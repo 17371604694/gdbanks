@@ -1,0 +1,98 @@
+<!--头文件-->
+<div class="navbar">
+    <!--导航图条背景图-->
+    <div class="float_left"><img src="${ctxStatic}/common/image2/logo.png" /></div>
+    <!--导航菜单栏-->
+    <div class="float_left">
+        <ul>
+            <li class="text_nvabar" onclick="sy()">首页</li>
+            <li class="text_nvabar_noselect" onclick="fhdt()" >分行动态</li>
+            <li class="text_nvabar_noselect redirects1">分行部室
+                <div id="redirects1_div"  style="display: none;">
+                </div>
+            </li>
+            <li class="text_nvabar_noselect redirects2">经营机构
+                <div id="redirects2_div"  style="display: none;">
+                </div>
+            </li>
+            <li class="text_nvabar_noselect" onclick="gzzd()">规章制度</li>
+            <li class="text_nvabar_noselect" onclick="xzzq()">下载专区</li>
+            <li class="text_nvabar_noselect" onclick="txl()">通讯录</li>
+        </ul>
+    </div>
+    <!--收索、登录、退出-->
+    <div class="folt_right">
+        <!--收索-->
+        <div class="float_left text_nvabar_noselect navbar_left" style="width:190px;">
+            <img class="float_left" src="${ctxStatic}/common/image2/ico_search_01.png"  style="margin-top:-4px;"  />
+            <input name="" type="text" v-model="selectParim" class="inputtext4" onblur="" onfocus=""/>
+        </div>
+        <!--用户信息-->
+        <div class="float_left text_nvabar_noselect navbar_left"  style="width:190px;">
+            <a href="${ctx}/login">
+                <img class="float_left photo" title="点击登录系统" src="${ctxStatic}/common/image2/ico_loogin.png"
+                     style="margin-top:-6px;width: 30px;height: 30px;border-radius: 50%;position: relative;left: 17%;" /></a>
+            <span id="unameuser" onclick="">登录</span>
+            <span class="uno">（123456）</span>
+        </div>
+        <!--用户信息（隐藏）-->
+        <input  id="userInput" type="hidden"/>
+        <input  id="userctx" value="${ctx}" type="hidden"/>
+        <div class="float_left text_nvabar_noselect navbar_left loginOutSystem"  style="width:100px;display: none" onclick="">退出系统</div>
+    </div>
+</div>
+<script>
+
+    /*鼠标移入移除显示部室网栏菜单*/
+      $(".redirects1").hover(function () {
+          $("#redirects1_div").show();
+      },function () {
+          $("#redirects1_div").hide();
+
+      });
+      $(".redirects2").hover(function () {
+          $("#redirects2_div").show();
+      },function () {
+          $("#redirects2_div").hide();
+
+      });
+
+    /**
+     * 加载导航栏菜单(部室网栏)
+     */
+    $.post("/a/public/getNavMenu","",function (data) {
+        // console.log(data);
+        var listA  = "";
+        for(var i = 0;i<data.length;i++){
+            listA += '<div><a class="redirects1_div_a" href="'+encodeURI("/a/logins/grouplist?id="+data[i].id)+'">'+data[i].name+'</a> </div>';
+        }
+        $("#redirects1_div").append(listA);
+    });
+    /**
+     * 加载导航栏菜单（经营机构）
+     */
+    $.post("/a/public/getNavMenuInstitutions","",function (data) {
+        // console.log(data);
+        var listA  = "";
+        for(var i = 0;i<data.length;i++){
+            listA += '<div><a class="redirects2_div_a" href="'+encodeURI("/a/logins/programadatalist?id="+data[i].id+"&name="+data[i].name)+'">'+data[i].name+'</a> </div>';
+        }
+        $("#redirects2_div").append(listA);
+    });
+
+    function sy() {
+        location.href = "/a/logins/index";
+    }
+    function fhdt() {
+        location.href = encodeURI("/a/logins/programadatalist?id=4f8d74dc230b49e5b9aba3d7386f85bf&name=分行动态");
+    }
+    function gzzd() {
+        location.href = encodeURI("/a/logins/programadatalist?id=06cdcb5fdbfa4aa7beb9718f2817b9f4&name=规章制度");
+    }
+    function xzzq() {
+        location.href = "/a/logins/down";
+    }
+    function txl() {
+        location.href = "/a/logins/addressbook";
+    }
+</script>

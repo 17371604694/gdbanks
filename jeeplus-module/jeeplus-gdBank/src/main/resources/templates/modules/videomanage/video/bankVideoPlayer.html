@@ -1,0 +1,15 @@
+<%
+layout("/include/_dialog.html"){
+%>
+
+<video id="video" src="" controls="controls" width="800px" height="400px" >
+    您的浏览器不支持播放该视频！
+</video><!--${bankVideo.videoPath!}-->
+<script type="text/javascript">
+    $(document).ready(function () {
+    })
+    var a = "${bankVideo.videoPath!}";
+   // alert(a);
+    $("#video").attr("src",a);
+</script>
+<% } %>

@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.consignfileapproval.administrativearchives.mapper.AdministrativeArchivesApproveMapper">
+    
+	<sql id="administrativeArchivesApproveColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.time AS "time",
+		a.use_department AS "useDepartment",
+		a.use_people AS "usePeople",
+		a.use_content AS "useContent",
+		a.dense_level AS "denseLevel",
+		a.using_purpose AS "usingPurpose",
+		a.with_way AS "withWay",
+		a.use_pattern AS "usePattern",
+		a.quantity AS "quantity",
+		a.return_time AS "returnTime",
+		a.utilization_unit AS " utilizationUnit",
+		a.matters_principal AS "mattersPrincipal",
+		a.asset_preservation AS "assetPreservation",
+		a.office_head AS "officeHead",
+		a.office_supervisor_leader AS "officeSupervisorLeader",
+		a.state AS "state",
+		a.utilization_unit_name AS "utilizationUnitName",
+		a.matters_principal_name AS "mattersPrincipalName",
+		a.asset_preservation_name AS "assetPreservationName",
+		a.office_head_name AS "officeHeadName",
+		a.office_supervisor_leader_name AS "officeSupervisorLeaderName",
+		a.use_department_name AS "useDepartmentName",
+		a.stateStep AS "stateStep",
+		a.materialAuditor AS "materialAuditor",
+		a.materialAuditorName AS "materialAuditorName",
+		a.usePeopleName AS "usePeopleName",
+		a.choices AS "choices"
+	</sql>
+	
+	<sql id="administrativeArchivesApproveJoins">
+		
+		LEFT JOIN sys_office useDepartment ON useDepartment.id = a.use_department
+	</sql>
+	
+    
+	<select id="get" resultType="AdministrativeArchivesApprove" >
+		SELECT 
+			<include refid="administrativeArchivesApproveColumns"/>
+		FROM administrative_archives_approve a
+		<include refid="administrativeArchivesApproveJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AdministrativeArchivesApprove" >
+		SELECT 
+			<include refid="administrativeArchivesApproveColumns"/>
+		FROM administrative_archives_approve a
+		<include refid="administrativeArchivesApproveJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="beginTime != null and endTime != null ">
+				AND a.time BETWEEN #{beginTime} AND #{endTime}
+			</if>
+			<if test="useDepartment != null and useDepartment != ''">
+				AND a.use_department = #{useDepartment}
+			</if>
+			<if test="usePeople != null and usePeople != ''">
+				AND a.use_people = #{usePeople}
+			</if>
+			<if test="withWay != null and withWay != ''">
+				AND a.with_way LIKE
+				    <if test="_databaseId == 'postgre'">'%'||#{withWay}||'%'</if>
+					<if test="_databaseId == 'oracle'">'%'||#{withWay}||'%'</if>
+					<if test="_databaseId == 'mssql'">'%'+#{withWay}+'%'</if>
+					<if test="_databaseId == 'mysql'">concat('%',#{withWay},'%')</if>
+			</if>
+			<if test="beginReturnTime != null and endReturnTime != null ">
+				AND a.return_time BETWEEN #{beginReturnTime} AND #{endReturnTime}
+			</if>
+			<if test="stateStep != null and stateStep != '' ">
+				AND a.statestep != #{stateStep}
+			</if>
+			<if test="state != null and state != '' ">
+				AND a.state = #{state}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AdministrativeArchivesApprove" >
+		SELECT 
+			<include refid="administrativeArchivesApproveColumns"/>
+		FROM administrative_archives_approve a
+		<include refid="administrativeArchivesApproveJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO administrative_archives_approve(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			time,
+			use_department,
+			use_people,
+			use_content,
+			dense_level,
+			using_purpose,
+			with_way,
+			use_pattern,
+			quantity,
+			return_time,
+			utilization_unit,
+			matters_principal,
+			asset_preservation,
+			office_head,
+			office_supervisor_leader,
+			utilization_unit_name,
+			matters_principal_name,
+			asset_preservation_name,
+			office_head_name,
+			office_supervisor_leader_name,
+			use_department_name,
+			state,
+			stateStep,
+			materialAuditor,
+			materialAuditorName,
+			usePeopleName,
+			choices
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{time},
+			#{useDepartment},
+			#{usePeople},
+			#{useContent},
+			#{denseLevel},
+			#{usingPurpose},
+			#{withWay},
+			#{usePattern},
+			#{quantity},
+			#{returnTime},
+			#{utilizationUnit},
+			#{mattersPrincipal},
+			#{assetPreservation},
+			#{officeHead},
+			#{officeSupervisorLeader},
+			#{utilizationUnitName},
+			#{mattersPrincipalName},
+			#{assetPreservationName},
+			#{officeHeadName},
+			#{officeSupervisorLeaderName},
+			#{useDepartmentName},
+			#{state},
+			#{stateStep},
+			#{materialAuditor},
+			#{materialAuditorName},
+			#{usePeopleName},
+			#{choices}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE administrative_archives_approve SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			time = #{time},
+			use_department = #{useDepartment},
+			use_people = #{usePeople},
+			use_content = #{useContent},
+			dense_level = #{denseLevel},
+			using_purpose = #{usingPurpose},
+			with_way = #{withWay},
+			use_pattern = #{usePattern},
+			quantity = #{quantity},
+			return_time = #{returnTime},
+			utilization_unit = #{ utilizationUnit},
+			matters_principal = #{mattersPrincipal},
+			asset_preservation = #{assetPreservation},
+			office_head = #{officeHead},
+			office_supervisor_leader = #{officeSupervisorLeader},
+			state = #{state},
+			utilization_unit_name = #{utilizationUnitName},
+			matters_principal_name = #{mattersPrincipalName},
+			asset_preservation_name = #{assetPreservationName},
+			office_head_name = #{officeHeadName},
+			office_supervisor_leader_name = #{officeSupervisorLeaderName},
+			use_department_name = #{useDepartmentName},
+			stateStep = #{stateStep},
+			state = #{state},
+			materialAuditor = #{materialAuditor},
+			materialAuditorName = #{materialAuditorName},
+			usePeopleName = #{usePeopleName},
+			choices = #{choices}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM administrative_archives_approve
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE administrative_archives_approve SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<!--审核通过或不通过-->
+	<update id="updatePass">
+
+		update administrative_archives_approve set
+		   state = #{state},stateStep=#{sta},remarks=#{remarks}
+		where id = #{id}
+
+	</update>
+	<update id="updataChoices">
+		update administrative_archives_approve set
+		   choices = #{choices}
+		where id = #{id}
+
+	</update>
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="AdministrativeArchivesApprove" statementType="STATEMENT">
+		select * FROM administrative_archives_approve  where ${propertyName} = '${value}'
+	</select>
+    <select id="findListConAll" resultType="AdministrativeArchivesApprove">
+
+		SELECT
+		<include refid="administrativeArchivesApproveColumns"/>
+		FROM administrative_archives_approve a
+		<include refid="administrativeArchivesApproveJoins"/>
+		<where>
+			<if test="beginTime != null and endTime != '' ">
+				AND a.time BETWEEN #{beginTime} AND #{endTime}
+			</if>
+			<if test="useDepartment != null and useDepartment != ''">
+				AND a.use_department LIKE concat('%',#{useDepartment},'%')
+			</if>
+			<if test="withWay != null and withWay != ''">
+				AND a.with_way LIKE concat('%',#{withWay},'%')
+			</if>
+			<if test="beginReturnTime != null and endReturnTime != '' ">
+				AND a.return_time BETWEEN #{beginReturnTime} AND #{endReturnTime}
+			</if>
+
+			<if test="userId!=null and userId!='' ">
+				and ( a.use_people= #{userId}
+				or a.utilization_unit=#{userId}
+				or a.matters_principal like CONCAT('%',#{userId},'%')
+				or a.asset_preservation=#{userId}
+				or a.materialAuditor=#{userId}
+				or a.office_head=#{userId}
+				or a.office_supervisor_leader=#{userId} )
+			</if>
+			<if test="stateStep !=null and stateStep>0 ">
+				and a.stateStep !=#{stateStep}
+			</if>
+			<if test="state !=null and state==1 ">
+				and a.stateStep != 7
+			</if>
+			<if test="state !=null and state==2 ">
+				and a.state = #{state} and  a.stateStep == 7
+			</if>
+			<if test="state !=null and state==3 ">
+				and a.state = #{state}
+			</if>
+
+		</where>
+		limit #{pageNo},#{pageSize}
+	</select>
+
+	<!--单独查询总数量-->
+	<select id="findListConAllCount" resultType="java.lang.Integer">
+		select count(1) from administrative_archives_approve a
+		<where>
+			<if test="userId!=null and userId!='' ">
+				or a.use_people= #{userId}
+				or a.utilization_unit=#{userId}
+				or a.matters_principal like CONCAT('%',#{userId},'%')
+				or a.asset_preservation=#{userId}
+				or a.materialAuditor=#{userId}
+				or a.office_head=#{userId}
+				or a.office_supervisor_leader=#{userId}
+			</if>
+		</where>
+
+	</select>
+
+
+
+</mapper>

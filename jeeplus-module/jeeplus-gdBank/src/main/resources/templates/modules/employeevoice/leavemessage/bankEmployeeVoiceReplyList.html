@@ -1,0 +1,98 @@
+<%
+layout("/include/_container.html", {title:"列表", parent:"员工心声"}){
+%>
+
+	<style type="text/css">
+		.table tbody tr td{
+			overflow: hidden;
+			text-overflow:ellipsis;
+			white-space: nowrap;
+		}
+	</style>
+    <!-- 文件上传 -->
+    <div id="import-collapse" class="collapse white-box m-b-5">
+        <a class="jp-ti-close close close" onclick="$('#import-collapse').fadeToggle()">
+            <i class="fa fa-times"></i>
+        </a>
+        <form id="importForm" method="POST" enctype="multipart/form-data" class="row form-horizontal" >
+            <div class="col-xs-12 col-sm-6">
+                <input name="file" type="file" class="required form-control">只允许导入&ldquo;xls&rdquo;或&ldquo;xlsx&rdquo;格式文件！<br>　
+
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <a  id="btnImportExcel"  class="btn btn-custom waves-effect waves-light btn-rounded m-l-10 btn-md"><i class="fa fa-upload"></i> 开始上传</a>
+                <a  id="btnDownloadTpl" class="btn btn-custom waves-effect waves-light btn-rounded m-l-10 btn-md"><i class="fa fa-download"></i> 下载模板</a>
+            </div>　
+        </form>
+    </div>
+    <!-- 搜索框-->
+    <div id="search-collapse" class="white-box collapse m-b-5">
+        <a class="jp-ti-close close" onclick="$('#search-collapse').fadeToggle()">
+            <i class="fa fa-times"></i>
+        </a>
+        <form id="searchForm" class="form-inline" >
+			 <div class="form-group m-b-10 m-r-10">
+				<label class="m-r-10" title="创建时间：">留言时间：</label>
+				<div class="input-daterange input-group" id="createDate">
+                    <input type="text" class="form-control" id="beginCreateDate" name="beginCreateDate">
+                    <span class="input-group-text btn-custom border text-white">to</span>
+                    <input type="text" class="form-control" id="endCreateDate" name="endCreateDate">
+                </div>
+			</div>
+			 <div class="form-group m-b-10 m-r-10">
+				<label class="m-r-10" title="留言人姓名：">留言人：</label>
+				<input name="leaveMessageName"  maxlength="64"  class=" form-control"/>
+			</div>
+			<div class="form-group m-b-10 m-r-10">
+				<label class="m-r-10" title="留言人姓名：">是否回复：</label>
+				<select name="isReply"  maxlength="64"  class=" form-control">
+					<option value=""></option>
+					<option value="否">否</option>
+					<option value="是">是</option>
+				</select>
+			</div>
+		    <div class="form-group m-b-10 m-r-10">
+                <a  id="search" class="btn  btn-custom waves-effect waves-light m-l-10 btn-md btn-rounded"><i class="fa fa-search"></i> 查询</a>
+                <a  id="reset" class="btn  btn-custom waves-effect waves-light m-l-10 btn-md btn-rounded" ><i class="fa fa-refresh"></i> 重置</a>
+            </div>
+        </form>
+    </div>
+
+	<div class="white-box">
+
+	<!-- 工具栏 -->
+	<div id="toolbar">
+			 <% if(shiro.hasPermission("employeevoice:leavemessage:bankEmployeeVoice:add") ){ %>
+			 	<button id="add" class="btn btn-custom waves-effect w-xs waves-light" onclick="add()">
+					<i class="fa fa-plus"></i> 发表
+				</button>
+			<% } %>
+			 <% if(shiro.hasPermission("employeevoice:leavemessage:bankEmployeeVoice:edit") ){ %>
+			    <button id="edit" class="btn btn-white waves-effect w-xs waves-light" disabled onclick="edit()">
+	            	<i class="fa fa-edit"></i> 回复
+	        	</button>
+			<% } %>
+			 <% if(shiro.hasPermission("employeevoice:leavemessage:bankEmployeeVoice:del") ){ %>
+				<button id="remove" class="btn btn-white waves-effect w-xs waves-light" disabled onclick="del()">
+	            	<i class="fa fa-remove"></i> 删除
+	        	</button>
+			<% } %>
+			 <% if(shiro.hasPermission("employeevoice:leavemessage:bankEmployeeVoice:import") ){ %>
+				<button id="import"  class="btn btn-white waves-effect w-xs waves-light" >
+					<i class="fa fa-upload"></i> 导入
+				</button>
+			<% } %>
+			 <% if(shiro.hasPermission("employeevoice:leavemessage:bankEmployeeVoice:export") ){ %>
+	        	<button id="export" class="btn btn-white waves-effect w-xs waves-light">
+					<i class="fa fa-download"></i> 导出
+				</button>
+			 <% } %>
+		    </div>
+		
+	<!-- 表格 -->
+	<table id="bankEmployeeVoiceTable" class="table-bordered"
+		   style="table-layout:fixed;"
+		   data-toolbar="#toolbar"></table>
+	</div>
+	<% include("bankEmployeeVoiceReplyList.js"){} %>
+	<% } %>

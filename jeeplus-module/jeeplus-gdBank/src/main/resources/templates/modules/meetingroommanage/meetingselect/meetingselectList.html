@@ -1,0 +1,255 @@
+<%
+layout("/include/_container.html", {title:"列表", parent:"会议室预定成功"}){
+%>
+<!--查看会议室预定情况的表格-->
+<style>
+    #coursesTable {
+        padding: 15px 10px;
+    }
+
+    .Courses-head {
+        /*background-color: #f2f6f7;*/
+    }
+
+    .Courses-head > div {
+        text-align: center;
+        font-size: 14px;
+        line-height: 28px;
+    }
+
+    .left-hand-TextDom{
+        height: 30px;
+    }
+
+    .left-hand-TextDom, .Courses-head {
+        background-color: #f2f6f7;
+    }
+
+    .Courses-leftHand {
+        /*text-align: center;*/
+        /*line-height: 50%;*/
+        background-color: white;
+        font-size: 12px;
+    }
+
+    .Courses-leftHand .left-hand-index {
+        margin-bottom: 4px !important;
+    }
+
+    .Courses-leftHand .left-hand-name {
+        color: #666;
+    }
+
+    .Courses-leftHand p {
+        width: 200px;
+        text-align: center;
+        font-weight: 900;
+    }
+
+    .Courses-head > div {
+        font-weight: bold;
+        border-right:  1px solid rgba(0, 0, 0,0.1) !important;
+        border-top:  1px solid rgba(0, 0, 0,0.1) !important;
+        border-bottom:  1px solid rgba(0, 0, 0,0.1) !important;
+    }
+
+    .Courses-leftHand > div {
+        font-weight: bold;
+        /*padding-top: 5px;*/
+        border-left:  1px solid rgba(0, 0, 0,0.1) !important;
+        border-top:  1px solid rgba(0, 0, 0,0.1) !important;
+        border-right:  1px solid rgba(0, 0, 0,0.1) !important;
+    }
+
+    .Courses-leftHand > div:last-child {
+    }
+
+    .left-hand-TextDom, .Courses-head {
+        border-bottom: 1px solid rgba(0, 0, 0,0.1) !important;
+    }
+
+
+    .Courses-content > ul {
+        border-bottom: 1px solid rgba(0, 0, 0,0.1) !important;
+        box-sizing: border-box;
+        background-color: white;
+    }
+
+    .Courses-content > ul:last-child {
+    }
+
+    .highlight-week {
+        font-weight:bold;
+        color: #0c84e4 !important;
+    }
+
+    .Courses-content li {
+        display:table-cell;
+        font-weight:bold;
+        font-size: 11.9px;
+        border-right:1px solid rgba(0, 0, 0,0.1) !important;
+    }
+
+    .Courses-content li span {
+        padding: 6px 2px;
+        box-sizing: border-box;
+        line-height: 18px;
+        border-radius: 4px;
+        white-space: normal;
+        word-break: break-all;
+        cursor: pointer;
+    }
+
+    .grid-active {
+        z-index: 9999;
+    }
+
+    .grid-active span {
+        box-shadow: 0px 2px 4px rgba(1, 1, 1, 1);
+    }
+
+</style>
+<div id="maxDiv" style="border: solid 0.1px white;padding: 1.5%;
+border-bottom-left-radius: 6px;border-bottom-right-radius: 6px;border-top-left-radius: 6px;border-top-right-radius: 6px;
+background-color: white">
+    <div id="meetingTable">
+        <div class="input-group" style="margin-bottom: 1%">
+            <input readonly="" id="beginTime"  name="time"  placeholder="请选择日期"   style="width: 20% ;border-radius:4px;
+            background-color: #f2f6f7;"  >
+            <div class="input-group-append required">
+                <span class="input-group-texsxt btn-custom border text-white"><i class="ti-calendar"></i></span>
+            </div>
+            <button onclick="search();" id="search" class="btn btn-primary btn-sm" style="margin-left: 4px;">查询</button>
+            <button onclick="add();" id="add" class="btn btn-primary btn-sm" style="margin-left: 4px;">预定</button>
+            <button onclick="sx();" id="sx" class="btn btn-primary btn-sm" style="margin-left: 4px;">刷新</button>
+        </div>
+
+    </div>
+</div>
+<script>
+    var arr = jp.getMeetingTable();
+    var RoomTypeArr = arr[0];
+    // var RoomTypeArr = [
+    //     [{index: '', name: '1号会议室'}, 1],
+    //     [{index: '', name: '2号会议室'}, 1],
+    //     [{index: '', name: '3号会议室'}, 1],
+    //     [{index: '', name: '4号会议室'}, 1],
+    //     [{index: '', name: '5号会议室'}, 1],
+    //     [{index: '', name: '6号会议室'}, 1],
+    //     [{index: '', name: '7号会议室'}, 1],
+    //     [{index: '', name: '8号会议室'}, 1],
+    //     [{index: '', name: '9号会议室'}, 1],
+    //     [{index: '', name: '10号会议室'}, 1]
+    // ];
+    var ContextArr = arr[2];
+    // var ContextArr = [
+    //     ['(主办部门：研发一部，主题：需求讨论,时间：9:00-10:00),(主办部门：研发一部，主题：需求讨论,时间：10:00-11:00)', '(主办部门：销售部，主题：宣传计划讨论,时间：9:00-10:00)', '', '', '', '', '', '', '', '',],
+    //     ['(主办部门：销售部，主题：宣传计划讨论,时间：9:00-10:00)', '', '', '', '', '', '', '', '', '',],
+    //     ['(主办部门：销售部，主题：宣传计划讨论,时间：9:00-10:00)', '', '', '', '', '', '', '', '', '',],
+    //     ['', '', '', '', '', '', '', '', '', '',],
+    //     ['', '', '', '', '', '', '', '', '', '',],
+    //     ['', '', '', '', '', '', '', '', '', '',],
+    //     ['', '', '', '', '', '', '', '', '', '',]
+    // ];
+    var weekArr = arr[1];
+    // var weekArr = window.innerWidth > 360 ? ['周一', '周二', '周三', '周四', '周五','周六','周天'] :
+    //     ['一', '二', '三', '四', '五','六','天'];
+    // var day = new Date().getDay();
+    var highlightWeek = jp.hightWeek(weekArr);
+    // 实例化()
+    var Timetable = new Timetables({
+        el: '#meetingTable',
+        timetables: ContextArr,
+        week: weekArr,
+        timetableType: RoomTypeArr,
+        highlightWeek: highlightWeek,
+        merge: false,
+        gridOnClick: function (e) {
+            // jp.toastr_show(e.name);
+        },
+        styles: {
+            Gheight: 80,
+            leftHandWidth:100
+        }
+    });
+
+
+    //收索按钮办公室
+    function search() {
+        var time = $("#beginTime").val();//查看周期
+        if(time.trim().length<=0){
+            var time2 = new Date().format("yyyy-MM-dd");
+            time=time2;
+            $("#beginTime").val(time2)
+        }
+
+        $("#courseWrapper").remove();
+        var arr = jp.getMeetingTable(time);
+        var RoomTypeArr = arr[0];
+        var ContextArr = arr[2];
+        var weekArr = arr[1];
+        var highlightWeek = jp.hightWeek(weekArr);
+        var Timetable = new Timetables({
+            el: '#meetingTable',
+            timetables: ContextArr,
+            week: weekArr,
+            timetableType: RoomTypeArr,
+            highlightWeek: highlightWeek,
+            merge: false,
+            gridOnClick: function (e) {
+                // jp.toastr_show(e.name);
+            },
+            styles: {
+                Gheight: 80,
+                leftHandWidth:100
+            }
+        });
+
+        jp.autoaAlignmentLi();
+    }
+    jp.autoaAlignmentLi();
+
+
+    Date.prototype.format = function(fmt) {
+        var o = {
+            "M+" : this.getMonth()+1,                 //月份
+            "d+" : this.getDate(),                    //日
+            "h+" : this.getHours(),                   //小时
+            "m+" : this.getMinutes(),                 //分
+            "s+" : this.getSeconds(),                 //秒
+            "q+" : Math.floor((this.getMonth()+3)/3), //季度
+            "S"  : this.getMilliseconds()             //毫秒
+        };
+        if(/(y+)/.test(fmt)) {
+            fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+        }
+        for(var k in o) {
+            if(new RegExp("("+ k +")").test(fmt)){
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+            }
+        }
+        return fmt;
+    }
+</script>
+</body>
+<script>
+    $(document).ready(function () {
+        $(document).ready(function () {
+            $('#beginTime').datepicker({//日期控件初始
+                autoclose:true,
+                todayHighlight:true,
+                toggleActive: true,
+                language:"zh-CN",
+                format:"yyyy-mm-dd"
+            });
+        })
+    })
+    function add() {
+        jp.openSaveDialogImage('新增会议室预定', "${ctx}/meetingroommanage/meetingroomconvention/bankConferenceRoomReservation/Directly/add",'800px', '550px');
+    }
+    function sx() {
+        location.reload();
+    }
+</script>
+<!--</html>-->
+<% } %>

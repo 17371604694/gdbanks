@@ -1,0 +1,33 @@
+<%
+layout("/include/_dialog.html"){
+%>
+	<script type="text/javascript">
+        function save1() {
+            jp.openSaveDialogImage('新增寄存档案出库', "${ctx}/consignfileapproval/confileapproval/consignFileApproval/Directly/add", '80%', '80%');
+        }
+
+        function save2() {
+            jp.openSaveDialogImage('新增文书档案出库', "${ctx}/consignfileapproval/administrativearchives/administrativeArchivesApprove/Directly/add", '80%', '80%');
+        }
+	</script>
+<form id="inputForm"  method="post"  class="form-horizontal p-15">
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+
+            <td class="width-15 active"><label class="pull-right">寄存档案借阅：</label></td>
+            <td class="width-35"  colspan="3">
+                <button onclick="save1()" type="button"  class="btn btn-custom waves-effect waves-light w-xs m-b-5">申请</button>
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right">文书档案借阅：</label></td>
+            <td class="width-35" colspan="3">
+                <button onclick="save2()" type="button"  class="btn btn-custom waves-effect waves-light w-xs m-b-5">申请</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</form>
+<% } %>

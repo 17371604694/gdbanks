@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.taskissuedby.taskissuedbyts.mapper.TaskIssuedByMapper">
+    
+	<sql id="taskIssuedByColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.publisher_id AS "publisherId",
+		a.publisher_name AS "publisherName",
+		a.start_time AS "startTime",
+		a.content AS "content",
+		a.end_time AS "endTime",
+		a.executor_id AS "executorId",
+		a.executor_name AS "executorName",
+		a.state AS "state",
+		a.explains AS "explains",
+		a.file AS "file",
+		a.rname AS "rname"
+	</sql>
+	
+	<sql id="taskIssuedByJoins">
+		
+		LEFT JOIN sys_user executorId ON executorId.id = a.executor_id
+	</sql>
+	
+    
+	<select id="get" resultType="TaskIssuedBy" >
+		SELECT 
+			<include refid="taskIssuedByColumns"/>
+		FROM task_issued_by a
+		<include refid="taskIssuedByJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList222" resultType="TaskIssuedBy" >
+
+		SELECT
+		<include refid="taskIssuedByColumns"/>
+		FROM task_issued_by a
+		<include refid="taskIssuedByJoins"/>
+		<where>
+		a.del_flag = #{DEL_FLAG_NORMAL}
+		${dataScope}
+			<if test="publisherName != null and publisherName != ''">
+				AND a.publisher_name = #{publisherName}
+			</if>
+			<if test="beginStartTime != null and endStartTime != null ">
+				AND a.start_time BETWEEN #{beginStartTime} AND #{endStartTime}
+			</if>
+			<if test="beginEndTime != null and endEndTime != null ">
+				AND a.end_time BETWEEN #{beginEndTime} AND #{endEndTime}
+			</if>
+			<if test="executorName != null and executorName != ''">
+				AND a.executor_name = #{executorName}
+			</if>
+			<if test="state !=-1">
+				AND a.state = #{state}
+			</if>
+			<if test="rname != null and rname != ''">
+				AND a.rname = #{rname}
+			</if>
+		 and a.state =0
+		</where>
+	</select>
+
+	<select id="findList" resultType="TaskIssuedBy" >
+		SELECT 
+			<include refid="taskIssuedByColumns"/>
+		FROM task_issued_by a
+		<include refid="taskIssuedByJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="publisherName != null and publisherName != ''">
+				AND a.publisher_name = #{publisherName}
+			</if>
+			<if test="beginStartTime != null and endStartTime != null ">
+				AND a.start_time BETWEEN #{beginStartTime} AND #{endStartTime}
+			</if>
+			<if test="beginEndTime != null and endEndTime != null ">
+				AND a.end_time BETWEEN #{beginEndTime} AND #{endEndTime}
+			</if>
+			<if test="executorName != null and executorName != ''">
+				AND a.executor_name = #{executorName}
+			</if>
+			<if test="state !=-1">
+				AND a.state = #{state}
+			</if>
+			<if test="rname != null and rname != ''">
+				AND a.rname = #{rname}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TaskIssuedBy" >
+		SELECT 
+			<include refid="taskIssuedByColumns"/>
+		FROM task_issued_by a
+		<include refid="taskIssuedByJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO task_issued_by(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			publisher_id,
+			publisher_name,
+			start_time,
+			content,
+			end_time,
+			executor_id,
+			executor_name,
+			state,
+			explains,
+			file,
+			rname
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{publisherId},
+			#{publisherName},
+			#{startTime},
+			#{content},
+			#{endTime},
+			#{executorId},
+			#{executorName},
+			default,
+			#{explains},
+			#{file},
+			#{rname}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE task_issued_by SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			publisher_id = #{publisherId},
+			publisher_name = #{publisherName},
+			start_time = #{startTime},
+			content = #{content},
+			end_time = #{endTime},
+			executor_id = #{executorId},
+			executor_name = #{executorName},
+			state = #{state},
+			explains = #{explains},
+			file = #{file},
+			rname = #{rname}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM task_issued_by
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE task_issued_by SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	<update id="updateStateById">
+
+
+		UPDATE task_issued_by SET
+			state = #{state},end_time=#{time}
+		WHERE id = #{id}
+
+
+	</update>
+
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="TaskIssuedBy" statementType="STATEMENT">
+		select * FROM task_issued_by  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

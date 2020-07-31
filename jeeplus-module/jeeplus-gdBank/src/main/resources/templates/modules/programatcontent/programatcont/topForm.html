@@ -1,0 +1,53 @@
+<%
+layout("/include/_dialog.html"){
+%>
+
+	<script type="text/javascript">
+		function save() {
+            var isValidate = jp.validateForm('#inputForm');//校验表单
+            if(!isValidate){
+                return false;
+			}else{
+                var index = jp.loading();
+                jp.post("${ctx}/programatcontent/programatcont/distributeContent/admintop",$('#inputForm').serialize(),function(data){
+                    if(data.success){
+                        jp.getParent().refresh();
+                        var dialogIndex = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                        parent.layer.close(dialogIndex);
+                        jp.toastr_success(data.msg)
+
+                    }else{
+                        jp.warning(data.msg);
+                    }
+                    jp.close(index);
+                })
+			}
+
+        }
+	</script>
+<style>
+</style>
+<form id="inputForm"  method="post" class="form-horizontal p-15">
+    <input type="hidden" name="id" value="${distributeContent.id!}"/>
+    <table class="table table-bordered">
+       <tbody>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>标题：</label></td>
+                <td class="width-35">
+                    <input name="title" value="${distributeContent.title!}"    class="form-control required"/>
+            </td>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>作者：</label></td>
+                <td class="width-35">
+                    <input name="author" readonly="readonly" id="author" value="${distributeContent.author!}"    class="form-control required"/>
+            </td>
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right">是否置顶：</label></td>
+                <td class="width-35">
+                    <#select path="sorts" value="${distributeContent.sorts!}" items="${fn.getDictList('fixation')}" itemLabel="label" itemValue="value" class=""/>
+            </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+<% } %>

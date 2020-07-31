@@ -1,0 +1,74 @@
+<%
+layout("/include/_dialog.html"){
+%>
+    <!--心声回复页面-->
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+		    var name  = JSON.parse(jp.getCookie("user")).name;
+            var id  = JSON.parse(jp.getCookie("user")).id;
+		    $("#replyName").val(name);
+		    $("#replyUserId").val(id);
+
+            $('#replyTime').datetimepicker({
+				 format:'Y-m-d H:i'
+		    });
+		});
+
+		function save() {
+            var isValidate = jp.validateForm('#inputForm');//校验表单
+            if(!isValidate){
+                return false;
+			}else{
+                var index = jp.loading();
+                jp.post("${ctx}/employeevoice/leavemessage/bankEmployeeVoice/save",$('#inputForm').serialize(),function(data){
+                    if(data.success){
+                        jp.getParent().refresh();
+                        var dialogIndex = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                        parent.layer.close(dialogIndex);
+                        jp.toastr_success(data.msg)
+
+                    }else{
+                        jp.toastr_error(data.msg);
+                    }
+                    jp.close(index);
+                })
+			}
+
+        }
+	</script>
+<form id="inputForm"  method="post"  class="form-horizontal p-15">
+    <input type="hidden" name="id" value="${bankEmployeeVoice.id!}"/>
+    <table class="table table-bordered">
+       <tbody>
+               <tr hidden>
+                   <td class="width-15 active"><label class="pull-right">留言人姓名：</label></td>
+                   <td class="width-35">
+                       <input id="leaveMessageName" readonly="readonly" name="leaveMessageName" value="${bankEmployeeVoice.leaveMessageName!}"    class="form-control "/>
+                       <input id="leaveMessageUserId" name="leaveMessageUserId" value="" hidden>
+                       <input name="remarks" value="${fn.getUser().photo}" id="remarks" hidden/>
+                   </td>
+               </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right">留言：</label></td>
+                <td class="width-35">
+                    <textarea name="leaveMessage" rows="4"  readonly  class="form-control required">${bankEmployeeVoice.leaveMessage!}</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>回复：</label></td>
+                <td class="width-35">
+                    <textarea name="reply" rows="8"    class="form-control required"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right">回复人：</label></td>
+                <td class="width-35">
+                    <input name="replyName" id="replyName" readonly="readonly" value="${bankEmployeeVoice.replyName!}"    class="form-control "/>
+                    <input name="replyUserId" id="replyUserId" value="${bankEmployeeVoice.replyUserId!}"  hidden  class="form-control "/>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+<% } %>

@@ -1,0 +1,236 @@
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta charset="UTF-8">
+
+    <title>光大银行</title>
+    <!--引入jquery 注意jquery必须最先引入-->
+    <script src="../../../static/common/js/jquery-3.3.1.min.js"></script>
+    <!-- 引入layer插件,当做独立组件使用，不使用layui模块 -->
+    <script src="${ctxStatic}/plugins/layui/layer/layer.js"></script>
+    <link rel="shortcut icon" href="${ctxStatic}/common/images/favicon.ico">
+    <link href="../../../static/common/css2/font.css" rel="stylesheet" type="text/css">
+    <link href="../../../static/common/css2/gdcontent.css" rel="stylesheet" type="text/css">
+    <script src="../../../static/common/js/jeeplus.js" type="text/javascript"></script>
+    <style type="text/css">
+        .redirects1{
+            position: relative;
+            padding-bottom: 40px;
+        }
+        #redirects1_div{
+            position: absolute;
+            top: 55px;
+            width: 800px;
+        // height: 200px;
+            background-color: rgb(0, 52, 100);
+            border-radius: 3px;
+
+        }
+        #redirects1_div>div{
+
+            /*background-color: red;*/
+            height: 40px;
+            width: 160px;
+            float: left;
+            line-height: 40px;
+        }
+        .redirects1_div_a{
+            color: #B5B8BD;
+        }
+        .redirects1_div_a:hover{
+            color: white;
+        }
+
+        /*2*/
+        .redirects2{
+            position: relative;
+            padding-bottom: 40px;
+        }
+        #redirects2_div{
+            position: absolute;
+            top: 55px;
+            width: 800px;
+            background-color: rgb(0, 52, 100);
+            border-radius: 3px;
+        }
+        #redirects2_div>div{
+            height: 40px;
+            width: 160px;
+            float: left;
+            line-height: 40px;
+        }
+        .redirects2_div_a{
+            color: #B5B8BD;
+        }
+        .redirects2_div_a:hover{
+            color: white;
+        }
+
+
+
+    </style>
+</head>
+<%
+layout("/include/_container2.html",{title:"用户管理", parent:"单位组织"}){
+%>
+<body>
+
+
+
+<div class="row">
+    <div  class="col-sm-10 col-md-12 p-l-0">
+        <!-- 搜索框-->
+        <div id="search-collapse" class="white-box collapse m-b-5">
+            <a class="jp-ti-close close" onclick="$('#search-collapse').fadeToggle()">
+                <i class="fa fa-times"></i>
+            </a>
+            <form id="searchForm" class="form-inline" >
+                <div class="form-group m-b-10 m-r-10">
+                    <a  id="search" class="btn  btn-custom waves-effect waves-light m-l-10 btn-md btn-rounded"><i class="fa fa-search"></i> 查询</a>
+                    <a  id="reset" class="btn  btn-custom waves-effect waves-light m-l-10 btn-md btn-rounded" ><i class="fa fa-refresh"></i> 重置</a>
+                </div>
+            </form>
+        </div>
+        <!-- 搜索框结束 -->
+        <div class="white-box">
+
+            <!-- 工具栏 -->
+            <div id="toolbar">
+                <% if(shiro.hasPermission("meetingroommanage:meetingroomconvention:bankConferenceRoomReservation:add") ){ %>
+                <button id="add" class="btn btn-custom waves-effect w-xs waves-light" onclick="add()">
+                    <i class="fa fa-plus"></i> 新建
+                </button>
+                <% } %>
+                <% if(shiro.hasPermission("meetingroommanage:meetingroomconvention:bankConferenceRoomReservation:edit") ){ %>
+                <button id="edit" class="btn btn-white waves-effect w-xs waves-light" disabled onclick="edit()">
+                    <i class="fa fa-edit"></i> 修改
+                </button>
+                <% } %>
+                <% if(shiro.hasPermission("meetingroommanage:meetingroomconvention:bankConferenceRoomReservation:del") ){ %>
+                <button id="remove" class="btn btn-white waves-effect w-xs waves-light" disabled onclick="del()">
+                    <i class="fa fa-remove"></i> 批量取消
+                </button>
+                <% } %>
+                <% if(shiro.hasPermission("meetingroommanage:meetingroomconvention:bankConferenceRoomReservation:import") ){ %>
+                <button id="import"  class="btn btn-white waves-effect w-xs waves-light" >
+                    <i class="fa fa-upload"></i> 导入
+                </button>
+                <% } %>
+                <% if(shiro.hasPermission("meetingroommanage:meetingroomconvention:bankConferenceRoomReservation:export") ){ %>
+                <button id="export" class="btn btn-white waves-effect w-xs waves-light">
+                    <i class="fa fa-download"></i> 导出
+                </button>
+                <% } %>
+            </div>
+
+            <!-- 表格 -->
+            <table id="bankConferenceRoomReservationTable" class="table-bordered"   data-toolbar="#toolbar"></table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $.getJSON("/a/public/getNavMenu",function (data) {
+            for (var i = 0; i < data.length ; i++) {
+                var $div=$("<div><a class=\"redirects1_div_a\" style=\"text-decoration: none\" href=\"/a/logins/grouplist?id="+data[i].id+"\">"+data[i].name+"</a> </div>");
+                $("#redirects1_div").append($div);
+            }
+        });
+        $.getJSON("/a/public/getNavMenuInstitutions",function (data) {
+            for (var i = 0; i < data.length ; i++) {
+                var $div=$("<div><a class=\"redirects2_div_a\" style=\"text-decoration: none\" href=\"/a/logins/grouplist?id="+data[i].id+"\">"+data[i].name+"</a> </div>");
+                $("#redirects2_div").append($div);
+            }
+        });
+
+        //首页li导航栏转跳
+        $(".redirects").click(function () {
+            var i=$(this).index();
+            if (i==0){ //首页
+                location.href="/a/logins/indexNew"
+            }
+            if (i==1){ //分行动态
+                location.href="/a/logins/programadatalist?id=4f8d74dc230b49e5b9aba3d7386f85bf&name="+encodeURI("分行动态")
+            }
+            if (i==4){ //
+                location.href="/a/logins/programadatalist?id=06cdcb5fdbfa4aa7beb9718f2817b9f4&name="+encodeURI("规章制度")
+            }
+            if (i==5){ //分行动态
+                location.href="/a/logins/down"
+            }
+            if (i==6){ //分行动态
+                location.href="/a/logins/addressbook"
+            }
+        });
+
+        $(".redirects1").hover(function () {
+            $("#redirects1_div").show();
+        },function () {
+            $("#redirects1_div").hide();
+
+        })
+        $(".redirects2").hover(function () {
+            $("#redirects2_div").show();
+        },function () {
+            $("#redirects2_div").hide();
+
+        })
+
+        $(".stParim").focus(function () {
+            if ($(this).val()=="欢迎访问光大内网！" || $(this).val()=="请输入要搜索的标题内容！"){
+                $(this).val("")
+            }
+        });
+        $(".stParim").blur(function () {
+            if ($(this).val()==""){
+                $(this).val("欢迎访问光大内网！");
+            }
+        });
+        $(".selectParim").click(function () {
+            var selectParim=$(".stParim").val();
+            if (selectParim=="欢迎访问光大内网！" || selectParim==""){
+                $(".stParim").val("请输入要搜索的标题内容！");
+            } else {
+                location.href="/a/logins/list?title="+selectParim.trim();
+            }
+
+
+        });
+        $("#unameuser").click(function () {
+            if ($(this).html()!="登录") {
+                layer.open({
+                    type: 2,
+                    shadeClose:true,
+                    id: 'update_user',
+                    title: ['修改用户信息', 'font-size:18px;'],
+                    area: ['1000px', '650px'],
+                    content: '/a/sys/user/info'
+                });
+            }
+        });
+
+        $(".loginOutSystem").click(function () {
+            location.href="/a/logout";
+        });
+    });
+</script>
+<script type="text/javascript">
+    var name="${fn.getUser()}".replace(/\s*/g,"");
+    var logis=name.length>360?"登录":"未登录";
+    // console.log(logis)
+    // var mm=name.substring(name.indexOf('{')).replace(/=/g,":");
+    var user=name.substring(name.indexOf('{')+1,name.lastIndexOf('}')).split(',');
+    if (logis=="登录"){
+        $("#unameuser").html(user[5].split('=')[1].replace(/'/g,""));
+        $(".photo").attr("src",user[12].split('=')[1].replace(/'/g,""));
+        $(".uno").html("("+user[4].split('=')[1].replace(/'/g,"")+")");
+        $("#userInput").val(name);
+        $(".loginOutSystem").show();
+
+    }
+</script>
+</body>
+<% include("bankConferenList.js"){} %>
+<% } %>
+</html>

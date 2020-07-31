@@ -1,0 +1,74 @@
+<%
+layout("/include/_dialog.html"){
+%>
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+						});
+
+		function save() {
+            var isValidate = jp.validateForm('#inputForm');//校验表单
+			//审核人可以不设置
+			// if ($("#verifyPersonName").val()=="" ||$("#verifyPersonName").val()==null){
+			//     layer.msg("审核人不能为空!");
+			//     return false;
+			// }
+            if(!isValidate){
+                return false;
+			}else{
+                var index = jp.loading();
+                jp.post("${ctx}/verifiertrue/verifiertrues/bankVerifierTrue/save",$('#inputForm').serialize(),function(data){
+                    if(data.success){
+                        jp.getParent().refresh();
+                        var dialogIndex = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                        parent.layer.close(dialogIndex);
+                        jp.toastr_success(data.msg)
+
+                    }else{
+                        jp.toastr_error(data.msg);
+                    }
+                    jp.close(index);
+                })
+			}
+
+        }
+	</script>
+<form id="inputForm"  method="post"  class="form-horizontal p-15">
+		<input type="hidden" name="id" value="${bankVerifierTrue.id!}"/>
+		<table class="table table-bordered">
+		   <tbody>
+			<!--	<tr>
+					<td class="width-15 active"><label class="pull-right">父级编号：</label></td>
+					<td class="width-35">
+						<#treeselect id="parent" name="parent.id" value="${bankVerifierTrue.parent.id!}" labelName="parent.columnName" labelValue="${bankVerifierTrue.parent.columnName!}"
+						title="父级编号" url="/verifiertrue/verifiertrues/bankVerifierTrue/treeData" extId="${bankVerifierTrue.id!}" class="form-control " allowClear="true"/>
+					</td>
+					<td class="width-15 active" style="display: none;"><label class="pull-right"><font color="red">*</font>名称：</label></td>
+					<td class="width-35" style="display: none;">
+						<input name="name" value="${bankVerifierTrue.name!}"    class="form-control"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>排序：</label></td>
+					<td class="width-35">
+						<input name="sort" value="${bankVerifierTrue.sort!}"    class="form-control required"/>
+					</td>
+
+				</tr>-->
+				<tr>
+					<td class="width-15 active"><label class="pull-right">栏目名称：</label></td>
+					<td class="width-35">
+						<input name="columnName" value="${bankVerifierTrue.columnName!}"    class="form-control "/>
+						<!--<input name="columnId" value="${bankVerifierTrue.columnId!}"    class="form-control "/>-->
+					</td>
+					<td class="width-15 active"><label class="pull-right">审核人：</label></td>
+					<td class="width-35">
+					     <#userselect id="verifyPerson" name="verifyPerson" value="${bankVerifierTrue.verifyPerson!}" labelName="remarks" labelValue="${bankVerifierTrue.remarks!}"
+							    class="form-control"  allowClear="true"/>
+					</td>
+
+		  		</tr>
+		 	</tbody>
+		</table>
+		</form>
+<% } %>

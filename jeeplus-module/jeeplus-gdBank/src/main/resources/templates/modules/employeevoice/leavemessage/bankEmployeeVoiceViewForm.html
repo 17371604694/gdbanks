@@ -1,0 +1,208 @@
+<%
+layout("/include/_dialog.html"){
+%>
+<!--心声查看页面-->
+    <style type="text/css">
+        section{
+            width: 1000px;
+            margin: auto;
+        }
+        .textarea{
+            margin: 20px 0;
+        }
+        textarea{
+            width: 100%;
+            height: 120px;
+            resize: none;
+        }
+        .cont{
+            height: auto;
+            border-bottom: 1px solid #5db3c3;
+            margin-top: 10px;
+            margin-bottom:10px;
+        }
+        .one{
+            padding: 0;
+        }
+        .btn{
+            width: 120px;
+            background: #6dcc71;
+            color: #fff;
+            float: right;
+        }
+        .btn:hover{
+            color: #fff;
+        }
+        img{
+            border-radius: 100%;
+            width: 100px;
+            height: 100px;
+        }
+        .two{
+            color: #d4a3a3;
+        }
+        .three{
+            margin-bottom: 5px;
+        }
+        .content{
+            height: auto;
+        }
+        .con_back{
+            height: 30px;
+        }
+    </style>
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+		    var name  = JSON.parse(jp.getCookie("user")).name;
+            var id  = JSON.parse(jp.getCookie("user")).id;
+		    $("#replyName").val(name);
+		    $("#replyUserId").val(id);
+
+            $('#replyTime').datetimepicker({
+				 format:'Y-m-d H:i'
+		    });
+		});
+
+		function save() {
+            var isValidate = jp.validateForm('#inputForm');//校验表单
+            if(!isValidate){
+                return false;
+			}else{
+                var index = jp.loading();
+                jp.post("${ctx}/employeevoice/leavemessage/bankEmployeeVoice/save",$('#inputForm').serialize(),function(data){
+                    if(data.success){
+                        jp.getParent().refresh();
+                        var dialogIndex = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                        parent.layer.close(dialogIndex);
+                        jp.toastr_success(data.msg)
+
+                    }else{
+                        jp.toastr_error(data.msg);
+                    }
+                    jp.close(index);
+                })
+			}
+
+        }
+	</script>
+
+<body>
+    <section class="tent_info" >
+        <div class="col-md-12 col-sm-12 col-xl-12 textarea one">
+            <textarea class="text_send" id="text_send" hidden>${bankEmployeeVoice.leaveMessage!}</textarea>
+            <div class="col-md-12 col-sm-12 col-xl-12 btn btn_send" hidden>提交</div>
+        </div>
+    </section>
+</body>
+
+<script type="text/javascript">
+    var  isshow = '${bankEmployeeVoice.isShow!}';//是否匿名
+    var leaveMessageName;
+    if("是"==isshow){
+        leaveMessageName = "匿名"
+    }else {
+        leaveMessageName = '${bankEmployeeVoice.leaveMessageName!}';//留言人名称
+    }
+
+    var leaveMessageTime = '${fn.formatDate(bankEmployeeVoice.createDate!, "yyyy-MM-dd HH:mm:ss")}';//留言时间
+    var id = '${bankEmployeeVoice.id!}';//留言id
+    $(document).ready(function() {
+            //获取评论信息
+            var text_send = $("#text_send").val();
+            if(text_send == ""){
+                return false;
+            }
+            var html;
+            html = '<div class="col-md-12 col-sm-12 col-xl-12 one cont" style="border-bottom: 1px solid #5db3c3;">'+
+                '<div class="col-md-2 col-sm-2 col-xl-12 one img">'+
+                '</div>'+
+                '<div class="col-md-10 col-sm-10 col-xl-12 one content">'+
+                '<div class="comment-right">'+
+                '<span><i class="glyphicon glyphicon-map-marker two">'+leaveMessageName+'</i></span>&nbsp;&nbsp;&nbsp;&nbsp;'+
+                '<span><i class="glyphicon glyphicon-map-marker two"></i></span>'+
+                '<div class="comment-content-header three">'+
+                '<span><i class="glyphicon glyphicon-time two"></i>'+leaveMessageTime+'</span>'+
+                '</div>'+
+                '<p class="tent">'+text_send+'</p>'+
+                '<div class="comment-content-footer">'+
+                '<div class="row">'+
+                '<div class="col-md-12 col-sm-12 col-xl-12 three">'+
+                '<textarea hidden class="" id="text_reply" placeholder="回复："></textarea>'+
+                '<div hidden  class="col-md-12 col-sm-12 col-xl-12 btn btn_send" onclick="f();">提交</div>'+
+                '<span><i class="glyphicon glyphicon-globe two"></i> </span>'+
+                '</div>'+
+                '</div>'+
+                '</div>'+
+                '</div>'+
+                '</div>'+
+                '</div>';
+
+            $.post("${ctx}/employeevoice/leavemessage/bankEmployeeVoice/getReplyData",{id:id},function (data) {
+                var html_reply = "";
+                var k = 0;
+                if(data[0].replyB){
+                    for(var i = 0;i<data.length;i++){
+                        if(data[i].replyNameB==null){
+                            data[i].replyNameB = "匿名";
+                        }
+                        k++;
+                        html_reply +=  '<div class="col-md-12 col-sm-12 col-xl-12 one cont">'+
+                            '<div class="col-md-2 col-sm-2 col-xl-12 one img">'+
+                            '</div>'+
+                            '<div class="col-md-10 col-sm-10 col-xl-12 one content">'+
+                            '<div class="comment-right">'+
+                            '<span><i class="glyphicon glyphicon-map-marker two">'+data[i].replyNameB+'</i></span>&nbsp;'+
+                            '<span><i class="glyphicon glyphicon-map-marker two">@'+leaveMessageName+'</i></span>'+
+                            '<div class="comment-content-header three">'+
+                            '<span><i class="glyphicon glyphicon-time two"></i>'+data[i].replyTimeB+'</span>&nbsp;&nbsp;&nbsp;&nbsp;'+
+                            '<span><i class="glyphicon glyphicon-map-marker two"></i>'+k+'楼</span>'+
+                            '</div>'+
+                            '<p class="tent">'+data[i].replyB+'</p>'+
+                            '<div class="comment-content-footer">'+
+                            '<div class="row">'+
+                            '<div class="col-md-12 col-sm-12 col-xl-12 three">'+
+                            '<span hidden><i class="glyphicon glyphicon-globe two" ></i> '+data[i].employeeVoiceReplyId+'</span>'+
+                            '</div>'+
+                            '</div>'+
+                            '</div>'+
+                            '</div>'+
+                            '</div>'+
+                            '</div>';
+                    }
+                    html = html+html_reply;
+                }
+
+                $(".tent_info").append(html);
+            })
+
+    });
+
+    // 回复
+    // $(".btn_send").on('click',function(){
+    function f() {
+        var reply = $("#text_reply").val();
+        var replyName;
+        var replyUserId;
+        if(reply){
+            $.post("${ctx}/employeevoice/leavemessage/bankEmployeeVoice/save",
+                {   reply:reply,//回复内容
+                    replyName:replyName,//回复人名称
+                    replyUserId:replyUserId,//回复人id
+                    id:id //留言id
+                },function (data) {
+                    if(data.success){
+                        layer.alert(data.msg);
+                        location.reload(true);
+                    }else {
+                        jp.toastr_warning(data.msg);
+                    }
+                });
+        }else {
+            layer.alert("请输入合法内容！");
+        }
+
+    }
+
+</script>
+<% } %>

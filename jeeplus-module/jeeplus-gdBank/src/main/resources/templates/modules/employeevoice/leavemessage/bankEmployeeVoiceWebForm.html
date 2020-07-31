@@ -1,0 +1,74 @@
+<%
+layout("/include/_dialog.html"){
+%>
+    <!--首页发表页面-->
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+		    $("#leaveMessageName").val(JSON.parse(jp.getCookie("user")).name);
+            $("#leaveMessageUserId").val(JSON.parse(jp.getCookie("user")).id);
+            $('#replyTime').datetimepicker({
+				 format:'Y-m-d H:i'
+		    });
+		});
+
+		function save() {
+            var isValidate = jp.validateForm('#inputForm');//校验表单
+            if(!isValidate){
+                return false;
+            }else {
+                // var index = jp.loading();
+                jp.post("${ctx}/employeevoice/leavemessage/bankEmployeeVoice/save", $('#inputForm').serialize(), function (data) {
+                    if (data.success) {
+                        //
+                        // jp.alert(data.msg);
+                        var dialogIndex = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                        parent.layer.close(dialogIndex);
+
+                        // jp.toastr_success(data.msg)
+                    } else {
+                        // jp.toastr_error(data.msg);
+                    }
+                    // jp.close(index);
+                    window.parent.location.reload();
+                })
+            }
+
+        }
+	</script>
+<form id="inputForm"  method="post"  class="form-horizontal p-15">
+    <input type="hidden" name="id" value="${bankEmployeeVoice.id!}"/>
+    <input type="hidden" name="type" value="${bankEmployeeVoice.type!}"/><!--留言类型-->
+    <table class="table table-bordered">
+       <tbody>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>留言人：</label></td>
+                <td class="width-35">
+                <input name="leaveMessageName" readonly="readonly" value=""  id="leaveMessageName"  class="form-control "/>
+                <input name="leaveMessageUserId" value="" id="leaveMessageUserId" hidden/>
+                <input name="remarks" value="${fn.getUser().photo}" id="remarks" hidden/>
+                </td>
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>留言：</label></td>
+                <td class="width-35">
+                    <textarea name="leaveMessage" rows="8"    class="form-control required">${bankEmployeeVoice.leaveMessage!}</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>回复部门：</label></td>
+                <td class="width-35">
+                    <#treeselect id="replyDept" name="replyDept" value="${bankEmployeeVoice.replyDept!}" labelName="replyDeptName" labelValue="${bankEmployeeVoice.replyDeptName!}"
+                    allowClear="true" title="部门" url="/sys/office/treeData?type=2" class="form-control required" notAllowSelectRoot="${true}"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>是否匿名：</label></td>
+                <td class="width-35">
+                    <#select path="isShow" value="${bankEmployeeVoice.isShow!}" items="${fn.getDictList('isshow')}" itemLabel="label" itemValue="value" class="required"/>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+<% } %>

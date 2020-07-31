@@ -1,0 +1,285 @@
+@charset "utf-8";
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	font-size:12px;
+	line-height:22px;
+	font-family:"宋体","Arial Narrow";
+}
+
+.shadow_down_zise{
+	box-shadow: 0px 2px 10px #9C78C3;
+	-moz-box-shadow:0px 2px 10px #9C78C3;
+	-webkit-box-shadow:0px 3px 10px #9C78C3;
+}
+/* 头部*/
+.layout_narbar{
+	width:100%;
+	height:525px;
+	background-image:url(../image/banner.jpg);
+	background-repeat:no-repeat;
+	
+	}
+.layout_deptbar{
+	width:100%;
+	height:475px;
+	background-image:url(../image/banner_bm.jpg);
+	background-repeat:no-repeat;
+	
+	}
+.navbar{
+	width:1170px;
+	margin:0 auto;
+	height:75px;
+	background-color:#FFF;
+	
+	}
+.navbar ul li{
+    position: relative;
+    display: block;
+	list-style: none;
+	float: left!important;
+	width:85px;
+	padding-top:20px;
+	}
+.layout_zhyw{
+	width:1002px;
+	height:100px;
+	background-image:url(../image/zhyw.jpg);
+	margin:0 auto;
+	margin-top:350px;
+	}
+.layout_zhyw_wz{
+	position: relative;
+	width:800px;
+	height:100px;
+	margin:0 auto;
+	padding-left:170px;
+	}
+	
+.layout_dj{
+	width:100%;
+	height:89px;
+	margin-top:30px;
+	}
+.layout_dj div{
+	width:1170px;
+	margin:0 auto;
+	height:89px;
+	}
+.layout_news{
+	width:100%;
+	margin-top:30px;
+	}
+.layout_news_content{
+	width:1170px;
+	margin:0 auto;
+	}
+.seach{
+	margin-top: 5px;
+	width:270px;
+	border-radius:15px;
+	border:1px solid #D5CFEB;
+	height:30px;
+	
+	}
+.inputtext{
+	border:0px;outline:none;cursor:pointer;
+	width:200px;
+	margin-left:8px;
+	}
+.layout_table_news{
+	width:270px;
+	border:1px solid #9C78C3;
+	height:200px;
+	margin-top:15px;
+	margin-left:5px;
+	}
+.layout_table_news2{
+	width:270px;
+	border:1px solid #E19814;
+	height:200px;
+	margin-top:15px;
+	margin-left:5px;
+	}
+.layout_tr_zise{
+	background-color:#9C78C3;
+	}
+.layout_tr_yellow{
+	background-color:#E19814;
+	}
+
+.newslist
+{
+	border-bottom:1px solid #E3E3E3;
+
+}
+/* 布局文样式*/
+.float_left {
+	float:left;}
+.folt_right {
+	float:right;}
+	
+/* 营销布局文样式*/	
+.layout_yx{
+	width:100%;
+	margin-top:50px;
+	background-color:#F4F4F4;
+	}
+.layout_yx_content{
+	width:1170px;
+	margin:0 auto;
+	}
+.yx_table_bg{
+	background-color:#FFF;
+	
+	}
+/* 应用文样式*/	
+.layout_yy{
+	width:100%;
+	}
+.layout_yy_content{
+	width:1300px;
+	margin:0 auto;
+	}
+.layout_ry{
+	width:100%;
+	margin-top:50px;
+	background-color:#F4F4F4;
+	}
+.layout_ry_content{
+	width:1300px;
+	margin:0 auto;
+	}
+.ry_mt{
+	margin-top:14px;
+	
+	}
+.box_fc_zs{
+	background-color:#9C78C3;
+	height:58px;
+	width:225px;
+	text-align:center;
+	line-height:58px;
+	
+	}
+.box_fc_hs{
+	background-color:#E19814;
+	height:58px;
+	width:225px;
+	text-align:center;
+	line-height:58px;
+	
+	}
+.layout_down{
+	width:100%;
+	background-color:#70328E;
+	}
+.layout_down_content{
+	margin:0 auto;
+	}
+	
+	
+/* 文字样式*/
+.left_middle{
+	text-align:left;
+	}
+.inden5px{
+	text-indent:5px;
+	
+	}
+/*.pgin{
+	padding:10px;
+	
+	}*/
+	
+.layout_dept{
+	width:1170px;
+	height:100px;	
+	margin:0 auto;
+	margin-top:100px;
+	}
+.layout_dept_bg{
+	width:452px;
+	height:31px;
+	background-image:url(../image/banner_bm_bg.png);
+	text-align:right;
+	line-height:31px;
+	
+	}
+.layout_dept_news{
+	width:100%;
+	height:408px;
+	
+	}
+.layout_dept_newsconent{
+	width:1300px;
+	height:408px;
+	margin:0 auto;
+	margin-top:50px;
+	margin-bottom:50px;
+	
+	}
+
+.dept_title{
+	line-height: 30px;
+	border-bottom-width: 2px;
+	border-bottom-style: solid;
+	border-bottom-color: #9B77C3;
+	height:30px;
+
+	}
+.dept_jieshao{
+	background-color:#F6F2FA;
+	padding:30px 30px 0px 30px;
+	height:111px;
+	line-height:36px;
+	}
+.uldept{
+	height:40px;
+
+	list-style-image:url(../image/shu.jpg);
+	}
+	
+.layout_dept_list{
+	width:100%;
+	height:880px;
+	background-color:#F5F5F5;
+	
+	}
+	
+.layout_dept_list_newsconent{
+	width:1300px;
+	height:795px;
+	margin:0 auto;
+	margin-bottom:50px;
+	padding-top:50px;
+	
+	}
+.layout_donwlogo{
+	width:100%;
+	background-color:#E4E4E4;
+	}
+.layout_dept_list_yw{
+	width:100%;
+	height:320px;
+	margin:0 auto;
+	margin-top:24px;
+	}
+.layout_dept_list_yw_table{
+	width:313px;
+	height:317px;
+	background-color:#FFF;
+	border-radius: 5px;
+	border: 1px solid #9973C1;
+	
+	}
+.mgright{
+	margin-right:12px;
+	
+	}
+
+
+

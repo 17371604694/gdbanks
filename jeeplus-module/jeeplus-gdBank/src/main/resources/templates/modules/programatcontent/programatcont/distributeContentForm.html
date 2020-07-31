@@ -1,0 +1,202 @@
+<%
+layout("/include/_dialog.html"){
+%>
+	<script type="text/javascript">
+
+        var $select;
+		$(document).ready(function() {
+		    //自动填充发件人
+            // var u = JSON.parse(jp.getCookie("user"));
+            // var name = u.name;
+            // $("#author").val(name);
+            //富文本初始化
+			$('#content').summernote({
+				height: 400,
+                width:1200,
+                lang: 'zh-CN',
+                toolbar: [
+                    ['operate', ['undo','redo']],
+                    ['magic',['style']],
+                    ['style', ['bold', 'italic', 'underline','fontname', 'clear']],
+                    ['para', ['height','fontsize','ul', 'ol', 'paragraph']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['color', ['color']],
+                    ['insert',['picture','video','link','table','hr']],
+                    ['layout',['fullscreen','codeview']],
+                ],
+                onImageUpload: function(files, editor, $editable) {
+                    uploadSummerPic(files[0], editor, $editable);
+                },
+                callbacks: {
+                    onChange: function(contents, $editable) {
+                        $("input[name='content']").val($('#content').summernote('code'));//取富文本的值
+                    }
+                    , onImageUpload:function (files, editor, $editable) {
+                        for (var i = 0; i <files.length ; i++) {
+                            sendFile(files[i], editor, $editable);
+                        }
+                    }
+
+                }
+            });
+            // $('.note-editable').css('font-size','18px');
+            function uploadSummerPic(file, editor, $editable) {
+                var fd = new FormData();
+                fd.append("file", file);
+                $.ajax({
+                    type:"POST",
+                    url:"/pic/uploadSummerPic",
+                    data: fd,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        editor.insertImage($editable, data.url);
+                    }
+                });
+            }
+            function sendFile(file, editor, $editable) {
+                var data = new FormData();
+                data.append("file", file);
+                $.ajax({
+                    data: data,
+                    type: "POST",
+                    url: "${ctx}/sys/file/webupload/upload?uploadPath=/userpublic", //图片上传出来的url，返回的是图片上传后的路径，http格式
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    dataType: "json",
+                    success: function (data) {//data是返回的hash,key之类的值，key是定义的文件名
+                         $('#content').summernote('insertImage', data.body.url);
+                    },
+                    error: function () {
+                        alert("上传失败");
+                    }
+                });
+            }
+            //加载所有副栏目
+            $.getJSON("${ctx}/programatcontent/programatcont/distributeContent/dataOpenItem?pageNo=1&pageSize=100&type=2",function (data) {
+                $('#checkedLevel').empty();
+                var da=[];
+                // console.log(data)
+                for (var i = 0; i <data.rows.length ; i++) {
+                    da.push({text:data.rows[i].name,value:data.rows[i].columnid});
+
+                }
+                    $select = $('#checkedLevel').multipleSelect({
+                        addTitle: true, //鼠标点悬停在下拉框时是否显示被选中的值
+                        selectAll: false, //是否显示全部复选框，默认显示
+                        name: "选择副栏目",
+                        selectAllText: "选择全部", //选择全部的复选框的text值
+                        allSelected: "全部", //全部选中后显示的值
+                        delimiter: ',', //多个值直接的间隔符，默认是逗号
+                        placeholder: "选择副栏目", //不选择时下拉框显示的内容
+                        minimumCountSelected:8
+                        ,data:da,
+                    });
+                if('${distributeContent.programatParentid!}'.length>0){//判断是否有选项被选择
+                    var ids = "${distributeContent.programatParentid!}".split(",");
+                }
+                $("#checkedLevel").multipleSelect('setSelects', ids);//回显选中项
+            });
+
+		});
+
+		function save() {
+            //赋值副栏目
+            $("#programatParentid").val($select.multipleSelect('getSelects'));
+            $("#programatParentidNameList").val($select.multipleSelect('getSelects', 'text'));
+
+            var isValidate = jp.validateForm('#inputForm');//校验表单
+            if(!isValidate){
+                return false;
+			}else{
+                var index = jp.loading();
+                jp.post("${ctx}/programatcontent/programatcont/distributeContent/save",$('#inputForm').serialize(),function(data){
+                    if(data.success){
+                        jp.getParent().refresh();
+                        var dialogIndex = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                        parent.layer.close(dialogIndex);
+                        jp.toastr_success(data.msg)
+                    }else{
+                        jp.warning(data.msg);
+                    }
+                    jp.close(index);
+                })
+			}
+
+        }
+	</script>
+<style>
+    .ms-choice{
+        height: 37px;
+    }
+    .ms-choice>.placeholder{
+        margin-top: 6px;
+    }
+
+</style>
+<form id="inputForm"  method="post" class="form-horizontal p-15">
+    <input type="hidden" name="id" value="${distributeContent.id!}"/>
+    <table class="table table-bordered">
+       <tbody>
+
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>栏目：</label></td>
+                <td class="width-35">
+                    <input  value="${distributeContentName}" readonly="readonly"   class="form-control required"/>
+                    <input name="programatId" type="hidden" value="${distributeContentId}"    class="form-control required"/>
+            </td>
+                <td style="" class="width-15 active"><label class="pull-right">副栏目：</label></td>
+                <td class="width-35">
+                    <select id='checkedLevel'  style="width:100%;height:88px;" multiple="multiple" >
+                    </select>
+
+                    <input name="programatParentid" hidden="hidden" id="programatParentid" value="${distributeContent.programatParentid!}">
+                    <input name="programatParentidNameList" hidden="hidden" id="programatParentidNameList" value="${distributeContent.programatParentidNameList!}">
+                </td>
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>部门负责人：</label></td>
+                <td class="width-35" colspan="3">
+                    <!--<input name="departmentReviewer"  value="${distributeContent.departmentReviewer}"    class="form-control required"/>-->
+                    <#treeselect id="departmentReviewer" name="departmentReviewer" value="${distributeContent.departmentReviewer!}"
+                    labelName="parent.name" labelValue="${distributeContent.departmentReviewerName!}"
+                    title="部门负责人" url="/programatcontent/programatcont/distributeContent/treeData2"
+                    extId="${distributeContent.departmentReviewer!}"  class="form-control required" allowClear="true"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>标题：</label></td>
+                <td class="width-35">
+                    <input name="title" value="${distributeContent.title!}"    class="form-control required"/>
+            </td>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>作者：</label></td>
+                <td class="width-35">
+                    <input name="author" readonly="readonly" id="author" value="${distributeContent.author!}"    class="form-control required"/>
+            </td>
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right">附件：</label></td>
+                <td class="width-35" colspan="3">
+                    <#fileUpload id="accessorys" name="accessorys"  value="${distributeContent.accessorys}" type="file" class="form-control " uploadPath="/programatcontent/programatcont/distributeContentlll"/>
+                </td>
+
+            </tr>
+
+            <tr>
+                <td class="width-15 active"><label class="pull-right">内容：</label></td>
+                <td class="width-35" colspan="3">
+                    <input name="content" type="hidden">
+                    <span style="color: red">  请使用：微软雅黑 20号字 行高2.0</span>
+                    <div id="content">
+                        ${fn.unescapeHtml(distributeContent.content)}
+                    </div>
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+
+</form>
+<% } %>

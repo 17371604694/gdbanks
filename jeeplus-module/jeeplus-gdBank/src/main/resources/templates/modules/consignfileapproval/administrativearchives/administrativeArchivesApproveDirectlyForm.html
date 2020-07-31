@@ -1,0 +1,222 @@
+<%
+layout("/include/_dialog.html"){
+%>
+	<script type="text/javascript">
+        var user = JSON.parse(jp.getCookie("user"));
+        var username = user.name;
+        var userid = user.id;
+		$(document).ready(function() {
+		    $("#usePeopleName").val(username);
+            $("#userid").val(userid);
+            $('#time').datetimepicker({
+				 format:'Y-m-d H:i'
+		    });
+	        $('#returnTime').datetimepicker({
+				 format:'Y-m-d H:i'
+		    });
+	        //默认选中当前时间
+            var date=new Date();
+            var t=date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+            if ($("input[name=time]").val().trim()=="" || $("input[name=time]").val()==null){
+                $("input[name=time]").val(t);
+            }
+		});
+
+		function save() {
+            var isValidate = jp.validateForm('#inputForm');//校验表单
+            var utilizationUnitId = $("#utilizationUnitId").val();//单位负责人
+            var materialAuditorId = $("#materialAuditorId").val();//档案管理员
+            var officeHeadId = $("#officeHeadId").val();//办公室负责人
+            if(utilizationUnitId==''||materialAuditorId==''||officeHeadId==''){
+                if(utilizationUnitId==''){
+                    layer.msg("单位负责人不可为空！")
+                }
+                if(materialAuditorId==''){
+                    layer.msg("档案管理员不可为空！")
+                }
+                if(officeHeadId==''){
+                    layer.msg("办公室负责人不可为空！")
+                }
+                isValidate = false;
+            }
+            if(!isValidate){
+                return false;
+			}else{
+                jp.post("${ctx}/consignfileapproval/administrativearchives/administrativeArchivesApprove/save",$('#inputForm').serialize(),function(data){
+                    if(data.success){
+                        alert(data.msg);
+                        var dialogIndex = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                        parent.layer.close(dialogIndex);
+
+                    }else{
+                    }
+                })
+			}
+
+        }
+	</script>
+<input type="button" id="bt" onclick="javascript:doPrint()" class="btn btn-primary btn-sm" style="float: right;margin-right: 2%;margin-top: 2%; margin-bottom: 2%"  value="打印" />
+<!--startprint-->
+<form id="inputForm"  method="post"  class="form-horizontal p-15">
+    <input type="hidden" name="id" value="${administrativeArchivesApprove.id!}"/>
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>日期：</label></td>
+            <td class="width-35"  colspan="3">
+                <div class="input-group">
+                    <input readonly="" id="time"  name="time"  placeholder="请选择日期" class="form-control  required "   value="${fn.formatDate(administrativeArchivesApprove.time!, 'yyyy-MM-dd HH:mm:ss')}">
+                    <div class="input-group-append">
+                        <span class="input-group-text btn-custom border text-white"><i class="ti-calendar"></i></span>
+                    </div>
+                </div>
+            </td>
+
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right">密  级：</label></td>
+            <td class="width-35" colspan="3">
+                <#radiobuttons path="denseLevel" value="${administrativeArchivesApprove.denseLevel}"
+                items="${fn.getDictList('securityType')}" itemLabel="label" itemValue="value" class="required"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>利用部门：</label></td>
+            <td class="width-35">
+                <!--labelValue="${administrativeArchivesApprove!}"-->
+                <input name="useDepartment" value="${administrativeArchivesApprove.useDepartment!}"  hidden  class="form-control required"/>
+                <input name="useDepartmentName" value="${administrativeArchivesApprove.useDepartmentName!}"  readonly="readonly"  class="form-control required"/>
+            </td>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>利用人：</label></td>
+            <td class="width-35">
+                <input id="usePeople" name="usePeople" value="${administrativeArchivesApprove.usePeople!}"  hidden  class="form-control required"/>
+                <input id="usePeopleName" name="usePeopleName" value=""  readonly="readonly"  class="form-control required"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>利用内容：</label></td>
+            <td class="width-35" colspan="3">
+                <textarea name="useContent" rows="4"    class="form-control ">${administrativeArchivesApprove.useContent!}</textarea>
+                <!--                    <input name="useContent" value="${administrativeArchivesApprove.useContent!}"    class="form-control "/>-->
+            </td>
+
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>用  途：</label></td>
+            <td class="width-35" colspan="3">
+                <input name="withWay" value="${administrativeArchivesApprove.withWay!}"    class="form-control required"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>利用目的：</label></td>
+            <td class="width-35" colspan="3">
+                <#radiobuttons path="usingPurpose" value="${administrativeArchivesApprove.usingPurpose!}" items="${fn.getDictList('workType')}" itemLabel="label" itemValue="value" class=""/>
+            </td>
+
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>利用方式：</label></td>
+            <td class="width-35">
+                <#radiobuttons path="usePattern" value="${administrativeArchivesApprove.usePattern!}" items="${fn.getDictList('takeType')}" itemLabel="label" itemValue="value" class=""/>
+
+            </td>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>数 量：</label></td>
+            <td class="width-35">
+                <input name="quantity" value="${administrativeArchivesApprove.quantity!}"    class="form-control required"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right">外借档案退还时间：</label></td>
+            <td class="width-35">
+                <div class="input-group">
+                    <input readonly="" id="returnTime"  name="returnTime"  placeholder="请选择日期" class="form-control  "   value="${fn.formatDate(administrativeArchivesApprove.returnTime!, 'yyyy-MM-dd HH:mm:ss')}">
+                    <div class="input-group-append">
+                        <span class="input-group-text btn-custom border text-white"><i class="ti-calendar"></i></span>
+                    </div>
+                </div>
+            </td>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>本单位负责人：</label></td>
+            <td class="width-35">
+                <!--<input name="utilizationUnit" value="${administrativeArchivesApprove.utilizationUnit!}"    class="form-control "/>-->
+                <#userselect id="utilizationUnit" name="utilizationUnit"
+                value="${administrativeArchivesApprove.utilizationUnit!}" labelName="utilizationUnitName" labelValue="${administrativeArchivesApprove.utilizationUnitName!}"
+                class="form-control required" allowClear="true"  />
+
+            </td>
+        </tr>
+
+        <tr>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>档案审核员：</label></td>
+            <td class="width-35" colspan="3">
+                <!--<input name="officeHead" value="${administrativeArchivesApprove.officeHead!}"    class="form-control "/>-->
+
+                <#userselect id="materialAuditor" name="materialAuditor"
+                value="${administrativeArchivesApprove.materialAuditor!}" labelName="materialAuditorName" labelValue="${administrativeArchivesApprove.materialAuditorName!}"
+                class="form-control required"   allowClear="true" allowClear="true"/>
+            </td>
+
+        </tr>
+
+        <tr>
+            <td class="width-15 active"><label class="pull-right">事项涉及的相关<br>管理部门负责人：</label></td>
+            <td class="width-35">
+                <!--<input name="mattersPrincipal" value="${administrativeArchivesApprove.mattersPrincipal!}"    class="form-control "/>-->
+                <#userselect id="mattersPrincipal" name="mattersPrincipal"
+                value="${administrativeArchivesApprove.mattersPrincipal!}" labelName="mattersPrincipalName" labelValue="${administrativeArchivesApprove.mattersPrincipalName!}"
+                class="form-control " allowClear="true" isMultiSelected="${true}"/>
+
+            </td>
+            <td class="width-15 active"><label class="pull-right">资产保全部负责人<br>（诉讼调取档案需）：</label></td>
+            <td class="width-35">
+                <!--<input name="assetPreservation" value="${administrativeArchivesApprove.assetPreservation!}"    class="form-control "/>-->
+
+                <#userselect id="assetPreservation" name="assetPreservation"
+                value="${administrativeArchivesApprove.assetPreservation!}" labelName="assetPreservationName" labelValue="${administrativeArchivesApprove.assetPreservationName!}"
+                class="form-control " allowClear="true" />
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>办公室负责人：</label></td>
+            <td class="width-35">
+                <!--<input name="officeHead" value="${administrativeArchivesApprove.officeHead!}"    class="form-control "/>-->
+
+                <#userselect id="officeHead" name="officeHead"
+                value="${administrativeArchivesApprove.officeHead!}" labelName="officeHeadName" labelValue="${administrativeArchivesApprove.officeHeadName!}"
+                class="form-control required"   allowClear="true"/>
+            </td>
+            <td class="width-15 active"><label class="pull-right">行领导：</label></td>
+            <td class="width-35">
+                <!--<input name="officeSupervisorLeader" value="${administrativeArchivesApprove.officeSupervisorLeader!}"    class="form-control "/>-->
+                <#userselect id="officeSupervisorLeader" name="officeSupervisorLeader"
+                value="${administrativeArchivesApprove.officeSupervisorLeader!}" labelName="officeSupervisorLeaderName" labelValue="${administrativeArchivesApprove.officeSupervisorLeaderName!}"
+                class="form-control required" allowClear="true" />
+
+            </td>
+        </tr>
+        <tr style="display: none">
+            <td class="width-15 active"><label class="pull-right">状态：</label></td>
+            <td class="width-35">
+                <input name="state" value="${administrativeArchivesApprove.state==null?1:administrativeArchivesApprove.state}"    class="form-control "/>
+                <input name="stateStep" value="${administrativeArchivesApprove.stateStep==null?1:administrativeArchivesApprove.stateStep}"    class="form-control "/>
+                <input name="choices" value="${administrativeArchivesApprove.choices==null?0:administrativeArchivesApprove.choices}"    class="form-control "/>
+            </td>
+            <td class="width-15 active"></td>
+            <td class="width-35" ></td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right">审核信息：</label></td>
+            <td class="width-35" colspan="3">
+                <textarea name="remarks" rows="4"  readonly="readonly"  class="form-control ">${administrativeArchivesApprove.remarks!}</textarea>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="form-group row m-b-0">
+        <div class="offset-sm-1 col-sm-9 m-t-15">
+            <button onclick="save()" type="button" data-loading-text="正在提交..." class="btn btn-custom waves-effect waves-light w-xs m-b-5">提交</button>
+        </div>
+    </div>
+</form>
+<!--endprint-->
+<% } %>

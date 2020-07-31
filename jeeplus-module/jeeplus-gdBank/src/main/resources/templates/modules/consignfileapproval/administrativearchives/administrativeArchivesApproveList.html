@@ -1,0 +1,118 @@
+<%
+layout("/include/_container.html", {title:"列表", parent:"文书档案利用审批单"}){
+%>
+
+	<style type="text/css">
+		.table tbody tr td{
+			overflow: hidden;
+			text-overflow:ellipsis;
+			white-space: nowrap;
+		}
+	</style>
+    <!-- 文件上传 -->
+    <div id="import-collapse" class="collapse white-box m-b-5">
+        <a class="jp-ti-close close close" onclick="$('#import-collapse').fadeToggle()">
+            <i class="fa fa-times"></i>
+        </a>
+        <form id="importForm" method="POST" enctype="multipart/form-data" class="row form-horizontal" >
+            <div class="col-xs-12 col-sm-6">
+                <input name="file" type="file" class="required form-control">只允许导入&ldquo;xls&rdquo;或&ldquo;xlsx&rdquo;格式文件！<br>　
+
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <a  id="btnImportExcel"  class="btn btn-custom waves-effect waves-light btn-rounded m-l-10 btn-md"><i class="fa fa-upload"></i> 开始上传</a>
+                <a  id="btnDownloadTpl" class="btn btn-custom waves-effect waves-light btn-rounded m-l-10 btn-md"><i class="fa fa-download"></i> 下载模板</a>
+            </div>　
+        </form>
+    </div>
+    <!-- 搜索框-->
+    <div id="search-collapse" class="white-box collapse m-b-5">
+        <a class="jp-ti-close close" onclick="$('#search-collapse').fadeToggle()">
+            <i class="fa fa-times"></i>
+        </a>
+        <form id="searchForm" class="form-inline" >
+			 <div class="form-group m-b-10 m-r-10">
+				<label class="m-r-10" title="日期：">日期：</label>
+				<div class="input-daterange input-group" id="time">
+                    <input type="text" class="form-control" id="beginTime" name="beginTime">
+                    <span class="input-group-text btn-custom border text-white">to</span>
+                    <input type="text" class="form-control" id="endTime" name="endTime">
+                </div>
+			</div>
+			 <div class="form-group m-b-10 m-r-10">
+				<label class="m-r-10" title="利用部门：">利用部门：</label>
+				<!--<#treeselect id="useDepartment" name="useDepartment"  labelName=""
+					title="部门" url="/sys/office/treeData?type=2" class="form-control" allowClear="true" notAllowSelectParent="true"/>-->
+				 <input class="form-control" name="useDepartment">
+			</div>
+			 <div class="form-group m-b-10 m-r-10" style="display: none">
+				<label class="m-r-10" title="利用人：">利用人：</label>
+				<input name="usePeople" value="${administrativeArchivesApprove.usePeople!}"  maxlength="64"  class=" form-control"/>
+			</div>
+			 <div class="form-group m-b-10 m-r-10">
+				<label class="m-r-10" title="用  途：">用  途：</label>
+				<input name="withWay"  maxlength="64"  class=" form-control"/>
+			</div>
+			 <div class="form-group m-b-10 m-r-10">
+				<label class="m-r-10" title="外借档案退还时间：">外借档案退还时间：</label>
+				<div class="input-daterange input-group" id="returnTime">
+                    <input type="text" class="form-control" id="beginReturnTime" name="beginReturnTime">
+                    <span class="input-group-text btn-custom border text-white">to</span>
+                    <input type="text" class="form-control" id="endReturnTime" name="endReturnTime">
+                </div>
+			</div>
+			<div class="form-group m-b-10 m-r-10">
+				<label class="m-r-10" title="审核状态：">审核状态：</label>
+				<select  name="state" class=" form-control">
+					<option value="">--选择--</option>
+					<option value="1">待审核</option>
+					<option value="2">通过</option>
+					<option value="3">驳回</option>
+				</select>
+			</div>
+		    <div class="form-group m-b-10 m-r-10">
+                <a  id="search" class="btn  btn-custom waves-effect waves-light m-l-10 btn-md btn-rounded"><i class="fa fa-search"></i> 查询</a>
+                <a  id="reset" class="btn  btn-custom waves-effect waves-light m-l-10 btn-md btn-rounded" ><i class="fa fa-refresh"></i> 重置</a>
+            </div>
+        </form>
+    </div>
+
+	<div class="white-box">
+
+	<!-- 工具栏 -->
+	<div id="toolbar">
+			 <% if(shiro.hasPermission("consignfileapproval:administrativearchives:administrativeArchivesApprove:add") ){ %>
+			 	<button id="add" class="btn btn-custom waves-effect w-xs waves-light" onclick="add()">
+					<i class="fa fa-plus"></i> 新建
+				</button>
+			<% } %>
+<!--			 <% if(shiro.hasPermission("consignfileapproval:administrativearchives:administrativeArchivesApprove:edit") ){ %>-->
+<!--			    <button id="edit" class="btn btn-white waves-effect w-xs waves-light" disabled onclick="edit()">-->
+<!--	            	<i class="fa fa-edit"></i> 修改-->
+<!--	        	</button>-->
+<!--			<% } %>-->
+			 <% if(shiro.hasPermission("consignfileapproval:administrativearchives:administrativeArchivesApprove:del") ){ %>
+				<button id="remove" class="btn btn-white waves-effect w-xs waves-light" disabled onclick="del()">
+	            	<i class="fa fa-remove"></i> 删除
+	        	</button>
+			<% } %>
+<!--			 <% if(shiro.hasPermission("consignfileapproval:administrativearchives:administrativeArchivesApprove:import") ){ %>-->
+<!--				<button id="import"  class="btn btn-white waves-effect w-xs waves-light" >-->
+<!--					<i class="fa fa-upload"></i> 导入-->
+<!--				</button>-->
+<!--			<% } %>-->
+<!--			 <% if(shiro.hasPermission("consignfileapproval:administrativearchives:administrativeArchivesApprove:export") ){ %>-->
+<!--	        	<button id="export" class="btn btn-white waves-effect w-xs waves-light">-->
+<!--					<i class="fa fa-download"></i> 导出-->
+<!--				</button>-->
+<!--			 <% } %>-->
+		    </div>
+		
+	<!-- 表格 -->
+	<table id="administrativeArchivesApproveTable" class="table-bordered"
+		   style="table-layout:fixed;"
+		   data-toolbar="#toolbar"></table>
+	</div>
+
+	<% include("administrativeArchivesApproveList.js"){} %>
+	<% } %>

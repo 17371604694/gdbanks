@@ -1,0 +1,77 @@
+<%
+layout("/include/_dialog.html"){
+%>
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+					});
+
+		function save() {
+            var isValidate = jp.validateForm('#inputForm');//校验表单
+            if(!isValidate){
+                return false;
+			}else{
+                var index = jp.loading();
+                jp.post("${ctx}/download/download/bankDownload/save",$('#inputForm').serialize(),function(data){
+                    if(data.success){
+                        jp.getParent().refresh();
+                        var dialogIndex = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                        parent.layer.close(dialogIndex);
+                        jp.toastr_success(data.msg)
+
+                    }else{
+                        jp.toastr_error(data.msg);
+                    }
+                    jp.close(index);
+                })
+			}
+
+        }
+	</script>
+<form id="inputForm"  method="post"  class="form-horizontal p-15">
+    <input type="hidden" name="id" value="${bankDownload.id!}"/>
+    <table class="table table-bordered">
+       <tbody>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>附件名称：</label></td>
+                <td class="width-35">
+                    <input name="name" value="${bankDownload.name!}"    class="form-control required"/>
+            </td>
+                <td class="width-15 active"><label class="pull-right">附件类型：</label></td>
+                <td class="width-35">
+                    <input name="type" value="${bankDownload.type!}"    class="form-control required"/>
+            </td>
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>作者部门：</label></td>
+                <td class="width-35">
+                    <#treeselect id="dept" name="dept" value="${bankDownload.dept!}" labelName="officename" labelValue="${bankDownload.officename!}"
+                        title="部门" url="/sys/office/treeData?type=2" class="form-control " allowClear="true" notAllowSelectParent="true" class="required"/>
+            </td>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>使用类型：</label></td>
+                <td class="width-35">
+                    <#select path="useType" value="${bankDownload.useType!}" items="${fn.getDictList('use_type')}" itemLabel="label" itemValue="value" class="required"/>
+            </td>
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>附件：</label></td>
+                <td class="width-35">
+                    <#fileUpload id="accessorys" name="accessorys"  value="${bankDownload.accessorys}" type="file" class="form-control required" uploadPath="/download/download/bankDownload"/>
+            </td>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>上传人：</label></td>
+                <td class="width-35">
+                    <input name="author" value="${bankDownload.author!}"    class="form-control required"/>
+            </td>
+            </tr>
+            <tr hidden>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>作者部门：</label></td>
+                <td class="width-35">
+                    <input name="officename" value="${bankDownload.officename!}"    class="form-control required"/>
+            </td>
+                <td class="width-15 active"></td>
+                <td class="width-35" ></td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+<% } %>

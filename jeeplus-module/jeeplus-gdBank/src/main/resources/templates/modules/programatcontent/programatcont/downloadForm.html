@@ -1,0 +1,113 @@
+<%
+layout("/include/_dialog.html"){
+%>
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+		    //自动填充发件人
+            var u = JSON.parse(jp.getCookie("user"));
+            var name = u.name;
+            $("#author").val(name);
+            //富文本初始化
+			$('#content').summernote({
+				height: 300,
+                width:1200,
+                lang: 'zh-CN',
+                callbacks: {
+                    onChange: function(contents, $editable) {
+                        $("input[name='content']").val($('#content').summernote('code'));//取富文本的值
+                    }
+                    , onImageUpload:function (files, editor, $editable) {
+                        for (var i = 0; i <files.length ; i++) {
+                            sendFile(files[i], editor, $editable);
+                        }
+                    }
+                }
+            });
+		});
+
+        function sendFile(file, editor, $editable) {
+            var data = new FormData();
+            data.append("file", file);
+            $.ajax({
+                data: data,
+                type: "POST",
+                url: "${ctx}/sys/file/webupload/upload?uploadPath=/userpublic", //图片上传出来的url，返回的是图片上传后的路径，http格式
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: "json",
+                success: function (data) {//data是返回的hash,key之类的值，key是定义的文件名
+                    $('#content').summernote('insertImage', data.body.url);
+                },
+                error: function () {
+                    alert("上传失败");
+                }
+            });
+        }
+
+
+		function save() {
+            var isValidate = jp.validateForm('#inputForm');//校验表单
+            if(!isValidate){
+                return false;
+			}else{
+                var index = jp.loading();
+                jp.post("${ctx}/programatcontent/programatcont/download/save",$('#inputForm').serialize(),function(data){
+                    if(data.success){
+                        jp.getParent().refresh();
+                        var dialogIndex = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                        parent.layer.close(dialogIndex);
+                        jp.toastr_success(data.msg)
+
+                    }else{
+                        jp.warning(data.msg);
+                    }
+                    jp.close(index);
+                })
+			}
+
+        }
+	</script>
+<form id="inputForm"  method="post"  class="form-horizontal p-15">
+    <input type="hidden" name="id" value="${distributeContent.id!}"/>
+    <table class="table table-bordered">
+       <tbody>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>附件类型：</label></td>
+                <td class="width-35"><!--上传下载文件时，该字段代表上传文件的类型-->
+                    <input  value="${distributeContent.content!}"  name="content" type="text"  class="form-control required"/>
+            </td>
+
+            <tr hidden>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>部门：</label></td>
+                <td class="width-35"><!--隐藏域-->
+                    <input  value="dept"  name="dept" hidden class="form-control required"/>
+                </td>
+            </tr>
+            <tr>
+
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>上传人：</label></td>
+                <td class="width-35">
+                    <input name="author" readonly="readonly" id="author" value="${distributeContent.author!}"    class="form-control required"/>
+            </td>
+            </tr>
+
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>附件名称：</label></td>
+                <td class="width-35"><!--上传下载文件时，该字段代表附件名称-->
+                    <input name="title" value="${distributeContent.title!}"    class="form-control required"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right">附件：</label></td>
+                <td class="width-35" colspan="3">
+                    <#fileUpload id="accessorys" name="accessorys"  value="${distributeContent.accessorys}" type="file" class="form-control " uploadPath="/programatcontent/programatcont/distributeContentlll"/>
+            </td>
+
+            </tr>
+
+        </tbody>
+    </table>
+</form>
+<% } %>

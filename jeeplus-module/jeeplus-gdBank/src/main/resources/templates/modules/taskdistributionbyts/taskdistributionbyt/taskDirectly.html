@@ -1,0 +1,123 @@
+<%
+layout("/include/_dialog.html"){
+%>
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+				        $('#startTime').datetimepicker({
+				 format:'Y-m-d H:i'
+		    });
+	        $('#endTime').datetimepicker({
+				 format:'Y-m-d H:i'
+		    });
+            var date=new Date();
+            var t=date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+            if ($("input[name=startTime]").val().trim()=="" || $("input[name=startTime]").val()==null){
+                $("input[name=startTime]").val(t);
+            }
+		});
+
+		function save() {
+            var isValidate = jp.validateForm('#inputForm');//校验表单
+            if(!isValidate){
+                return false;
+			}else{
+                // var index = jp.loading();
+                jp.post("${ctx}/taskdistributionbyts/taskdistributionbyt/taskDistributionByts/save",$('#inputForm').serialize(),function(data){
+                    if(data.success){
+                        alert(data.msg);
+                        var dialogIndex = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                        parent.layer.close(dialogIndex);
+                    }else{
+                    }
+                    // jp.close(index);
+                })
+			}
+
+        }
+	</script>
+<form id="inputForm"  method="post"  class="form-horizontal p-15">
+    <input type="hidden" name="id" value="${taskDistributionByts.id!}"/>
+    <table class="table table-bordered">
+       <tbody>
+           <!-- <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>备注信息：</label></td>
+                <td class="width-35">
+                    <textarea name="remarks" rows="4"    class="form-control required">${taskDistributionByts.remarks!}</textarea>
+            </td>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>任务下发人id：</label></td>
+                <td class="width-35">
+                    <input name="publisherId" value="${taskDistributionByts.publisherId!}"    class="form-control required"/>
+            </td>
+            </tr>-->
+           <tr>
+               <td class="width-15 active"><label class="pull-right">任务名称：</label></td>
+               <td class="width-35" colspan="3">
+                   <input name="taskName" value="${taskDistributionByts.taskName!}" maxlength="120"   class="form-control "/>
+               </td>
+           </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>下发人名称：</label></td>
+                <td class="width-35" >
+                    <input name="publisherName" value="${taskDistributionByts.publisherName!}"  readonly  class="form-control required"/>
+                    <input name="publisherId" value="${taskDistributionByts.publisherId!}"  hidden   class="form-control required"/>
+            </td>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>发起时间：</label></td>
+                <td class="width-35">
+                    <div class="input-group">
+                        <input readonly="" id="startTime"  name="startTime"  placeholder="请选择日期" class="form-control   required"   value="${fn.formatDate(taskDistributionByts.startTime!, 'yyyy-MM-dd HH:mm:ss')}">
+                        <div class="input-group-append">
+                            <span class="input-group-text btn-custom border text-white"><i class="ti-calendar"></i></span>
+                        </div>
+                    </div>
+            </td>
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right">结束时间：</label></td>
+                <td class="width-35" colspan="3">
+                    <div class="input-group">
+                        <input readonly="" id="endTime"  name="endTime"  placeholder="请选择日期" class="form-control   "   value="${fn.formatDate(taskDistributionByts.endTime!, 'yyyy-MM-dd HH:mm:ss')}">
+                        <div class="input-group-append">
+                            <span class="input-group-text btn-custom border text-white"><i class="ti-calendar"></i></span>
+                        </div>
+                    </div>
+            </td>
+
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right">内容：</label></td>
+                <td class="width-35" colspan="3">
+                    <textarea name="content" rows="4"  maxlength="120"  class="form-control ">${taskDistributionByts.content!}</textarea>
+            </td>
+
+            </tr>
+           <tr>
+               <td class="width-15 active"><label class="pull-right">模板文件：</label></td>
+               <td class="width-35" colspan="3">
+                   <#fileUpload id="file" name="file"  value="${taskDistributionByts.file}" type="file" class="form-control "
+                   uploadPath="/taskdistributionbyts/taskdistributionbyt/taskDistributionByts"/>
+               </td>
+           </tr>
+            <tr style="display: none">
+                <td class="width-15 active"><label class="pull-right">状态：</label></td>
+                <td class="width-35">
+                    <input name="state" value="${taskDistributionByts.state==null?0:taskDistributionByts.state}"    class="form-control "/>
+            </td>
+
+            </tr>
+       <tr>
+           <td class="width-15 active"><label class="pull-right">执行人id：</label></td>
+           <td class="width-35" colspan="3">
+               <#userselect id="taskIds" name="taskIds" value="${taskDistributionByts.taskIds!}" labelName="" labelValue="${taskDistributionByts.taskIds!}"
+               class="form-control "  allowClear="true"  isMultiSelected="${true}" />
+           </td>
+       </tr>
+        </tbody>
+    </table>
+    <div class="form-group row m-b-0">
+        <div class="offset-sm-1 col-sm-9 m-t-15">
+            <button onclick="save()" type="button" data-loading-text="正在提交..." class="btn btn-custom waves-effect waves-light w-xs m-b-5">提交</button>
+        </div>
+    </div>
+</form>
+<% } %>

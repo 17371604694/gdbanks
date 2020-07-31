@@ -1,0 +1,240 @@
+<%
+layout("/include/_dialog.html"){
+%>
+<!--广告审核表单页面-->
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+		    var user = JSON.parse(jp.getCookie("user"));
+		    // console.log(user);
+		 //   var id = user.id;
+		 //   var name = user.name;
+		 //   $("#applicantPerson").val(id);
+        //    $("#applicantPersonName").val(name);
+          /*  $('#time').datetimepicker({
+				 format:'Y-m-d H:i'
+		    });*/
+            //默认选中当前时间
+            var date=new Date();
+            var t=date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+            if ($("input[name=time]").val().trim()=="" || $("input[name=time]").val()==null){
+                $("input[name=time]").val(t);
+            }
+				//富文本初始化
+			$('#advertisingCentent').summernote({
+				height: 400,
+                width:1200,
+                lang: 'zh-CN',
+                toolbar: [
+                    ['operate', ['undo','redo']],
+                    ['magic',['style']],
+                    ['style', ['bold', 'italic', 'underline','fontname', 'clear']],
+                    ['para', ['height','fontsize','ul', 'ol', 'paragraph']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['color', ['color']],
+                    ['insert',['picture','video','link','table','hr']],
+                    ['layout',['fullscreen','codeview']],
+                ],
+                callbacks: {
+                    onChange: function(contents, $editable) {
+                        $("input[name='advertisingCentent']").val($('#advertisingCentent').summernote('code'));//取富文本的值
+                    }
+                    , onImageUpload:function (files, editor, $editable) {
+                        console.log("上传图片")
+                        for (var i = 0; i <files.length ; i++) {
+                            sendFile(files[i], editor, $editable);
+                        }
+                    }
+                }
+            });
+
+            var remakr="${advertisingAudit.remarks!}";
+            if(remakr.length>0){
+                var rema = remakr.split('!');
+                $("#lilsit").empty();
+                for (var i = 0; i <rema.length ; i++) {
+
+                    if(rema[i].lastIndexOf("驳回")>0){
+                        $("#lilsit").append("<li style='line-height: 30px;color: red'>"+rema[i]+"</li>")
+                    }else{
+                        $("#lilsit").append("<li style='line-height: 30px;color: green'>"+rema[i]+"</li>")
+                    }
+
+                }
+
+                var state="${advertisingAudit.stateStep!}";
+                if(state.length>0 && state=="6"){
+                    $("#lilsit").append("<li style='line-height: 30px;color: darkmagenta'>审核完成</li>")
+                }
+            }
+
+
+		});
+
+
+        function sendFile(file, editor, $editable) {
+            var data = new FormData();
+            data.append("file", file);
+            $.ajax({
+                data: data,
+                type: "POST",
+                url: "${ctx}/sys/file/webupload/upload?uploadPath=/userpublic", //图片上传出来的url，返回的是图片上传后的路径，http格式
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: "json",
+                success: function (data) {//data是返回的hash,key之类的值，key是定义的文件名
+                    $('#advertisingCentent').summernote('insertImage', data.body.url);
+                },
+                error: function () {
+                    alert("上传失败");
+                }
+            });
+        }
+
+        function save() {
+            var isValidate = jp.validateForm('#inputForm');//校验表单
+            var unitPrincipalId = $("#unitPrincipalId").val();//单位负责人
+            var advertisingAuditorId = $("#advertisingAuditorId").val();//广告审核员
+            var offerPrincipalId = $("#offerPrincipalId").val();//办公室负责人
+            if(unitPrincipalId==''||advertisingAuditorId==''||offerPrincipalId==''){
+               if(unitPrincipalId==''){
+                   layer.msg("单位负责人不可为空！")
+               }
+                if(advertisingAuditorId==''){
+                    layer.msg("广告审核员不可为空！")
+                }
+                if(offerPrincipalId==''){
+                    layer.msg("办公室负责人不可为空！")
+                }
+                isValidate = false;
+            }
+            if(!isValidate){
+                return false;
+			}else{
+                var index = jp.loading();
+                jp.post("${ctx}/advertisingaudit/advertising/advertisingAudit/save",$('#inputForm').serialize(),function(data){
+                    if(data.success){
+                        jp.getParent().refresh();
+                        var dialogIndex = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                        parent.layer.close(dialogIndex);
+                        jp.toastr_success(data.msg)
+
+                    }else{
+                        jp.toastr_error(data.msg);
+                    }
+                    jp.close(index);
+                })
+			}
+
+        }
+	</script>
+
+<input type="button" id="bt" onclick="javascript:doPrint()" class="btn btn-primary btn-sm" style="float: right;margin-right: 2%;margin-top: 2%; margin-bottom: 2%"  value="打印" />
+<!--startprint-->
+<form id="inputForm"  method="post"  class="form-horizontal p-15">
+    <input type="hidden" name="id" value="${advertisingAudit.id!}"/>
+    <table class="table table-bordered">
+       <tbody>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>时间：</label></td>
+                <td class="width-35" colspan="3">
+                    <div class="input-group">
+                        <input readonly="readonly" id="time"  name="time"  placeholder="请选择日期" class="form-control  required "   value="${fn.formatDate(advertisingAudit.time!, 'yyyy-MM-dd HH:mm:ss')}">
+                        <div class="input-group-append">
+                            <span class="input-group-text btn-custom border text-white"><i class="ti-calendar"></i></span>
+                        </div>
+                    </div>
+            </td>
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>申请单位：</label></td>
+                <td class="width-35">
+                    <input name="applicantUnit" value="${advertisingAudit.applicantUnit!}"  readonly="readonly"  class="form-control required"/>
+            </td>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>申请人：</label></td>
+                <td class="width-35">
+                    <input id="applicantPerson" name="applicantPerson" value="${advertisingAudit.applicantPerson!}" hidden    class="form-control required"/>
+                    <input id="applicantPersonName" name="applicantPersonName" value="${advertisingAudit.applicantPersonName!}"  readonly="readonly"  class="form-control required"/>
+            </td>
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right">广告内容：</label></td>
+                <td class="width-35" colspan="3">
+<!--                    <textarea name="advertisingCentent" rows="4"    class="form-control ">${advertisingAudit.advertisingCentent!}</textarea>-->
+                    <input type="hidden" name="advertisingCentent"  value="${advertisingAudit.advertisingCentent!}"/>
+                    <div id="advertisingCentent">
+                      ${fn.unescapeHtml(advertisingAudit.advertisingCentent)}
+                    </div>
+            </td>
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right">附件：</label></td>
+                <td class="width-35" >
+                    <#fileUpload id="advertisingFile" name="advertisingFile"  value="${advertisingAudit.advertisingFile}" type="file" class="form-control " uploadPath="/advertisingaudit/advertising/advertisingAudit"/>
+            </td>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>本单位负责人：</label></td>
+                <td class="width-35">
+                    <#userselect id="unitPrincipal" name="unitPrincipal" value="${advertisingAudit.unitPrincipal!}" labelName="unitPrincipalName" labelValue="${advertisingAudit.unitPrincipalName!}"
+                    class="form-control required"  allowClear="true"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>广告审核员：</label></td>
+                <td class="width-35" colspan="3">
+                    <#userselect id="advertisingAuditor" name="advertisingAuditor" value="${advertisingAudit.advertisingAuditor!}"
+                    labelName="advertisingAuditorName" labelValue="${advertisingAudit.advertisingAuditorName!}"
+                    class="form-control required"  allowClear="true"/>
+                </td>
+
+
+            </tr>
+
+            <tr>
+                <td class="width-15 active"><label class="pull-right">相关部门负责人：</label></td>
+                <td class="width-35" colspan="3">
+                    <#userselect id="department" name="department" value="${advertisingAudit.department!}"
+                    labelName="departmentName" labelValue="${advertisingAudit.departmentName!}"
+                    class="form-control "  allowClear="true" isMultiSelected="${true}"/>
+                </td>
+
+
+            </tr>
+
+
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>办公室负责人：</label></td>
+                <td class="width-35">
+                    <#userselect id="offerPrincipal" name="offerPrincipal" value="${advertisingAudit.offerPrincipal!}" labelName="offerPrincipalName" labelValue="${advertisingAudit.offerPrincipalName!}"
+                            class="form-control required"  allowClear="true"/>
+            </td>
+                <td class="width-15 active"><label class="pull-right">行领导：</label></td>
+                <td class="width-35">
+                    <#userselect id="satrapPrincipal" name="satrapPrincipal" value="${advertisingAudit.satrapPrincipal!}" labelName="satrapPrincipalName" labelValue="${advertisingAudit.satrapPrincipalName!}"
+                            class="form-control "  allowClear="true"/>
+            </td>
+            </tr>
+
+            <tr style="display: none">
+                <td class="width-15 active"><label class="pull-right">初始化设置：</label></td>
+                <td class="width-35">
+                    <input name="state" value="${advertisingAudit.state==null?1:advertisingAudit.state}"    class="form-control "/>
+                    <input name="stateStep" value="${advertisingAudit.stateStep==null?1:advertisingAudit.stateStep}"    class="form-control "/>
+                    <input name="choices" value="${advertisingAudit.choices==null?0:advertisingAudit.choices}"    class="form-control "/>
+                </td>
+            </tr>
+
+       <tr>
+           <td class="width-15 active"><label class="pull-right">审核详情：</label></td>
+           <td class="width-35" colspan="3">
+               <textarea name="remarks" rows="4"  readonly="readonly" hidden  class="form-control ">${advertisingAudit.remarks!}</textarea>
+               <ul id="lilsit">
+               </ul>
+           </td>
+       </tr>
+        </tbody>
+    </table>
+</form>
+<!--endprint-->
+<% } %>

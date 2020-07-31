@@ -1,0 +1,136 @@
+<%
+layout("/include/_dialog.html"){
+%>
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+
+
+            if(($("#verifierPersion").val()+'').length!=0){
+               // alert($("#verifierPersion").val())
+               var list=JSON.parse($("#verifierPersion").val());
+                var use="";
+                for (var i = 0; i <list.length ; i++) {
+                    use=use+" "+list[i].uname;
+                }
+                $("#verifierPersionName").val(use);
+
+
+            }
+
+            $("#verifierPersionButton, #verifierPersionName").click(function(){
+                top.layer.open({
+                    type: 2,
+                    area: ['1200px', '600px'],
+                    content: '${ctx}/sys/user/userSelect?isMultiSelect=true',
+                    btn: ['确认', '取消'],
+                    success: function(layero, index){
+                        $.getJSON("${ctx}/verifierts/verifier/bankVerifier/delUsersAll",function(obj){});
+                    },
+                    yes: function(index, layero){
+                        $.getJSON("${ctx}/verifierts/verifier/bankVerifier/finBankUserAll",function(obj){
+                            //alert(obj.length);
+                            if (obj.length==0){
+                                alert("至少选择一个审核人");
+                            } else {
+                                top.layer.close(index);
+                                $("#verifierPersion").val(JSON.stringify(obj));
+                                var use="";
+                                for (var i = 0; i <obj.length ; i++) {
+                                    use=use+" "+obj[i].uname;
+                                }
+                                $("#verifierPersionName").val(use);
+                            }
+
+                        });
+                    }
+
+                });
+
+            });
+
+            $("#verifierPersionDelButton").click(function(){
+                // 是否限制选择，如果限制，设置为disabled
+                if ($("#verifierPersionButton").hasClass("disabled")){
+                    return true;
+                }
+                // 清除
+                $("#verifierPersionId").val("");
+                $("#verifierPersionName").val("");
+                $("#verifierPersionName").focus();
+
+            });
+
+
+					});
+
+		function save() {
+
+            var isValidate = jp.validateForm('#inputForm');//校验表单
+		    if(($("#verifierPersionName").val()).length==0){
+                layer.msg("审核人不能为空!!!");
+                return false;
+            }
+
+            jp.get("${ctx}/verifierts/verifier/bankVerifier/checkPrograma?name="+$("#programaName").val(),function(data){
+                if (!data){
+                    layer.msg("该栏目已存在,不能重复添加");
+                    return false;
+                }else {
+                    if(!isValidate){
+                        return false;
+                    }else{
+                        var index = jp.loading();
+                        jp.post("${ctx}/verifierts/verifier/bankVerifier/save",$('#inputForm').serialize(),function(data){
+                            if(data.success){
+                                jp.getParent().refresh();
+                                var dialogIndex = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                                parent.layer.close(dialogIndex);
+                                jp.toastr_success(data.msg)
+
+                            }else{
+                                jp.toastr_error(data.msg);
+                            }
+                            jp.close(index);
+                        })
+                    }
+
+                }
+            });
+
+        }
+	</script>
+<form id="inputForm"  method="post"  class="form-horizontal p-15">
+    <input type="hidden" name="id" value="${bankVerifier.id!}"/>
+    <table class="table table-bordered">
+       <tbody>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>栏目：</label></td>
+                <td class="width-35">
+                    <!--<input name="programa" value="${bankVerifier.programa!}"    class="form-control required"/>-->
+
+                    <#treeselect id="programa" name="programa" value="${bankVerifier.programa!}" labelName="parent.name" labelValue="${bankVerifier.programaName!}"
+                    title="栏目" url="/verifierts/verifier/bankVerifier/treeData1" extId="${office.id!}"  class="form-control  required" allowClear="true"/>
+                      <!--/verifierts/verifier/bankVerifier/treeData1-->
+                      <!--/sys/office/treeData?type=2-->
+            </td>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>审核人：</label></td>
+                <td class="width-35">
+                    <input type="hidden" name="verifierPersion" value="${bankVerifier.verifierPersion!}" id="verifierPersion"   class="form-control required"/>
+                    <!--<input type="text" name="remarks" value="${bankVerifier.remarks!}" id="remarks"   class="form-control required"/>-->
+                  <!--  <#userselect id="verifierPersion" name="verifierPersion" value="${testActivitiAudit.user.id!}" labelName="user.name" labelValue="${bankVerifier.verifierPersionName!}"
+                    class="form-control required" isMultiSelected="${true}"  allowClear="true"/>-->
+                    <div class="input-group">
+                        <input class="form-control" id="verifierPersionName"  name="remarks" type="text" value="" data-msg-required="">
+                        <span class="input-group-append">
+		            	   <button type="button" id="verifierPersionButton" class="btn waves-effect waves-light btn-custom   "><i class="fa fa-search"></i></button>
+	             	       <button type="button" id="verifierPersionDelButton" class="close" data-dismiss="alert" style="position: absolute;top: 10px;right: 53px;z-index: 999;display: block;font-size: 18px;">×</button>
+		                </span>
+                    </div>
+
+            </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+<% } %>

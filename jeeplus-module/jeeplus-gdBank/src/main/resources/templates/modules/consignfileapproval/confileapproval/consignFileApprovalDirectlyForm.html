@@ -1,0 +1,182 @@
+<%
+layout("/include/_dialog.html"){
+%>
+	<script type="text/javascript">
+        var user = JSON.parse(jp.getCookie("user"));
+        var username = user.name;
+        var userid = user.id;
+		$(document).ready(function() {
+            $("#applicantPersonName").val(username);
+            $("#applicantPerson").val(userid);
+            $('#time').datetimepicker({
+				 format:'Y-m-d H:i'
+		    });
+	        $('#returnTime').datetimepicker({
+				 format:'Y-m-d H:i'
+		    });
+            //默认选中当前时间
+            var date=new Date();
+            var t=date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+            if ($("input[name=time]").val().trim()=="" || $("input[name=time]").val()==null){
+                $("input[name=time]").val(t);
+            }
+		});
+
+		function save() {
+            var isValidate = jp.validateForm('#inputForm');//校验表单
+            var chargeApplicantPersonId = $("#chargeApplicantPersonId").val();//单位负责人
+            var materialAuditorId = $("#materialAuditorId").val();//档案管理员
+            var officeHeadId = $("#officeHeadId").val();//办公室负责人
+            if(chargeApplicantPersonId==''||materialAuditorId==''||officeHeadId==''){
+                if(chargeApplicantPersonId==''){
+                    layer.msg("单位负责人不可为空！")
+                }
+                if(materialAuditorId==''){
+                    layer.msg("档案管理员不可为空！")
+                }
+                if(officeHeadId==''){
+                    layer.msg("办公室负责人不可为空！")
+                }
+                isValidate = false;
+            }
+            if(!isValidate){
+                return false;
+			}else{
+                jp.post("${ctx}/consignfileapproval/confileapproval/consignFileApproval/save",$('#inputForm').serialize(),function(data){
+                    if(data.success){
+                        alert(data.msg);
+                        var dialogIndex = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                        parent.layer.close(dialogIndex);
+                    }else{
+                        layer.msg(data.msg);
+                    }
+                })
+			}
+
+        }
+	</script>
+<input type="button" id="bt" onclick="javascript:doPrint()" class="btn btn-primary btn-sm" style="float: right;margin-right: 2%;margin-top: 2%; margin-bottom: 2%"  value="打印" />
+<!--startprint-->
+<form id="inputForm"  method="post"  class="form-horizontal p-15">
+    <input type="hidden" name="id" value="${consignFileApproval.id!}"/>
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>日期：</label></td>
+            <td class="width-35" >
+                <div class="input-group">
+                    <input readonly="" id="time"  name="time"  placeholder="请选择日期" class="form-control  required "   value="${fn.formatDate(consignFileApproval.time!, 'yyyy-MM-dd HH:mm:ss')}">
+                    <div class="input-group-append">
+                        <span class="input-group-text btn-custom border text-white"><i class="ti-calendar"></i></span>
+                    </div>
+                </div>
+            </td>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>数 量(箱)：</label></td>
+            <td class="width-35">
+                <input name="quantity" value="${consignFileApproval.quantity!}"    class="form-control required"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>申请单位：</label></td>
+            <td class="width-35">
+                <input name="applicantUnit" value="${consignFileApproval.applicantUnit!}"  readonly="readonly"  class="form-control required"/>
+            </td>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>申请人：</label></td>
+            <td class="width-35">
+                <input id="applicantPersonName" name="applicantPersonName" value="${consignFileApproval.applicantPersonName!}"  readonly  class="form-control required"/>
+                <input id="applicantPerson" name="applicantPerson" value="${consignFileApproval.applicantPerson!}" hidden   class="form-control required"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>工作目的：</label></td>
+            <td class="width-35">
+                <!--<#checkbox path="goalOfWork" values="${consignFileApproval.goalOfWork}" items="${fn.getDictList('workType')}" values="${consignFileApproval.goalOfWork}" itemLabel="label" itemValue="value" class=""/>-->
+                <#radiobuttons path="goalOfWork" value="${consignFileApproval.goalOfWork!}"
+                items="${fn.getDictList('workType')}" itemLabel="label" itemValue="value" class="required"/>
+
+            </td>
+
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>用  途：</label></td>
+            <td class="width-35" colspan="3">
+                <textarea name="withTheWay" rows="4" class="form-control required">${consignFileApproval.withTheWay!}</textarea>
+            </td>
+        </tr>
+        <tr rowspan="3">
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>出库内容：</label></td>
+            <td class="width-35" colspan="3">
+                <textarea name="outboundContent" rows="4" class="form-control required">${consignFileApproval.outboundContent!}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right">预计归还时间：</label></td>
+            <td class="width-35">
+                <div class="input-group">
+                    <input readonly="" id="returnTime"  name="returnTime"  placeholder="请选择日期" class="form-control "   value="${fn.formatDate(consignFileApproval.returnTime!, 'yyyy-MM-dd HH:mm:ss')}">
+                    <div class="input-group-append">
+                        <span class="input-group-text btn-custom border text-white"><i class="ti-calendar"></i></span>
+                    </div>
+                </div>
+            </td>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>本单位负责人：</label></td>
+            <td class="width-35">
+                <!--<input name="chargeApplicantPersonName" value="${consignFileApproval.chargeApplicantPersonName!}"    class="form-control "/>-->
+                <#userselect id="chargeApplicantPerson" name="chargeApplicantPerson"
+                value="${consignFileApproval.chargeApplicantPerson!}" labelName="chargeApplicantPersonName" labelValue="${consignFileApproval.chargeApplicantPersonName!}"
+                class="form-control required" allowClear="true" />
+
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>档案审核员：</label></td>
+            <td class="width-35" colspan="3">
+                <!--<input name="officeHead" value="${consignFileApproval.officeHead!}"    class="form-control "/>-->
+                <#userselect id="materialAuditor" name="materialAuditor"
+                value="${consignFileApproval.materialAuditor!}" labelName="materialAuditorName" labelValue="${consignFileApproval.materialAuditorName!}"
+                class="form-control required"  allowClear="true" />
+
+            </td>
+
+        </tr>
+
+
+        <tr>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>办公室负责人：</label></td>
+            <td class="width-35">
+                <!--<input name="officeHead" value="${consignFileApproval.officeHead!}"    class="form-control "/>-->
+                <#userselect id="officeHead" name="officeHead"
+                value="${consignFileApproval.officeHead!}" labelName="officeHeadName" labelValue="${consignFileApproval.officeHeadName!}"
+                class="form-control required" allowClear="true" />
+
+            </td>
+            <td class="width-15 active" ><label class="pull-right">行领导：</label></td>
+            <td class="width-35" >
+                <#userselect id="officeSupervisorLeader" name="officeSupervisorLeader"
+                value="${consignFileApproval.officeSupervisorLeader!}" labelName="officeSupervisorLeaderName" labelValue="${consignFileApproval.officeSupervisorLeaderName!}"
+                class="form-control " allowClear="true" />
+            </td>
+
+            <td class="width-15 active" style="display: none" ><label class="pull-right">审核状态：</label></td>
+            <td class="width-35" style="display: none" >
+                <input name="state" value="${consignFileApproval.state==null?1:consignFileApproval.state}"    class="form-control "/>
+                <input name="stateStep" value="${consignFileApproval.stateStep==null?1:consignFileApproval.stateStep}"    class="form-control "/>
+
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right">审核信息：</label></td>
+            <td class="width-35" colspan="3">
+                <textarea name="remarks" rows="4" readonly="readonly"   class="form-control ">${consignFileApproval.remarks!}</textarea>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="form-group row m-b-0">
+        <div class="offset-sm-1 col-sm-9 m-t-15">
+            <button onclick="save()" type="button" data-loading-text="正在提交..." class="btn btn-custom waves-effect waves-light w-xs m-b-5">提交</button>
+        </div>
+    </div>
+</form>
+<!--endprint-->
+<% } %>

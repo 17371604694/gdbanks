@@ -1,0 +1,153 @@
+<%
+layout("/include/_container.html", {title:"首页", parent:"工作台"}){
+%>
+<!--<script src="${ctxStatic}/plugins/waypoints/lib/jquery.waypoints.js"></script>-->
+<script src="${ctxStatic}/plugins/counterup/jquery.counterup.min.js"></script>
+<script src="${ctxStatic}/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
+
+<style>
+	.card-body.h450{
+		height: 450px;
+	}
+</style>
+<style type="text/css">
+	.table tbody tr td{
+		overflow: hidden;
+		text-overflow:ellipsis;
+		white-space: nowrap;
+	}
+
+
+</style>
+<script>
+	//稿件审核
+	function f1() {
+		location.href="${ctx}/programatcontent/programatcont/distributeContent/allList?name=all";
+	}
+	//广告审核
+	function f2() {
+		location.href="${ctx}/advertisingaudit/advertising/advertisingAudit/listCheck";
+	}
+	//文书档案审核
+	function f3() {
+		location.href="${ctx}/consignfileapproval/administrativearchives/administrativeArchivesApprove/listCheck";
+	}
+	//寄存档案审核
+	function f4() {
+		location.href="${ctx}/consignfileapproval/confileapproval/consignFileApproval/listCheck";
+	}
+
+
+</script>
+
+<div hidden class="row">
+	<div class="col-sm-3">
+		<div class="card widget-user">
+			<div class="card-body text-center">
+				<h2 class="text-custom" data-plugin="counterup" ></h2>
+				<h5 style="margin-bottom: 2%;margin-top:5%">新闻、部室稿件</h5><a href="#"onclick="f1();" style="color:orangered ">查看</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-sm-3">
+		<div class="card widget-user">
+			<div class="card-body text-center">
+				<h2 class="text-custom" data-plugin="counterup"></h2>
+				<h5 style="margin-bottom: 2%;margin-top:5%">广告</h5><a href="#" style="color:orangered " onclick="f2();">查看</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-sm-3">
+		<div class="card widget-user">
+			<div class="card-body text-center">
+				<h2 class="text-custom" data-plugin="counterup"></h2>
+				<h5 style="margin-bottom: 2%;margin-top:5%">文书档案</h5><a href="#" onclick="f3();" style="color:orangered ">查看</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-sm-3">
+		<div class="card widget-user">
+			<div class="card-body text-center">
+				<h2 class="text-custom" data-plugin="counterup"></h2>
+				<h5 style="margin-bottom: 2%;margin-top:5%">寄存档案</h5><a href="#" onclick="f4();" style="color:orangered ">查看</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+
+	<div class=" card" style="width: 50%">
+		<div class="">
+			<div class="card-body ">
+
+				<h4 class="header-title " style="margin-bottom: 2%">稿件列表<a href="#"onclick="f1();" style="color:darkgreen;margin-left: 70%; ">查看</a></h4>
+
+				<div style=" position: relative;
+					 -webkit-tap-highlight-color: rgba(0, 0, 0, 0);" class=" ">
+					<table id="distributeContentTable"
+						   style="table-layout:fixed;"
+						   class="table-bordered"></table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class=" card" style="width: 50%">
+		<div class="">
+			<div class="card-body  ">
+				<h4 class="header-title "style="margin-bottom: 2%">广告列表<a href="#" style="color:darkgreen;margin-left: 70% " onclick="f2();">查看</a></h4>
+
+				<div style=" position: relative;
+					 -webkit-tap-highlight-color: rgba(0, 0, 0, 0);" class="morris-chart m-t-10">
+					<table id="advertisingAuditTable"
+						   style="table-layout:fixed;"
+						   class="table-bordered"></table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class=" card" style="width: 50%">
+		<div class="" >
+			<div class="card-body  ">
+				<h4 class="header-title "style="margin-bottom: 2%">文书档案列表<a href="#" onclick="f3();" style="color:darkgreen;margin-left: 70% ">查看</a></h4>
+
+				<div style=" position: relative;
+					 -webkit-tap-highlight-color: rgba(0, 0, 0, 0);" class="morris-chart m-t-10">
+					<table id="administrativeArchivesApproveTable"
+						   style="table-layout:fixed;"
+						   class="table-bordered"></table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="card " style="width: 50%">
+		<div class="">
+			<div class="card-body  ">
+				<h4 class="header-title " style="margin-bottom: 2%">寄存档案列表<a href="#" onclick="f4();" style="color:darkgreen;margin-left: 70%">查看</a></h4>
+
+				<div style=" position: relative;
+					 -webkit-tap-highlight-color: rgba(0, 0, 0, 0);" class="morris-chart m-t-10">
+					<table id="consignFileApprovalTable"
+						   style="table-layout:fixed;"
+						   class="table-bordered"></table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</div>
+<% include("advertising.js"){} %><!--广告列表-->
+<% include("archives.js"){} %><!--文书档案列表-->
+<% include("registerfile.js"){} %><!--寄存档案列表-->
+<% include("manuscript.js"){} %><!--稿件列表-->
+<% } %>

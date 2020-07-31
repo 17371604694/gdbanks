@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.taskdistributionbyts.taskdistributionbytsfits.mapper.TaskDistributionBytsFitMapper">
+
+
+
+	<sql id="taskDistributionBytsFitColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.executor_id AS "executorId",
+		a.executor_name AS "executorName",
+		a.executor_file AS "executorFile",
+		a.executor_give AS "executorGive",
+		a.executor_time AS "executorTime",
+		a.task_distribution_byts_id AS "taskDistributionBytsId",
+		a.state AS "state",
+		b.publisher_name as "taskDistributionByts.publisherName",
+		b.start_time as "taskDistributionByts.startTime",
+		b.task_name as "taskDistributionByts.taskName",
+		b.file as "taskDistributionByts.file",
+		b.content as "taskDistributionByts.content"
+
+	</sql>
+
+
+
+
+
+	<sql id="taskDistributionBytsFitJoins">
+        left join bank_task_distribution_byts b on b.id=a.task_distribution_byts_id
+	</sql>
+
+
+	<select id="get" resultType="TaskDistributionBytsFit" >
+		SELECT 
+			<include refid="taskDistributionBytsFitColumns"/>
+		FROM bank_task_distribution_byts_fit a
+		<include refid="taskDistributionBytsFitJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TaskDistributionBytsFit" >
+		SELECT 
+			<include refid="taskDistributionBytsFitColumns"/>
+		FROM bank_task_distribution_byts_fit a
+		<include refid="taskDistributionBytsFitJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="executorId != null and executorId != ''">
+				AND a.executor_id = #{executorId}
+			</if>
+			<if test="executorName != null and executorName != ''">
+				AND a.executor_name = #{executorName}
+			</if>
+			<if test="state >0">
+				AND a.state = #{state}
+			</if>
+			<if test="beginExecutorTime != null and endExecutorTime != null ">
+				AND a.executor_time BETWEEN #{beginExecutorTime} AND #{endExecutorTime}
+			</if>
+			<if test="taskDistributionBytsId != null and taskDistributionBytsId != ''">
+				AND a.task_distribution_byts_id = #{taskDistributionBytsId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TaskDistributionBytsFit" >
+		SELECT 
+			<include refid="taskDistributionBytsFitColumns"/>
+		FROM bank_task_distribution_byts_fit a
+		<include refid="taskDistributionBytsFitJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bank_task_distribution_byts_fit(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			executor_id,
+			executor_name,
+			executor_file,
+			executor_give,
+			executor_time,
+			task_distribution_byts_id,
+			state
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{executorId},
+			#{executorName},
+			#{executorFile},
+			#{executorGive},
+			#{executorTime},
+			#{taskDistributionBytsId},
+			#{state}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bank_task_distribution_byts_fit SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			executor_id = #{executorId},
+			executor_name = #{executorName},
+			executor_file = #{executorFile},
+			executor_give = #{executorGive},
+			executor_time = #{executorTime},
+			task_distribution_byts_id = #{taskDistributionBytsId},
+			state = #{state}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM bank_task_distribution_byts_fit
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE bank_task_distribution_byts_fit SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="TaskDistributionBytsFit" statementType="STATEMENT">
+		select * FROM bank_task_distribution_byts_fit  where ${propertyName} = '${value}'
+	</select>
+	<select id="findByTidAll" resultType="TaskDistributionBytsFit">
+		SELECT
+		<include refid="taskDistributionBytsFitColumns"/>
+		FROM
+		bank_task_distribution_byts_fit a
+		<include refid="taskDistributionBytsFitJoins"/>
+		where a.task_distribution_byts_id=#{tid}
+
+	</select>
+	<delete id="delTaskByTid">
+		DELETE FROM bank_task_distribution_byts_fit
+		WHERE  task_distribution_byts_id= #{tid}
+
+	</delete>
+
+</mapper>

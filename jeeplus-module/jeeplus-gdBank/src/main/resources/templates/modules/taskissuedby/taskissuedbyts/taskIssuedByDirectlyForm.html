@@ -1,0 +1,105 @@
+<%
+layout("/include/_dialog.html"){
+%>
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+            $('#startTime').datetimepicker({
+				 format:'Y-m-d H:i'
+		    });
+            var u = JSON.parse(jp.getCookie("user"));
+            // console.log(u);
+            var date=new Date();
+            var t=date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+            if ($("input[name=publisherId]").val().trim()=="" || $("input[name=publisherId]").val()==null){
+                $("input[name=publisherId]").val(u.id);
+            }
+            if ($("input[name=publisherName]").val().trim()=="" || $("input[name=publisherName]").val()==null){
+                $("input[name=publisherName]").val(u.name);
+            }
+            if ($("input[name=startTime]").val().trim()=="" || $("input[name=startTime]").val()==null){
+                $("input[name=startTime]").val(t);
+            }
+
+
+
+
+
+		});
+
+		function save() {
+            var isValidate = jp.validateForm('#inputForm');//校验表单
+            if(!isValidate){
+                return false;
+			}else{
+                jp.post("${ctx}/taskissuedby/taskissuedbyts/taskIssuedBy/save",$('#inputForm').serialize(),function(data){
+                    if(data.success){
+                        alert(data.msg);
+                        var dialogIndex = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                        parent.layer.close(dialogIndex);
+                    }else{
+                        layer.msg(data.msg);
+                    }
+                })
+			}
+
+        }
+	</script>
+<form id="inputForm"  method="post"  class="form-horizontal p-15" action="${ctx}/taskissuedby/taskissuedbyts/taskIssuedBy/save">
+    <input type="hidden" name="id" value="${taskIssuedBy.id!}"/>
+    <table class="table table-bordered">
+       <tbody>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>下发人姓名：</label></td>
+                <td class="width-35">
+                    <input name="publisherId" type="hidden" value="${taskIssuedBy.publisherId!}"    class="form-control "/>
+                    <input name="publisherName" value="${taskIssuedBy.publisherName!}"  required="required"  class="form-control "/>
+            </td>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>发起时间：</label></td>
+                <td class="width-35">
+                    <div class="input-group">
+                        <input readonly="readonly" id="startTime" required="required"  name="startTime"  placeholder="请选择日期" class="form-control   "   value="${fn.formatDate(taskIssuedBy.startTime!, 'yyyy-MM-dd HH:mm:ss')}">
+                        <div class="input-group-append">
+                            <span class="input-group-text btn-custom border text-white"><i class="ti-calendar"></i></span>
+                        </div>
+                    </div>
+            </td>
+            </tr>
+
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>任务名称：</label></td>
+                <td class="width-35" colspan="3">
+                    <input name="rname" value="${taskIssuedBy.rname!}"   class="form-control "/>
+                </td>
+
+            </tr>
+
+            <tr>
+                <td class="width-15 active"><label class="pull-right">内容：</label></td>
+                <td class="width-35" colspan="3">
+                    <!--<input name="content" value="${taskIssuedBy.content!}" style="height: 200px"   class="form-control "/>-->
+                    <textarea name="content" cols="80" rows="7" class="form-control">
+                        ${taskIssuedBy.content!}
+
+                    </textarea>
+            </td>
+
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>执行人：</label></td>
+                <td class="width-35" colspan="3">
+                    <#userselect id="executorId" name="executorId" value="${taskIssuedBy.executorId!}" labelName="executorName" labelValue="${taskIssuedBy.executorName!}"
+                    class="form-control " isMultiSelected="${true}" allowClear="true"/>
+                </td>
+            </tr>
+            <tr>
+            </tr>
+        </tbody>
+    </table>
+    <div class="form-group row m-b-0">
+        <div class="offset-sm-1 col-sm-9 m-t-15">
+            <button onclick="save()" type="button" data-loading-text="正在提交..." class="btn btn-custom waves-effect waves-light w-xs m-b-5">提交</button>
+        </div>
+    </div>
+</form>
+<% } %>

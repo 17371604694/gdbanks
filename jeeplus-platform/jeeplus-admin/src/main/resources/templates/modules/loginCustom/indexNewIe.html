@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="shortcut icon" href="${ctxStatic}/common/images/favicon.ico">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>光大银行武汉分行</title>
+
+    <link href="${ctxStatic}/common/css2/gd.css" rel="stylesheet" type="text/css" />
+    <link href="${ctxStatic}/common/css2/font.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="${ctxStatic}/common/css2/lb.css">
+    <link rel="stylesheet" href="${ctxStatic}/common/css2/style.css">
+    <!--引入jquery 注意jquery必须最先引入-->
+    <script src="${ctxStatic}/plugins/jquery/jquery.min.js"></script>
+    <!-- 引入layer插件,当做独立组件使用，不使用layui模块 -->
+    <script src="${ctxStatic}/plugins/layui/layer/layer.js"></script>
+    <script src="${ctxStatic}/plugins/layui/laytpl/laytpl.js"></script>
+    <script src="${ctxStatic}/plugins/layui/dist/layui.all.js"></script>
+    <link href="${ctxStatic}/plugins/layui/dist/css/layui.css" rel="stylesheet" type="text/css">
+    <script src="${ctxStatic}/common/js/jeeplus.js"></script>
+    <style type="text/css">
+        .redirects1{
+            position: relative;
+            padding-bottom: 20px;
+        }
+        #redirects1_div{
+            position: absolute;
+            top: 55px;
+            width: 800px;
+           // height: 200px;
+            background-color: rgb(0, 52, 98);
+            border-radius: 3px;
+
+        }
+        #redirects1_div>div{
+
+            /*background-color: red;*/
+            height: 40px;
+            width: 160px;
+            float: left;
+            line-height: 40px;
+        }
+        .redirects1_div_a{
+            color: #B5B8BD;
+        }
+        .redirects1_div_a:hover{
+            color: white;
+        }
+
+        /*2*/
+        .redirects2{
+            position: relative;
+            padding-bottom: 20px;
+        }
+        #redirects2_div{
+            position: absolute;
+            top: 55px;
+            width: 800px;
+        // height: 200px;
+            background-color: rgb(0, 52, 98);
+            border-radius: 3px;
+
+        }
+        #redirects2_div>div{
+
+            /*background-color: red;*/
+            height: 40px;
+            width: 160px;
+            float: left;
+            line-height: 40px;
+        }
+        .redirects2_div_a{
+            color: #B5B8BD;
+        }
+        .redirects2_div_a:hover{
+            color: white;
+        }
+
+        .navbar{
+            /*position: sticky;*/
+            /*top: 20px;*/
+            /*background-color: #e1c74d;*/
+            /*z-index: 9999999;*/
+
+        }
+
+       .tabOne{
+           background-color: #e1c74d;
+       }
+        .tabtwo{
+            background-color: #95999c;
+        }
+
+        /*悬浮窗*/
+
+        .com-activity-widget {
+            background-image: url(../../../static/common/image2/toupiao.png);
+            opacity: 1;
+            position: fixed;
+            right: 0px;
+            bottom: 100px;
+            z-index: 300;
+            width: 80px;
+            height: 80px;
+            background-size: contain;
+            transition: all .3s ease-in-out;
+        }
+        .com-activity-widget-link {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 0;
+        }
+        .com-activity-widget-main {
+            opacity: 1;
+            transition: all .3s ease-in-out;
+        }
+        .com-activity-widget-close {
+            position: absolute;
+            right: 7px;
+            top: 16px;
+            width: 16px;
+            height: 16px;
+            /*background-image: url(https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1587102842495&di=2685783ecb9700f8a9a5a990b3702c10&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Felement_origin_min_pic%2F00%2F44%2F87%2F5856d70ff3651b1.jpg);*/
+            font-size: 0;
+            background-position: 91.83% 84.44%;
+            background-size: 3237.5% 3112.5%;
+            background-repeat: no-repeat;
+        }
+        .a {
+            color: #666;
+            text-decoration: none;
+        }
+        .a:-webkit-any-link {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="com-activity-widget"><a href="/a/logins/toupiao" target="_blank" class="com-activity-widget-link"></a>
+        <div class="com-activity-widget-main"><a href="/a/logins/indexNew" class="com-activity-widget-close a"></a></div>
+        <div style="margin-top: 105%;color: purple;text-align: center;"></div>
+    </div>
+    <div id="indexNew">
+        <div id="sydhbj" style="background-size: cover;" class="layout_narbar">
+            <div class="navbar" >
+                <div class="float_left"><img src="${ctxStatic}/common/image2/logo.png" /></div>
+                <div class="float_left">
+                    <ul>
+                        <li class="text_nvabar " onclick="redirectsFor(0)">首页</li>
+                        <li class="text_nvabar_noselect " onclick="redirectsFor(1)">分行动态</li>
+                        <li class="text_nvabar_noselect redirects1 " >分行部室
+                          <div id="redirects1_div"  style="display: none;">
+                          </div>
+                        </li>
+                        <li class="text_nvabar_noselect redirects2 "  >经营机构
+                            <div id="redirects2_div"  style="display: none;">
+                            </div>
+
+                        </li>
+                        <li class="text_nvabar_noselect " onclick="redirectsFor(4)">规章制度</li>
+                        <li class="text_nvabar_noselect " onclick="redirectsFor(5)">下载专区</li>
+                        <li class="text_nvabar_noselect "  onclick="redirectsFor(6)">通讯录</li>
+                    </ul>
+                </div>
+                <div class="folt_right">
+                    <div class="float_left text_nvabar_noselect navbar_left" style="width:190px;">
+                        <img class="float_left selectParimClick" src="${ctxStatic}/common/image2/ico_search_01.png"  style="margin-top:-4px;"  />
+                        <input name="" type="text" value="" class="inputtext4 selectParim" onblur="selectParimBlur" onfocus="selectParimfocus"/>
+                    </div>
+                    <div class="float_left text_nvabar_noselect navbar_left"  style="width:190px;">
+                        <a href="${ctx}/login">
+                            <img class="float_left photo" title="点击登录系统" src="${ctxStatic}/common/image2/ico_loogin.png"
+                                 style="margin-top:-6px;width: 30px;height: 30px;border-radius: 50%;position: relative;left: 17%;" />
+                        </a>
+                        <span id="unameuser" >登录</span>
+                        <span class="uno" id="cardnum"></span>
+                    </div>
+                    <input  id="userInput" type="hidden"/>  <!--用户信息-->
+                    <input  id="userctx" value="${ctx}" type="hidden"/>  <!--${ctx}信息-->
+                    <div class="float_left text_nvabar_noselect navbar_left loginOutSystem"  style="width:90px;display: none">退出系统</div>
+                </div>
+            </div>
+            <div class="layout_zhyw " style="position: relative">
+                <div class="layout_zhyw_wz">
+                    <div class="float_left" style="width:100px;"><img src="${ctxStatic}/common/image2/zhyw01.png" /></div>
+                    <div class="float_left" style="width:21px;"><img src="${ctxStatic}/common/image2/zhyw_02.png" /></div>
+                    <div class="float_left font_back_18h alilunboParent" style="width:974.02px;  padding-top:37px;">
+                        <img class="float_left" style="margin-top:-8px;" src="../../../static/common/image2/zhyw_03.png" />
+                        <a href="/a/logins/content?id=000" style="padding-left: 10px;
+                                  text-overflow: -o-ellipsis-lastline;
+                                    overflow: hidden;text-overflow: ellipsis;
+                                    display: -webkit-box;-webkit-line-clamp: 1;
+                                    -webkit-box-orient: vertical;
+                        " class="alist22hei alilunbo">新闻未加载</a>
+                    </div>
+                    <div class="float_left"  style=" width:100px; height:100px; text-align:center; background-color:#E3A300;position: relative;left: 15px">
+                        <span style="font-size: 50px" class="timefont_62 alilunbo_day">天</span><br>
+                        <span style="font-size: 11.5px" class="timefont_12 alilunbo_time">年月日 星期</span>
+                    </div>
+                </div>
+                <!--导航条-->
+                <div style="position: absolute;top: 77px;right: 130px;z-index: 999;">
+                   <a href="javascript:(0)" id="alilunboNav">
+                       <!--tabOne':'tabtwo-->
+                      <!--<div class="tabOne" style="float: left;width: 40px;height: 2px;margin-left: 10px" onclick="tabTitle(index)" ></div>-->
+                   </a>
+                </div>
+            </div>
+        </div>
+
+       <!-- <div class="layout_news" style="clear:both; height:480px;">
+            <div class="layout_news_content">
+            <div class="float_left" style="width:472px; background-color:#FFF;">
+                    <div class="lb-box" id="lb-1">
+                    &lt;!&ndash; 轮播内容 &ndash;&gt;
+                    <div class="lb-content">
+                      <div class="lb-item active" v-if="byTheNews.length>0">
+                          <svg t="1578034267811" class="icon players" viewBox="0 0 1024 1024" @click="payVideo(byTheNews[0].accessorys,byTheNews[0].title)" v-if="byTheNews[0].accessorys!=''"
+                               style="position: absolute;top: 80px;left: 190px;" version='1.1' xmlns="http://www.w3.org/2000/svg" p-id="2031"
+                          width="70" height="70"><path d="M675.328 117.717333A425.429333 425.429333 0 0 0 512
+                            85.333333C276.352 85.333333 85.333333 276.352 85.333333 512s191.018667 426.666667 426.666667
+                            426.666667 426.666667-191.018667 426.666667-426.666667c0-56.746667-11.093333-112-32.384-163.328a21.333333
+                            21.333333 0 0 0-39.402667 16.341333A382.762667 382.762667 0 0 1 896 512c0 212.074667-171.925333 384-384 384S128
+                            724.074667 128 512 299.925333 128 512 128c51.114667 0 100.8 9.984 146.986667 29.12a21.333333 21.333333 0 0 0
+                            16.341333-39.402667zM456.704 305.92C432.704 289.152 405.333333 303.082667 405.333333 331.797333v360.533334c0
+                            28.586667 27.541333 42.538667 51.370667 25.856l252.352-176.768c21.76-15.253333 21.632-43.541333 0-58.709334l-252.373333-176.768z
+                            m-8.597333 366.72V351.466667l229.269333 160.597333-229.269333 160.597333z" fill="#cdcdcd" p-id="2032"></path></svg>
+                        <a :href="'/a/logins/content/?id='+byTheNews[0].id">
+                          <img :src="byTheNews[0].accessorysImg" style="height: 268px" alt="picture loss">
+                          <span style=" text-overflow: -o-ellipsis-lastline; overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;
+                            padding-bottom: 3px;">{{byTheNews[0].title}}</span>
+                          <span style="color:#888888; font-size:14px; font-weight:normal;
+                              text-overflow: -o-ellipsis-lastline;
+                             overflow: hidden;text-overflow: ellipsis;
+                            display: -webkit-box;-webkit-line-clamp: 1;
+                            -webkit-box-orient: vertical;
+                            padding-bottom: 3px;">{{byTheNews[0].content.substring(0,byTheNews[0].content.length>=100?100:byTheNews[0].content.length)}}</span>
+                        </a>
+                          &lt;!&ndash;日期&ndash;&gt;
+                          <div style="position: absolute;bottom: -21px;right: 0px;height: 65px;width: 89px;background-color: white;z-index: 999;">
+                              <div class="timefont_62" style="width: 100%;height:60%;float: left;border: 0px solid red;line-height: 50px;color: #E3A300;
+                            text-align: center;font-size: 41px;font-weight: bold;">{{byTheNews[0].time.substring(byTheNews[0].time.indexOf('-')+1,byTheNews[0].time.lastIndexOf('-'))}}</div>
+                              <div style="color: #888888;font-weight: bold; width: 100%;height:30%;float: left;border: 0px solid red;line-height: 37px;text-align: center">{{byTheNews[0].time.substring(0,7)}}</div>
+                          </div>
+                          &lt;!&ndash;了解更多&ndash;&gt;
+                          <div style="position: absolute;bottom: -116px;font-size: 12px;z-index: 999">
+                              <span ><a style="color:#888888;" :href="'/a/logins/content/?id='+byTheNews[0].id">了解更多</a></span>
+                              <img src="../../../static/common/image2/空白箭头.jpg" alt=""/>
+                          </div>
+                      </div>
+                      <div class="lb-item" v-for="(item,index) in byTheNews" v-if="index>0">
+                        <a :href="'/a/logins/content/?id='+item.id">
+                          <img :src="item.accessorysImg" style="height: 268px" alt="picture loss">
+                         <span style=" text-overflow: -o-ellipsis-lastline;
+                                overflow: hidden;text-overflow: ellipsis;
+                                display: -webkit-box;-webkit-line-clamp: 1;
+                                -webkit-box-orient: vertical;
+                                padding-bottom: 3px;">{{item.title}}</span>
+
+                          <span style="color:#888888; font-size:12px; font-weight:normal; text-overflow: -o-ellipsis-lastline;
+                                overflow: hidden;text-overflow: ellipsis;
+                                display: -webkit-box;-webkit-line-clamp: 1;
+                                -webkit-box-orient: vertical;
+                                padding-bottom: 3px; ">{{item.content.substring(0,item.content.length>=100?100:item.content.length)}}</span>
+                        </a>
+                          &lt;!&ndash;日期&ndash;&gt;
+                          <div style="position: absolute;bottom: -21px;right: 0px;height: 65px;width: 89px;background-color: white;z-index: 999;">
+                              <div class="timefont_62" style="width: 100%;height:60%;float: left;border: 0px solid red;line-height: 50px;color:#E3A300;
+                               text-align: center;font-size: 41px;font-weight: bold;">{{item.time.substring(item.time.indexOf('-')+1,item.time.lastIndexOf('-'))}}</div>
+                              <div style="color: #888888;font-weight: bold;: 50px; width: 100%;height:30%;float: left;border: 0px solid red;line-height: 37px;text-align: center">{{item.time.substring(0,7)}}</div>
+                          </div>
+                          &lt;!&ndash;了解更多&ndash;&gt;
+                          <div style="position: absolute;bottom: -116px;font-size: 12px;z-index: 999">
+                              <span ><a style="color:#888888;" style="color:#888888;" :href="'/a/logins/content/?id='+item.id">了解更多</a></span>
+                              <img src="../../../static/common/image2/空白箭头.jpg" alt=""/>
+                          </div>
+                      </div>
+                    </div>
+                    &lt;!&ndash; 轮播标志 &ndash;&gt;
+                    <ol class="lb-sign" >
+                      <li :class="[index==0 ? 'active' : '']" v-for="(item,index) in byTheNews" ></li>
+                    </ol>
+                    &lt;!&ndash; 轮播控件 &ndash;&gt;
+                    <div class="lb-ctrl left" style="display: none"><img src="${ctxStatic}/common/image2/箭头%20(2).png" width="30px" height="30px" alt=""/> </div>
+                    <div class="lb-ctrl right" style="display: none"><img src="${ctxStatic}/common/image2/箭头%20(1).png" width="30px" height="30px" alt=""/></div>
+                    </div>
+            </div>
+            &lt;!&ndash;分行动态、工作通知、业务通报&ndash;&gt;
+            <div class="float_left" style="width:500px;">
+                &lt;!&ndash;表头&ndash;&gt;
+                <table width="461px;" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td width="33%" height="51px" align="center" valign="middle" :class="tabType[0].class1 " @click="tabThree(0)">分行动态</td>
+                      <td align="center" valign="middle" :class="tabType[1].class1"  @click="tabThree(1)">工作通知</td>
+                      <td align="center" valign="middle" :class="tabType[2].class1"  @click="tabThree(2)">业务通报</td>
+                    </tr>
+                    <tr>
+                        <td width="33%" height="14px" align="center" valign="middle" :class="tabType[0].class2"></td>
+                        <td align="center" valign="middle" :class="tabType[1].class2"></td>
+                        <td align="center" valign="middle" :class="tabType[2].class2"></td>
+                    </tr>
+                </table>
+                <div style="padding-top:15px;">
+                &lt;!&ndash;数据&ndash;&gt;
+                <table cellpadding="0" cellspacing="0" width="90%" align="center">
+                    <tr align="left" valign="middle" v-for="(item,index) in fenHang" v-if="index<3"><td height="40" class="">
+                        <a :href="'/a/logins/content/?id='+item.id" class="alist17hei">{{item.title.substring(0,25)}}</a></td>
+                    </tr>
+                   &lt;!&ndash; <tr align="left" valign="middle"><td height="40" class=""><a href="#" class="alist17hei">董事长代言扶贫茶 | 荣获“中国金融年度品牌大奖”</a></td></tr>
+                    <tr align="left" valign="middle"><td height="40" class=""><a href="#" class="alist17hei">光大云缴费高速发展 直联客户超千万</a></td></tr>&ndash;&gt;
+                    <tr align="left" valign="middle" v-for="(item,index) in fenHang" v-if="index>=3 && index<7">
+
+                        <td height="40" class="" >
+                            <img src="${ctxStatic}/common/image2/ico_dian.jpg" width="4" height="4" />
+                        <a :href="'/a/logins/content/?id='+item.id" class="alist16hui">{{item.title.substring(0,28)}}</a>
+                        </td>
+                    </tr>
+                   &lt;!&ndash; <tr align="left" valign="middle"><td height="40" class=""><a href="#" class="alist16hui">光大“魅力海南旅游节”推出半年成果颇丰</a></td></tr>
+                    <tr align="left" valign="middle"><td height="40" class=""><a href="#" class="alist16hui">光大“魅力海南旅游节”推出半年成果颇丰</a></td></tr>
+                    <tr align="left" valign="middle"><td height="40" class=""><a href="#" class="alist16hui">光大“魅力海南旅游节”推出半年成果颇丰</a></td></tr>&ndash;&gt;
+                    <tr align="left" valign="middle">
+                      <td height="40" align="right" class="font_back_16h">
+                          <a v-if="fenHang.length>1" :href="'/a/logins/programadatalist?id='+fenTree.programatId+'&name='+fenTree.programatIdName">
+                              <img src="${ctxStatic}/common/image2/ico_more_new.png"  />
+                          </a>
+                         </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            &lt;!&ndash;会议通知&ndash;&gt;
+            <div class="float_left" style="width:225px;">
+            &lt;!&ndash;会议通知&ndash;&gt;
+            <div>
+
+                <table cellpadding="0" cellspacing="0" class="layout_table_news">
+                    <tr class="layout_tr_zise"><td height="48px" align="center" valign="middle" class="font_bai_22h">会仪通知</td></tr>
+                  <tr class="">
+                    <td align="center" valign="top" ><table width="98%" border="0" cellpadding="0" cellspacing="0">
+                      <tr v-for="item in meetingInfos">
+                        <td width="5%" height="34" align="center" valign="middle" class="newslist"><img src="${ctxStatic}/common/image2/ico_dian.jpg" width="4" height="4" /></td>
+                        <td width="95%" class=""><a :href="'/a/logins/content?id='+item.id" class="alist14hei">{{item.title.substring(0,15)}}</a></td>
+                      </tr>
+                      &lt;!&ndash;<tr>
+                        <td width="5%" height="34" align="center" valign="middle" class="newslist"><img src="${ctxStatic}/common/image2/ico_dian.jpg" width="4" height="4" /></td>
+                        <td width="95%" class=""><a href="#" class="alist14hei">李晓鹏，党委副书记、监</a></td>
+                      </tr>
+                      <tr>
+                        <td width="5%" height="34" align="center" valign="middle" class="newslist"><img src="${ctxStatic}/common/image2/ico_dian.jpg" width="4" height="4" /></td>
+                        <td width="95%" class=""><a href="#" class="alist14hei">李晓鹏，党委副书记、监</a></td>
+                      </tr>
+                      <tr>
+                        <td width="5%" height="34" align="center" valign="middle" class=""><img src="${ctxStatic}/common/image2/ico_dian.jpg" width="4" height="4" /></td>
+                        <td width="95%" class=""><a href="#" class="alist14hei">李晓鹏，党委副书记、监</a></td>
+                      </tr>
+                                    <tr>
+                        <td width="5%" height="34" align="center" valign="middle" class=""><img src="${ctxStatic}/common/image2/ico_dian.jpg" width="4" height="4" /></td>
+                        <td width="95%" class=""><a href="#" class="alist14hei">李晓鹏，党委副书记、监</a></td>
+                      </tr>
+                                    <tr>
+                        <td width="5%" height="34" align="center" valign="middle" class=""><img src="${ctxStatic}/common/image2/ico_dian.jpg" width="4" height="4" /></td>
+                        <td width="95%" class=""><a href="#" class="alist14hei">李晓鹏，党委副书记、监</a></td>
+                      </tr>
+                                    <tr>
+                        <td width="5%" height="34" align="center" valign="middle" class=""><img src="${ctxStatic}/common/image2/ico_dian.jpg" width="4" height="4" /></td>
+                        <td width="95%" class=""><a href="#" class="alist14hei">李晓鹏，党委副书记、监</a></td>
+                      </tr>&ndash;&gt;
+                  </table>
+                      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                          <td align="center">
+                              <a href="/a/logins/programadatalist?id=a05ce7a6a2494f8f8e4508b84c8d3049&name=会议通知">
+                                  <img src="${ctxStatic}/common/image2/hytz_more.png" width="210" height="105" />
+                              </a>
+                          </td>
+                        </tr>
+                    </table></td></tr>
+                </table>
+            </div>
+
+            </div>
+            </div>
+        </div>
+        <div class="layout_yx" style="clear:both; height:754px; background-color:#FFF;">
+         <div class="layout_yx_content">
+            &lt;!&ndash; 左边 对公板块、零售板块、综合支持、内控合规&ndash;&gt;
+            <div class="float_left" style="width:810px">
+              <table width="794" border="0" cellspacing="0" cellpadding="0" class="border_all_line">
+                <tr>
+                  <td width="107" height="426" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td height="106" align="center" valign="middle" class="border_bottom_line" :class="tab2Type[0].class1" @click="dlzn(0)">对公<br />
+                        板块</td>
+                      </tr>
+                    <tr>
+                      <td height="106" align="center" valign="middle" class="border_bottom_line " :class="tab2Type[1].class1" @click="dlzn(1)">零售<br />
+                        板块</td>
+                      </tr>
+                    <tr>
+                      <td height="106" align="center" valign="middle" class="border_bottom_line " :class="tab2Type[2].class1" @click="dlzn(2)">综合<br />
+                        支持</td>
+                      </tr>
+                    <tr>
+                      <td height="107" align="center" valign="middle" class="border_bottom_line" :class="tab2Type[3].class1" @click="dlzn(3)">内控<br />
+                        合规</td>
+                      </tr>
+                  </table></td>
+                  <td align="center" valign="top" class="border_left_line"><table width="98%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>&lt;!&ndash;第一条&ndash;&gt;
+                      <td height="60"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr v-if="tellingInfos.length>0">
+                          <td width="89%" height="60" align="left" valign="middle"><a :href="'/a/logins/content/?id='+tellingInfos[0].id" class="alist17hei">{{tellingInfos[0].title}}</a></td>
+                          <td width="11%" align="left">{{tellingInfos[0].time.substring(0,tellingInfos[0].time.lastIndexOf('-'))}}</td>
+                          </tr>
+                        </table></td>
+                    </tr>
+                    <tr>&lt;!&ndash;3张图片展示&ndash;&gt;
+                      <td height="119" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            &lt;!&ndash;有图片时展示&ndash;&gt;
+                          <td width="33%" align="center" valign="middle" v-if="tellingInfosImg.length>0" v-for="item in tellingInfosImg" >
+                              <img :src="item" width="201" height="119" /></td>
+                         &lt;!&ndash; <td width="33%" align="center" valign="middle"><img :src="tellingInfos[0].imgs[]" width="201" height="119" /></td>
+                          <td width="33%" align="center" valign="middle"><img :src="tellingInfos[0].imgs[]" width="201" height="119" /></td>&ndash;&gt;
+                          </tr>
+                        </table></td>
+                    </tr>
+                    <tr >&lt;!&ndash;带原点的展示&ndash;&gt;
+                      <td><table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:20px;" >
+                        <tr v-for="(item,index) in tellingInfos" v-if="index>0 && tellingInfos.length>0">
+                          <td width="2%" height="36" align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_dian.jpg" width="4" height="4" /></td>
+                          <td width="87%" align="left" valign="middle"><a style="color: #888888" :href="'/a/logins/content/?id='+item.id" class="alist16hui">{{item.title}}</a></td>
+                          <td width="11%" align="left"><a style="color: #888888" :href="'/a/logins/content/?id='+item.id" class="alist16hui">{{item.time.substring(0,item.time.lastIndexOf('-'))}}</a></td>
+                          </tr>
+                        &lt;!&ndash;<tr>
+                          <td width="2%" height="36" align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_dian.jpg" width="4" height="4" /></td>
+                          <td width="87%" align="left" valign="middle"><a href="#" class="alist16hui">光大“魅力海南旅游节”推出半年成果颇丰</a></td>
+                          <td width="11%" align="left"><a href="#" class="alist16hui">2019-11</a></td>
+                          </tr>
+                                        <tr>
+                          <td width="2%" height="36" align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_dian.jpg" width="4" height="4" /></td>
+                          <td width="87%" align="left" valign="middle"><a href="#" class="alist16hui">光大“魅力海南旅游节”推出半年成果颇丰</a></td>
+                          <td width="11%" align="left"><a href="#" class="alist16hui">2019-11</a></td>
+                          </tr>
+                                        <tr>
+                          <td width="2%" height="36" align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_dian.jpg" width="4" height="4" /></td>
+                          <td width="87%" align="left" valign="middle"><a href="#" class="alist16hui">光大“魅力海南旅游节”推出半年成果颇丰</a></td>
+                          <td width="11%" align="left"><a href="#" class="alist16hui">2019-11</a></td>
+                          </tr>
+                                        <tr>
+                          <td width="2%" height="36" align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_dian.jpg" width="4" height="4" /></td>
+                          <td width="87%" align="left" valign="middle"><a href="#" class="alist16hui">光大“魅力海南旅游节”推出半年成果颇丰</a></td>
+                          <td width="11%" align="left"><a href="#" class="alist16hui">2019-11</a></td>
+                          </tr>
+                                        <tr>
+                          <td width="2%" height="36" align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_dian.jpg" width="4" height="4" /></td>
+                          <td width="87%" align="left" valign="middle"><a href="#" class="alist16hui">光大“魅力海南旅游节”推出半年成果颇丰</a></td>
+                          <td width="11%" align="left"><a href="#" class="alist16hui">2019-11</a></td>
+                          </tr>&ndash;&gt;
+                        </table></td>
+                    </tr>
+                  </table></td>
+                </tr>
+              </table>
+            </div>
+            &lt;!&ndash; 右边 三明四精、建言献策&ndash;&gt;
+            <div class="float_left" style="width:390px">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" class="border_all_line">
+                <tr>
+                    &lt;!&ndash;三明四精开始&ndash;&gt;
+                  <td height="236" align="center" valign="top"><table width="349" border="0" cellspacing="0" cellpadding="0">
+                    <tr>&lt;!&ndash;标题&ndash;&gt;
+                      <td height="60" align="left" valign="middle" class="smfj_line text24_b_y">三名四精</td>
+                    </tr>
+                    <tr>
+                      <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0" >
+                        <tr v-for="item in threeEliteInfos">&lt;!&ndash;数据循环&ndash;&gt;
+                          <td width="2%" height="30" align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_dian.jpg" width="4" height="4" /></td>
+                          <td width="87%" align="left" valign="middle"><a :href="'/a/logins/content?id='+item.id" class="alist16hui">{{item.title.substring(0,20)}}</a></td>
+                        </tr>
+                         &lt;!&ndash;  <tr>
+                          <td width="2%" height="30" align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_dian.jpg" width="4" height="4" /></td>
+                          <td width="87%" align="left" valign="middle"><a href="#" class="alist16hui">光大“魅力海南旅游节”推出半年成果颇丰</a></td>
+                          </tr>
+                                        <tr>
+                          <td width="2%" height="30" align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_dian.jpg" width="4" height="4" /></td>
+                          <td width="87%" align="left" valign="middle"><a href="#" class="alist16hui">光大“魅力海南旅游节”推出半年成果颇丰</a></td>
+                          </tr>
+                                        <tr>
+                          <td width="2%" height="30" align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_dian.jpg" width="4" height="4" /></td>
+                          <td width="87%" align="left" valign="middle"><a href="#" class="alist16hui">光大“魅力海南旅游节”推出半年成果颇丰</a></td>
+                          </tr>
+                          </tr>&ndash;&gt;
+                          <tr>
+                              <td height="30" colspan="2" align="right" valign="middle">
+                                  <a href="/a/logins/programadatalist?id=963ac34cde814e32a91b6e30ad2836c2&name=三名四精">
+                                      <img src="${ctxStatic}/common/image2/ico_more_03.png" width="98" height="18" />
+                                  </a>
+                              </td>
+                        </table></td>
+                    </tr>
+                  </table></td>
+                    &lt;!&ndash;三明四精结束&ndash;&gt;
+                </tr>
+              </table>
+                &lt;!&ndash;员工心声、建言献策&ndash;&gt;
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:28px;">
+                <tr>
+                  <td width="50%" align="left" valign="top"><table width="180" border="0" cellspacing="0" cellpadding="0" class="border_all_line">
+                    <tr>
+                      <td height="162" align="center" valign="middle"><a href="/a/logins/voice?type=1"><img src="${ctxStatic}/common/image2/ico_ygxx.png" width="65" height="99" /></a></td>
+                    </tr>
+                  </table></td>
+                  <td width="50%" height="162" align="right" valign="top"><table width="180" border="0" cellspacing="0" cellpadding="0" class="border_all_line">
+                    <tr>
+                        <td height="162" align="center" valign="middle"><a href="/a/logins/voice?type=2"><img src="${ctxStatic}/common/image2/ico_jyxc.png" width="67" height="99" /></a></td>
+                    </tr>
+                  </table></td>
+                </tr>
+              </table>
+            </div>
+
+         </div>
+            &lt;!&ndash;不忘初心牢记使命&ndash;&gt;
+        <div class="layout_yx_content" style="clear:both;"><img src="../../../static/common/image2/danjian.png" @click="bwcx()"/></div>
+        </div>
+        &lt;!&ndash; 应用办公 &ndash;&gt;
+        <div class="layout_yy" style="height:773px;">
+            <div class="layout_yy_content" >
+                 <img src="../../../static/common/image2/fun_01.png" />
+            </div>
+            <div class="layout_yy_content">
+                <img src="../../../static/common/image2/fun_02.png" />
+            </div>
+            <div class="layout_yy_content" style="position: relative">
+                <img src="../../../static/common/image2/fun_03.png" />
+                <a href="javascript:void(0)"  onclick="addmeeting()" style="position: absolute;top: -5%;left: 32%;width: 94px;height: 94px;border-radius: 50%;"></a>
+                <a href="javascript:void(0)"  onclick="addcons()" style="position: absolute;top: 25%;left: 39%;width: 94px;height: 94px;border-radius: 50%;"></a>
+                <a href="javascript:void(0)"  onclick="addaudit()" style="position: absolute;top: 32%;left: 47%;width: 94px;height: 94px;border-radius: 50%;"></a>
+                <a href="javascript:void(0)"  onclick="addtask()" style="position: absolute;top: 25%;left: 55%;width: 94px;height: 94px;border-radius: 50%;"></a>
+            </div>
+        </div>
+        &lt;!&ndash; 阳光、荣誉、家园等轮播 &ndash;&gt;
+        <div class="layout_ry" style="height:680px;">
+            <div class="layout_ry_content">
+                &lt;!&ndash;原模块
+                   <div id="app">
+                      <carousel></carousel>
+                   </div>
+                    <script src='${ctxStatic}/common/js2/script.js'></script>
+                &ndash;&gt;
+                <div id="app">
+                    <div class="card-carousel-wrapper">
+                        <div class="card-carousel&#45;&#45;nav__left" @click="moveCarousel(-1)" :disabled="atHeadOfList"></div>
+                        <div class="card-carousel">
+                            <div class="card-carousel&#45;&#45;overflow-container">
+                                <div class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')'}">
+                                    <div class="card-carousel&#45;&#45;card" v-for="item in itemsHonor">
+                                        <div class="card-layout ">
+                                            <div class="text24_b_y ">{{ item.title }}</div>
+&lt;!&ndash;                                            <div v-for="list in yglb">&lt;!&ndash;列表&ndash;&gt;&ndash;&gt;
+&lt;!&ndash;                                                <div class="font_back_20h" style="margin-top:35px;">{{ list.title }}</div>&ndash;&gt;
+&lt;!&ndash;                                            </div>&ndash;&gt;
+                                            <div class="font_back_20h" style="margin-top:35px;">{{ item.name }}</div>
+                                            <div class="font_hui_16h" style="margin-top:24px; height:165px;color: #888888">{{ item.tag }}</div>
+                                            <div>
+                                                <div class="float_left font_hui_14h">时间：{{item.time}}</div>
+                                                <div class="folt_right">
+                                                    <a :href="item.linkpath">
+                                                        <img src="${ctxStatic}/common/image2/ico_more_03.png" width="98" height="18" />
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div style="margin-top:60px;"><img :src="item.img" width="355" height="197"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-carousel&#45;&#45;nav__right" @click="moveCarousel(1)" :disabled="atEndOfList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        &lt;!&ndash; 风采 &ndash;&gt;
+        <div class="layout_yy" style="height:640px;">
+            <div class="layout_ry_content" style=" height:302px;" v-if="mienwallInfos.length>=2">
+                <div class="float_left" style="margin-right:22px;"><img :src="mienwallInfos[0].photo"  width="284" height="283"/></div>
+                <div class="float_left" style="margin-right:22px;"><img id="ygfc" width="588px" height="283px" src="${ctxStatic}/common/image2/ygfc_02.png"  /></div>
+                <div class="float_left"><img :src="mienwallInfos[1].photo"  width="284" height="283"/></div>
+
+            </div>
+            <div class="layout_ry_content" style="clear:both;margin-top:20px;">
+                <div class="float_left" style="margin-right:20px;" v-if="mienwallInfos.length>0 && index>1 && index<5" v-for="(itemcdd,index) in mienwallInfos">
+                    <img :src="itemcdd.photo" width="284" height="283" /></div>
+               &lt;!&ndash; <div class="float_left" style="margin-right:20px;"><img src="${ctxStatic}/common/image2/ygfc_03.png"  /></div>
+                <div class="float_left" style="margin-right:22px;"><img src="${ctxStatic}/common/image2/ygfc_01.png"  /></div>&ndash;&gt;
+                <div class="float_left" v-if="mienwallInfos.length>0"><img width="284" height="283" :src="mienwallInfos[5].photo"  /></div>
+&lt;!&ndash;                <div class="float_left" ><img  src="${ctxStatic}/common/image2/ygfc_01.png"  /></div>&ndash;&gt;
+            </div>
+        </div>
+        &lt;!&ndash;排行&ndash;&gt;
+        <div class="layout_yy" style="clear:both; background-color:#FFF; height:357px;">
+            <div class="layout_ry_content" style=" padding-top:50px;">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+          <tr>
+            <td width="33%"><table width="96%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td width="14%" height="53" align="center" valign="middle" class="newslist"><img src="${ctxStatic}/common/image2/ico_bmph.png" width="41" height="40" /></td>
+                            <td width="56%" align="left" valign="middle" class="font_back_16h newslist">部门排行</td>
+                            <td width="30%" align="center" valign="middle" class="newslist">
+                                <select  class="inputtext5" @change="statistics1Tab">
+                                      <option value="1" >当月</option>
+                                      <option value="2">历史</option>
+                                  </select>
+                            </td>
+                          </tr>
+                     </table>
+                </td>
+              </tr>
+              <tr>
+                <td align="center" valign="top">
+                    <table width="86%" border="0" cellspacing="0" cellpadding="0">
+                          <tr v-for="(item,index) in statistics1" v-if="statistics1.length>0 && index<5">
+                            <td width="12%" height="36" align="center" valign="middle"><img :src="'${ctxStatic}/common/image2/num_0'+(index+1)+'.png'" width="18" height="36" /></td>
+                            <td width="63%" style="color: #888888" class="font_back_14h inden5px">{{item.officename}}</td>
+                            <td width="10%" align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_30.png" width="14" height="14" /></td>
+                            <td width="15%" align="center" valign="middle">{{item.sum}}</td>
+                          </tr>
+                          &lt;!&ndash;<tr>
+                            <td height="36" align="center" valign="middle"><img src="${ctxStatic}/common/image2/num_02.png" width="18" height="36" /></td>
+                            <td class="font_back_14h inden5px">XXX部</td>
+                            <td align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_30.png" width="14" height="14" /></td>
+                            <td align="center" valign="middle">53</td>
+                          </tr>
+                          <tr>
+                            <td height="36" align="center" valign="middle"><img src="${ctxStatic}/common/image2/num_03.png" width="18" height="36" /></td>
+                            <td class="font_back_14h inden5px">XXX部</td>
+                            <td align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_30.png" width="14" height="14" /></td>
+                            <td align="center" valign="middle">2135</td>
+                          </tr>
+                          <tr>
+                            <td height="36" align="center" valign="middle"><img src="${ctxStatic}/common/image2/num_04.png" width="18" height="36" /></td>
+                            <td class="font_back_14h inden5px">XXX部</td>
+                            <td align="center" valign="middle" ><img src="${ctxStatic}/common/image2/ico_30.png" width="14" height="14" /></td>
+                            <td align="center" valign="middle">235</td>
+                          </tr>
+                          <tr>
+                            <td height="36" align="center" valign="middle"><img src="${ctxStatic}/common/image2/num_05.png" width="18" height="36" /></td>
+                            <td class="font_back_14h inden5px">XXX部</td>
+                            <td align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_30.png" width="14" height="14" /></td>
+                            <td align="center" valign="middle">124</td>
+                          </tr>&ndash;&gt;
+                    </table>
+                </td>
+              </tr>
+            </table></td>
+            <td width="33%" align="center"><table width="96%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="13%" height="53" align="center" valign="middle" class="newslist"><img src="${ctxStatic}/common/image2/ico_hyd.png" width="41" height="40" /></td>
+                    <td width="56%" align="left" valign="middle" class="font_back_16h newslist">活跃度</td>
+                    <td width="30%" align="center" valign="middle" class="newslist"><select size="1" class="inputtext5" @change="statistics2Tab">
+                      <option value="1">当月</option>
+                      <option value="2">历史</option>
+                    </select></td>
+                  </tr>
+                </table></td>
+              </tr>
+              <tr>
+                <td align="center" valign="top"><table width="86%" border="0" cellspacing="0" cellpadding="0">
+                  <tr v-for="(item,index) in statistics2" v-if="statistics2.length>0 && index<5">
+                    <td width="12%" height="36" align="center" valign="middle"><img :src="'${ctxStatic}/common/image2/num_0'+(index+1)+'.png'" width="18" height="36" /></td>
+                    <td width="63%" style="color: #888888;" class="font_back_14h inden5px">{{item.officename}}</td>
+                    <td width="10%" align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_31.png" width="14" height="14" /></td>
+                    <td width="15%" align="center" valign="middle">{{item.sum}}</td>
+                  </tr>
+                 &lt;!&ndash; <tr>
+                    <td height="36" align="center" valign="middle"><img src="${ctxStatic}/common/image2/num_02.png" width="18" height="36" /></td>
+                    <td class="font_back_14h inden5px">XXX部</td>
+                    <td align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_31.png" width="14" height="14" /></td>
+                    <td align="center" valign="middle">53</td>
+                  </tr>
+                  <tr>
+                    <td height="36" align="center" valign="middle"><img src="${ctxStatic}/common/image2/num_03.png" width="18" height="36" /></td>
+                    <td class="font_back_14h inden5px">XXX部</td>
+                    <td align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_31.png" width="14" height="14" /></td>
+                    <td align="center" valign="middle">2135</td>
+                  </tr>
+                  <tr>
+                    <td height="36" align="center" valign="middle"><img src="${ctxStatic}/common/image2/num_04.png" width="18" height="36" /></td>
+                    <td class="font_back_14h inden5px">XXX部</td>
+                    <td align="center" valign="middle" ><img src="${ctxStatic}/common/image2/ico_31.png" width="14" height="14" /></td>
+                    <td align="center" valign="middle">235</td>
+                  </tr>
+                  <tr>
+                    <td height="36" align="center" valign="middle"><img src="${ctxStatic}/common/image2/num_05.png" width="18" height="36" /></td>
+                    <td class="font_back_14h inden5px">XXX部</td>
+                    <td align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_31.png" width="14" height="14" /></td>
+                    <td align="center" valign="middle">124</td>
+                  </tr>&ndash;&gt;
+                </table></td>
+              </tr>
+            </table></td>
+            <td width="33%" align="right"><table width="96%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="14%" height="53" align="center" valign="middle" class="newslist"><img src="${ctxStatic}/common/image2/ico_rdph.png" width="41" height="40" /></td>
+                    <td width="56%" align="left" valign="middle" class="font_back_16h newslist">热度排行</td>
+                    <td width="30%" align="center" valign="middle" class="newslist"><select size="1" class="inputtext5" @change="statistics3Tab">
+                      <option value="1">当月</option>
+                      <option value="2">历史</option>
+                    </select></td>
+                  </tr>
+                </table></td>
+              </tr>
+              <tr>
+                <td align="center" valign="top"><table width="86%" border="0" cellspacing="0" cellpadding="0">
+                  <tr v-for="(item,index) in statistics3" v-if="statistics3.length>0 && index<5">
+                    <td width="12%" height="36" align="center" valign="middle"><img :src="'${ctxStatic}/common/image2/num_0'+(index+1)+'.png'" width="18" height="36" /></td>
+                    <td width="63%" style="color: #888888" class="font_back_14h inden5px">{{item.officename.substring(0,13)}}</td>
+                    <td width="10%" align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_32.png" width="14" height="14" /></td>
+                    <td width="15%" align="center" valign="middle">{{item.sum}}</td>
+                  </tr>
+                 &lt;!&ndash; <tr>
+                    <td height="36" align="center" valign="middle"><img src="${ctxStatic}/common/image2/num_02.png" width="18" height="36" /></td>
+                    <td class="font_back_14h inden5px">XXX部</td>
+                    <td align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_32.png" width="14" height="14" /></td>
+                    <td align="center" valign="middle">53</td>
+                  </tr>
+                  <tr>
+                    <td height="36" align="center" valign="middle"><img src="${ctxStatic}/common/image2/num_03.png" width="18" height="36" /></td>
+                    <td class="font_back_14h inden5px">XXX部</td>
+                    <td align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_32.png" width="14" height="14" /></td>
+                    <td align="center" valign="middle">2135</td>
+                  </tr>
+                  <tr>
+                    <td height="36" align="center" valign="middle"><img src="${ctxStatic}/common/image2/num_04.png" width="18" height="36" /></td>
+                    <td class="font_back_14h inden5px">XXX部</td>
+                    <td align="center" valign="middle" ><img src="${ctxStatic}/common/image2/ico_32.png" width="14" height="14" /></td>
+                    <td align="center" valign="middle">235</td>
+                  </tr>
+                  <tr>
+                    <td height="36" align="center" valign="middle"><img src="${ctxStatic}/common/image2/num_05.png" width="18" height="36" /></td>
+                    <td class="font_back_14h inden5px">XXX部</td>
+                    <td align="center" valign="middle"><img src="${ctxStatic}/common/image2/ico_32.png" width="14" height="14" /></td>
+                    <td align="center" valign="middle">124</td>
+                  </tr>&ndash;&gt;
+                </table></td>
+              </tr>
+            </table></td>
+          </tr>
+        </table>
+
+            </div>
+        </div>-->
+        <!--底部-->
+        <div class="layout_bottm" style="height:200px; ">
+                <div class="layout_ry_content" >
+                    <div class="float_left" style="width:400px; margin-top:70px;"><img src="${ctxStatic}/common/image2/logo_bottm.png" /></div>
+                    <div class="float_left font_bai_18h" style="width:400px; margin-top:90px; text-align:center;">中国光大银行武汉分行版权所有</div>
+                    <div class="float_left" style="width:100px; margin-top:60px;margin-right: 5%;"><img style="margin-left: -8%;" src="${ctxStatic}/common/image2/bottom_wxyh.png" />
+                        <div style="margin-top: 2%;color: white">微信银行</div>
+                    </div>
+                    <div class="float_left" style="width:100px; margin-top:60px;"><img style="margin-left: -8%;" src="${ctxStatic}/common/image2/bottom_sjyh.png" />
+                        <div style="margin-top: 2%;color: white">手机银行</div>
+                    </div>
+                </div>
+            </div>
+
+        <div id="htmlZy"></div>
+
+    </div>
+
+<script>
+    var name="${fn.getUser()}".replace(/\s*/g,"");
+    var logis=name.length>360?"登录":"未登录";
+    console.log(logis)
+    /* if (logis=="登录"){
+            $("#unameuser").html("${fn.getUser().name}");
+            $(".photo").attr("src","${fn.getUser().photo}");
+            $(".uno").html("("+"${fn.getUser().no}"+")");
+            $("#userInput").val("${fn.getUser()}");
+            $(".loginOutSystem").show();
+        }*/
+
+</script>
+
+</body>
+</html>

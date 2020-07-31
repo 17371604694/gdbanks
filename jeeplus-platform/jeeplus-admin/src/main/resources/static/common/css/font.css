@@ -1,0 +1,409 @@
+@charset "utf-8";
+/* 字体文样式*/
+body{
+	font-family: 微软雅黑;
+}
+.font_back_20 {
+	font-size: 18px;
+	font-family: "MS Serif", "New York", serif;
+	color: #000;
+}
+.font_back_16h {
+	font-size: 16px;
+	font-family: "MS Serif", "New York", serif;
+	color: #000;
+	font-weight: bold;
+
+}
+.font_back_18h {
+	font-size: 18px;
+	font-family: "MS Serif","New York","微软雅黑",serif;
+	color: #000;
+	font-weight: bold;
+
+
+}
+.font_back_20h {
+	font-size: 20px;
+	font-family: "MS Serif", "New York", serif;
+	color: #000;
+	font-weight: bold;
+}
+.font_back_24h {
+	font-size: 24px;
+	font-family: "MS Serif", "New York", serif;
+	color: #000;
+	font-weight: bold;
+}
+.font_back_14h {
+	font-size: 14px;
+	font-family: "MS Serif", "New York", serif;
+	color: #222222;
+}
+.font_yellow_16h {
+	font-size: 16px;
+	font-family: "MS Serif", "New York", serif;
+	color: #F5A83B;
+	font-weight: bold;
+}
+.font_hui_14h {
+	font-size: 14px;
+	font-family: 微软雅黑;
+	color: #767372;
+	font-weight: bold;
+}
+.font_hui_01_14h {
+	font-size: 14px;
+	font-family: "MS Serif", "New York", serif;
+	color: #D7D7D7;
+}
+.font_bai_14h {
+	font-size: 14px;
+	color: #ffffff;
+	font-weight: bold;
+	text-indent: 5px;
+}
+.font_bai_16h {
+	font-size: 16px;
+	color: #ffffff;
+	font-weight: bold;
+}
+.font_zise_18h {
+	font-size: 18px;
+	color: #672290;
+	font-weight: bold;
+}
+.font_zise_14h {
+	font-size: 14px;
+	color: #9C78C3;
+	font-weight: bold;
+}
+.font_zise_22h {
+	font-size: 22px;
+	color: #9C78C3;
+	font-weight: bold;
+	text-align: center;
+	line-height: 40px;
+}
+.alist16hei:link {		/*默认状态*/
+	color: #222222;
+	font-size: 14px;
+	font-family: "MS Serif", "New York", serif;
+	text-decoration: none;
+}
+.alist16hei:visited {	/*浏览过的*/
+	color: #212121;
+	font-size: 14px;
+	font-family: "MS Serif", "New York", serif;
+}
+.alist16hei:hover {	/*悬浮状态*/
+	color: #212121;
+	font-size: 14px;
+	font-family: "MS Serif", "New York", serif;
+}
+.alist16hei:active {	/*激活过的*/
+	color: #212121;
+	font-size: 14px;
+	font-family: "MS Serif", "New York", serif;
+}
+.alist17hei:link {		/*默认状态*/
+	color: #212121;
+	font-size: 18px;
+	font-family: "MS Serif", "New York", serif;
+	text-decoration: none;
+}
+.alist17hei:visited {	/*浏览过的*/
+	color: #212121;
+	font-size: 18px;
+	font-family: "MS Serif", "New York", serif;
+}
+.alist17hei:hover {	/*悬浮状态*/
+	color: #212121;
+	font-size: 18px;
+	font-family: "MS Serif", "New York", serif;
+}
+.alist17hei:active {	/*激活过的*/
+	color: #212121;
+	font-size: 18px;
+	font-family: "MS Serif", "New York", serif;
+}
+
+
+.adeptlist16:link {		/*默认状态*/
+	color: #212121;
+	font-size: 16px;
+	font-family: "MS Serif", "New York", serif;
+	text-decoration: none;
+}
+.adeptlist16:visited {	/*浏览过的*/
+	color: #212121;
+	font-size: 16px;
+	font-family: "MS Serif", "New York", serif;
+}
+.adeptlist16:hover {	/*悬浮状态*/
+	color: #212121;
+	font-size: 16px;
+	font-family: "MS Serif", "New York", serif;
+}
+.adeptlist16:active {	/*激活过的*/
+	color: #212121;
+	font-size: 16px;
+	font-family: "MS Serif", "New York", serif;
+}
+
+.adeptlist14:link {		/*默认状态*/
+	color: #212121;
+	font-size: 14px;
+	font-family: "MS Serif", "New York", serif;
+	text-decoration: none;
+}
+.adeptlist14:visited {	/*浏览过的*/
+	color: #212121;
+	font-size: 14px;
+	font-family: "MS Serif", "New York", serif;
+}
+.adeptlist14:hover {	/*悬浮状态*/
+	color: #212121;
+	font-size: 14px;
+	font-family: "MS Serif", "New York", serif;
+}
+.adeptlist14:active {	/*激活过的*/
+	color: #212121;
+	font-size: 14px;
+	font-family: "MS Serif", "New York", serif;
+}
+
+.linkmore:link {		/*默认状态*/
+	color: #212121;
+	font-size: 16px;
+	font-family: "MS Serif", "New York", serif;
+	text-decoration: none;
+}
+.linkmore:visited {	/*浏览过的*/
+	color: #212121;
+	font-size: 14px;
+	font-family: "MS Serif", "New York", serif;
+}
+.linkmore:hover {	/*悬浮状态*/
+	color: #212121;
+	font-size: 14px;
+	font-family: "MS Serif", "New York", serif;
+}
+.linkmore:active {	/*激活过的*/
+	color: #212121;
+	font-size: 14px;
+	font-family: "MS Serif", "New York", serif;
+}
+/* 字体块样式*/
+.box_zise {
+	display: inline-block;
+	background-color: #9C78C3;
+	width: 137px;
+	height: 38px;
+	font-size: 14px;
+	color: #ffffff;
+	line-height: 38px;
+	text-align: center;
+	font-weight: bold;
+	margin-right: 10px;
+}
+.box_huise {
+	display: inline-block;
+	background-color: #F4F4F4;
+	width: 137px;
+	height: 38px;
+	font-size: 14px;
+	color: #000000;
+	line-height: 38px;
+	text-align: center;
+	font-weight: bold;
+	margin-right: 10px;
+	border: 1px solid #D8D8D8;
+}
+.box_zise2 {
+	display: inline-block;
+	background-color: #9C78C3;
+	width: 50px;
+	height: 28px;
+	font-size: 14px;
+	color: #ffffff;
+	line-height: 28px;
+	text-align: center;
+	font-weight: bold;
+	border-radius: 27px 0 0 27px;
+	border: 1px solid #D8D8D8;
+	cursor:pointer;
+
+}
+.box_zise3 {
+	display: inline-block;
+	background-color: #ffffff;
+	width: 50px;
+	height: 28px;
+	font-size: 14px;
+	color: #9C78C3;
+	line-height: 28px;
+	text-align: center;
+	font-weight: bold;
+	border-radius: 0 27px 27px 0;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: none;
+	border-top-color: #D8D8D8;
+	border-right-color: #D8D8D8;
+	border-bottom-color: #D8D8D8;
+	border-left-color: #D8D8D8;
+	cursor:pointer;
+}
+.box_more {
+	display: inline-block;
+	background-color: #ffffff;
+	width: 50px;
+	height: 28px;
+	font-size: 14px;
+	color: #9C78C3;
+	line-height: 28px;
+	text-align: center;
+	font-weight: bold;
+	border-radius: 5px;
+	border: 1px solid #D8D8D8;
+	margin-right: 10px;
+}
+.font_bai_50h {
+	font-size: 50px;
+	color: #ffffff;
+	font-weight: bold;
+	font-family: "MS Serif", "New York", serif;
+}
+.font_bai_24h {
+	font-size: 24px;
+	color: #ffffff;
+	font-weight: bold;
+	font-family: "MS Serif", "New York", serif;
+	line-height: 30px;
+}
+/**
+自己添加样式
+*/
+
+.box_login {
+	display: inline-block;
+	background-color: #6b1685;
+	width: 60px;
+	font-size: 18px;
+	line-height:28px;
+	color: #ffffff;
+	text-align: center;
+	font-weight: bold;
+	border-radius: 5px;
+}
+
+.colora{
+	text-decoration: none;
+	color: black;
+}
+.box_huise:hover{
+	cursor:pointer;
+}
+.take{
+	background-color: rgb(156, 120, 195);
+	color: white;
+}
+
+
+
+/*滚动样式*/
+a:link,a:visited
+{
+	color:#000;
+	text-decoration: none;
+}
+input
+{
+	outline: 0;
+}
+
+.swiper_wrap{
+	position: relative;
+	top: 29px;
+	left: -30px;
+	width: 645px;
+	height: 30px;
+	margin: 0 auto;
+	overflow: hidden;
+
+}
+.swiper_wrap>ul{
+	position: relative;
+	top: 0;
+	left: 0;
+	width: 645px;
+	float: right;
+	color: #444;
+	font-size: 14px;
+	margin-top: 1px;
+}
+.swiper_wrap>ul li{
+	line-height: 30px;
+	padding-left: 24px;
+	font-size: 15px;
+	text-align: center;
+}
+.lt{
+	position: absolute;
+	left: -1px;
+	top: 7px;
+	font-family: "宋体";
+	font-weight: bold;
+	color: #AAAAAA;
+}
+.gt{
+	position: absolute;
+	right: 26px;
+	top: 7px;
+	font-family: "宋体";
+	font-weight: bold;
+	color: #AAAAAA;
+}
+.swiper_wrap .font_inner a{
+	color: #444;
+	font-size: 22px;
+}
+.swiper_wrap a:hover{
+	color: #FA9101;
+}
+/*滚动样式结束*/
+.float_leftday{
+	position: absolute;
+	right: 0;
+	top: 0px;
+
+}
+
+/* 1.3修改 */
+.linkmore:link {		/*默认状态*/
+	color: #212121;
+	font-size: 16px;
+	font-family: "MS Serif","New York","微软雅黑",serif;
+	text-decoration: none;
+}
+.linkmore:visited {	/*浏览过的*/
+	color: #212121;
+	font-size: 16px;
+	font-family: "MS Serif","New York","微软雅黑",serif;
+}
+.linkmore:hover {	/*悬浮状态*/
+	color: #212121;
+	font-size: 16px;
+	font-family: "MS Serif","New York","微软雅黑",serif;
+}
+.linkmore:active {	/*激活过的*/
+	color: #212121;
+	font-size: 14px;
+	font-family: "MS Serif","New York","微软雅黑",serif;
+}

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>光大银行武汉分行</title>
+  <link rel="shortcut icon" href="${ctxStatic}/common/images/favicon.ico">
+  <link href="../../../static/common/css2/font.css" rel="stylesheet" type="text/css">
+  <link href="../../../static/common/css2/gdcontent.css" rel="stylesheet" type="text/css">
+  <!--导航下拉菜单-->
+  <script src="${ctxStatic}/plugins/jquery/jquery.min.js"></script>
+  <script src="${ctxStatic}/plugins/layui/dist/layui.all.js"></script>
+  <script src="${ctxStatic}/plugins/layui/layer/layer.js"></script>
+  <script src="${ctxStatic}/plugins/layui/laytpl/laytpl.js"></script>
+  <link href="${ctxStatic}/plugins/layui/dist/css/layui.css" rel="stylesheet" type="text/css">
+  <script src="../../../static/common/js/list.js" type="text/javascript"></script>
+  <style type="text/css">
+    .redirects1{
+      position: relative;
+      padding-bottom: 40px;
+    }
+    #redirects1_div{
+      position: absolute;
+      top: 55px;
+      width: 800px;
+    // height: 200px;
+      background-color: rgb(0, 52, 100);
+      border-radius: 3px;
+
+    }
+    #redirects1_div>div{
+
+      /*background-color: red;*/
+      height: 40px;
+      width: 160px;
+      float: left;
+      line-height: 40px;
+    }
+    .redirects1_div_a{
+      color: #B5B8BD;
+    }
+    .redirects1_div_a:hover{
+      color: white;
+    }
+
+    /*2*/
+    .redirects2{
+      position: relative;
+      padding-bottom: 40px;
+    }
+    #redirects2_div{
+      position: absolute;
+      top: 55px;
+      width: 800px;
+      background-color: rgb(0, 52, 100);
+      border-radius: 3px;
+    }
+    #redirects2_div>div{
+      height: 40px;
+      width: 160px;
+      float: left;
+      line-height: 40px;
+    }
+    .redirects2_div_a{
+      color: #B5B8BD;
+    }
+    .redirects2_div_a:hover{
+      color: white;
+    }
+  </style>
+</head>
+<body>
+<div class="layout_deptbar">
+  <div class="navbar">
+    <div class="navbar">
+      <div class="float_left"><img src="../../../static/common/image2/logo.png" /></div>
+      <div class="float_left">
+        <ul>
+          <li class="text_nvabar_noselect redirects">首页</li>
+          <li class="text_nvabar_noselect redirects">分行动态</li>
+          <li class="text_nvabar_noselect redirects redirects1">分行部室<div id="redirects1_div"  style="display: none;"></div></li>
+          <li class="text_nvabar_noselect redirects redirects2">经营机构<div id="redirects2_div"  style="display: none;"></div></li>
+          <li class="text_nvabar_noselect redirects">规章制度</li>
+          <li class="text_nvabar_noselect redirects">下载专区</li>
+          <li class="text_nvabar_noselect" onclick="listtxl()">通讯录</li>
+        </ul>
+      </div>
+      <div class="folt_right">
+        <div class="float_left text_nvabar_noselect navbar_left" style="width:190px;">
+          <img class="float_left selectParim" src="../../../static/common/image2/ico_search_01.png"  style="margin-top:-4px;"  />
+          <input name="" type="text" value="欢迎访问光大内网" style="height: 16px"  class="inputtext4 stParim" /></div>
+        <div class="float_left text_nvabar_noselect navbar_left"  style="width:190px;">
+          <a href="${ctx}/login">
+            <img class="float_left photo" src="../../../static/common/image2/ico_loogin.png"
+                   style="margin-top:-6px;width: 30px;height: 30px;border-radius: 50%;position: relative;left: 17%;" />
+          </a>
+          <span id="unameuser" ></span>
+          <span class="uno" id="cardnum"></span>
+        </div>
+        <input  id="userInput" type="hidden"/>  <!--用户信息-->
+        <input  id="userctx" value="${ctx}" type="hidden"/>  <!--${ctx}信息-->
+        <div class="float_left text_nvabar_noselect navbar_left loginOutSystem"  style="width:100px;display: none">退出系统</div>
+      </div>
+    </div>
+  </div>
+  <div class="layout_dept">
+    <div style="width:500px;" class="float_left"><span class="font_bai_50h">${name!}</span><br><br><br>
+    </div>
+  </div>
+</div>
+<!-- 集合列表 -->
+<div class="layout_group" style="height: 100%">
+  <div class="layout_downlaout" style="border: 0px solid red;height: 100%">
+      <div class="layout_category_list" style="height: 100%">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="60%" ><div class="" style="height:66px;">
+              <div class="font_back_24h float_left margin_top20"><span class="dept_title">站内搜索</span></div>
+            </div>
+            </td>
+            <td  class=""><input type="text" name="textfield" id="textfield" class="inputtext2" style="height: 38px;width: 300px"/></td>
+            <td width="10%" class="" align="left" valign="middle"><img style="cursor: pointer" id="search" src="../../../static/common/image/ico_search01.jpg" width="43" height="38" /></td>
+          </tr>
+        </table>
+        <div class="float_left layout_category_list_info" style="height: 100%">
+          <div style="min-height: 300px">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" id="tableList">
+            </table>
+            <div id="test1" style="margin-left: 35%"></div>
+          </div>
+        </div>
+        <div style="clear:both;"></div>
+      </div>
+  </div>
+</div>
+<div class="layout_bottm" style="height:200px;">
+  <div class="layout_ry_content">
+    <div class="float_left" style="width:400px; margin-top:70px;"><img src="../../../static/common/image2/logo_bottm.png"></div>
+    <div class="float_left font_bai_18h" style="width:400px; margin-top:90px; text-align:center;">中国光大银行武汉分行版权所有</div>
+  </div>
+</div>
+<script type="text/javascript">
+  function listtxl(){
+    var cardnum = $("#cardnum").text();
+    if (!cardnum) {
+      alert("请先登录");
+    }else {
+      location.href="/a/logins/addressbook";
+    }
+  }
+</script>
+<script type="text/javascript">
+  var name="${fn.getUser()}".replace(/\s*/g,"");
+  var logis=name.length>360?"登录":"未登录";
+  var user=name.substring(name.indexOf('{')+1,name.lastIndexOf('}')).split(',');
+  if (logis=="登录"){
+    $("#unameuser").html(user[5].split('=')[1].replace(/'/g,""));
+    $(".photo").attr("src",user[12].split('=')[1].replace(/'/g,""));
+    $(".uno").html("("+user[2].split('=')[1].replace(/'/g,"")+")");
+    $("#userInput").val(name);
+    $(".loginOutSystem").show();
+  }
+</script>
+</body>
+</html>

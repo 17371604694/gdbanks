@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.meetingroommanage.meetingroomconvention.mapper.BankConferenceRoomReservationMapper">
+    
+	<sql id="bankConferenceRoomReservationColumns">
+		a.id AS "id",
+		createby.name AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.conference_theme AS "conferenceTheme",
+		a.host_dept AS "hostDept",
+		a.host_dept AS "office.id",
+		a.conference_contact_preson AS "conferenceContactPreson",
+		a.conference_contact_phone AS "conferenceContactPhone",
+		a.conference_room AS "conferenceRoom",
+		a.begin_time AS "beginTime",
+		a.end_time AS "endTime",
+		a.conference_type AS "conferenceType",
+		a.conference_preson AS "conferencePreson",
+		a.conference_preson_id AS "conferencePresonId",
+		a.accessory AS "accessory",
+		a.context AS "context",
+		a.conference_demand AS "conferenceDemand",
+		a.applicant_id AS "applicantId",
+		a.dept_id AS "deptId",
+		a.office_name AS "hostDeptName"
+	</sql>
+	
+	<sql id="bankConferenceRoomReservationJoins">
+		
+		LEFT JOIN sys_user conferencePreson ON conferencePreson.id = a.conference_preson
+		LEFT JOIN sys_user createby ON createby.id = a.create_by
+	</sql>
+	
+    <resultMap type="BankConferenceRoomReservation" id="BankConferenceRoomReservationResult" autoMapping="true">
+    	<result column="context" property="context"   typeHandler="com.jeeplus.core.mapper.ConvertBlobTypeHandler"/>
+    </resultMap>
+    
+	<select id="get" resultMap="BankConferenceRoomReservationResult" >
+		SELECT 
+			<include refid="bankConferenceRoomReservationColumns"/>
+		FROM bank_conference_room_reservation a
+		<include refid="bankConferenceRoomReservationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultMap="BankConferenceRoomReservationResult" >
+		SELECT 
+			<include refid="bankConferenceRoomReservationColumns"/>
+		FROM bank_conference_room_reservation a
+		<include refid="bankConferenceRoomReservationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="hostDept !=null and hostDept !=''" >
+				and a.host_dept = #{hostDept}
+			</if>
+			<if test="isNoticeMeeting !=null and isNoticeMeeting !=''" >
+				and a.is_notice_meeting = #{isNoticeMeeting}
+			</if>
+			<if test="conferencePresonId !=null and conferencePresonId !=''" >
+				and a.conference_preson_id like CONCAT ('%',#{conferencePresonId},'%')
+			</if>
+			<choose>
+				<when test="beginTime!=null"> and a.begin_time > #{beginTime} </when>
+			</choose>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultMap="BankConferenceRoomReservationResult" >
+		SELECT 
+			<include refid="bankConferenceRoomReservationColumns"/>
+		FROM bank_conference_room_reservation a
+		<include refid="bankConferenceRoomReservationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="isNoticeMeeting !=null and isNoticeMeeting !=''" >
+				and a.is_notice_meeting = #{isNoticeMeeting}
+			</if>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bank_conference_room_reservation(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			conference_theme,
+			host_dept,
+			conference_contact_preson,
+			conference_contact_phone,
+			conference_room,
+			begin_time,
+			end_time,
+			conference_type,
+			conference_preson,
+			conference_preson_id,
+			accessory,
+			context,
+			conference_demand,
+			applicant_id,
+			dept_id,
+			office_name,
+			is_notice_meeting
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{conferenceTheme},
+			#{hostDept},
+			#{conferenceContactPreson},
+			#{conferenceContactPhone},
+			#{conferenceRoom},
+			#{beginTime},
+			#{endTime},
+			#{conferenceType},
+			#{conferencePreson},
+			#{conferencePresonId},
+			#{accessory},
+			#{context},
+			#{conferenceDemand},
+			#{applicantId},
+			#{deptId},
+			#{hostDeptName},
+			#{isNoticeMeeting}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bank_conference_room_reservation SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			conference_theme = #{conferenceTheme},
+			host_dept = #{hostDept},
+			conference_contact_preson = #{conferenceContactPreson},
+			conference_contact_phone = #{conferenceContactPhone},
+			conference_room = #{conferenceRoom},
+			begin_time = #{beginTime},
+			end_time = #{endTime},
+			conference_type = #{conferenceType},
+			conference_preson = #{conferencePreson},
+			conference_preson_id = #{conferencePresonId},
+			accessory = #{accessory},
+			context = #{context},
+			conference_demand = #{conferenceDemand},
+			applicant_id = #{applicantId},
+			dept_id = #{deptId},
+			office_name = #{hostDeptName}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM bank_conference_room_reservation
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE bank_conference_room_reservation SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="BankConferenceRoomReservation" statementType="STATEMENT">
+		select * FROM bank_conference_room_reservation  where ${propertyName} = '${value}'
+	</select>
+
+	<!--查询会议室预约记录-->
+	<select id="findAllMeeting" resultType="MeetingTable">
+		select
+		a.conference_room AS "conferenceRoom",
+		a.conference_theme AS "conferenceTheme",
+		a.begin_time AS "beginTime",
+		a.end_time AS "endTime",
+		a.office_name AS "hostDept",
+		a.conference_contact_preson AS "conferenceContactPreson"
+		from bank_conference_room_reservation a
+		where a.del_flag = '0'
+		ORDER BY a.begin_time asc
+	</select>
+
+	<!--根据开始时间查询预约记录-->
+	<select id="findByBeginTime" resultType="BankConferenceRoomReservation">
+		SELECT * FROM bank_conference_room_reservation where
+		 (
+		(#{beginTime} > begin_time AND end_time > #{beginTime})
+		OR ( begin_time = #{beginTime}  AND end_time = #{endTime})
+		OR ( #{endTime} > begin_time AND end_time > #{endTime})
+		OR ( #{endTime} > end_time AND begin_time > #{beginTime})
+		OR ( end_time = #{endTime})
+		OR ( begin_time = #{beginTime})
+		 	)
+		 and conference_room = #{conferenceRoom} and del_flag = '0'
+	</select>
+
+	<!--根据结束时间查询预约记录-->
+<!--	<select id="findByEndTime" resultType="BankConferenceRoomReservation">-->
+<!--		SELECT * FROM bank_conference_room_reservation where-->
+<!--		end_time > #{endTime} and #{endTime}> begin_time and conference_room = #{conferenceRoom} and del_flag = '0'-->
+<!--	</select>-->
+	
+	<!--查询当前登录用户的角设-->
+	<select id="findrole" resultType="java.lang.String">
+		SELECT c.id
+			FROM sys_user_role a
+			left join sys_user b
+			on a.user_id=b.id
+			left join sys_role c
+			on a.role_id=c.id
+			where b.id = #{id}
+	</select>
+</mapper>

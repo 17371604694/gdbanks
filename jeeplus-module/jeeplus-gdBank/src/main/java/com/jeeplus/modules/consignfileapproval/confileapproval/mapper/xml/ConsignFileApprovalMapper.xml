@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.consignfileapproval.confileapproval.mapper.ConsignFileApprovalMapper">
+    
+	<sql id="consignFileApprovalColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.time AS "time",
+		a.applicant_unit AS "applicantUnit",
+		a.applicant_person AS "applicantPerson",
+		a.goal_of_work AS "goalOfWork",
+		a.with_the_way AS "withTheWay",
+		a.outbound_content AS "outboundContent",
+		a.quantity AS "quantity",
+		a.return_time AS "returnTime",
+		a.charge_applicant_person AS "chargeApplicantPerson",
+		a.office_head AS "officeHead",
+		a.office_supervisor_leader AS "officeSupervisorLeader",
+		a.state AS "state",
+		a.charge_applicant_person_name AS "chargeApplicantPersonName",
+		a.office_head_name AS "officeHeadName",
+		a.stateStep AS "stateStep",
+		a.office_supervisor_leader_name AS "officeSupervisorLeaderName",
+		a.materialAuditor AS "materialAuditor",
+		a.materialAuditorName AS "materialAuditorName",
+		a.applicantPersonName AS "applicantPersonName"
+	</sql>
+	
+	<sql id="consignFileApprovalJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="ConsignFileApproval" >
+		SELECT 
+			<include refid="consignFileApprovalColumns"/>
+		FROM consign_file_approval a
+		<include refid="consignFileApprovalJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ConsignFileApproval" >
+		SELECT 
+			<include refid="consignFileApprovalColumns"/>
+		FROM consign_file_approval a
+		<include refid="consignFileApprovalJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="beginTime != null and endTime != null ">
+				AND a.time BETWEEN #{beginTime} AND #{endTime}
+			</if>
+			<if test="applicantUnit != null and applicantUnit != ''">
+				AND a.applicant_unit LIKE
+				    <if test="_databaseId == 'postgre'">'%'||#{applicantUnit}||'%'</if>
+					<if test="_databaseId == 'oracle'">'%'||#{applicantUnit}||'%'</if>
+					<if test="_databaseId == 'mssql'">'%'+#{applicantUnit}+'%'</if>
+					<if test="_databaseId == 'mysql'">concat('%',#{applicantUnit},'%')</if>
+			</if>
+			<if test="applicantPerson != null and applicantPerson != ''">
+				AND a.applicant_person = #{applicantPerson}
+			</if>
+			<if test="goalOfWork != null and goalOfWork != ''">
+				AND a.goal_of_work = #{goalOfWork}
+			</if>
+			<if test="withTheWay != null and withTheWay != ''">
+				AND a.with_the_way LIKE
+				    <if test="_databaseId == 'postgre'">'%'||#{withTheWay}||'%'</if>
+					<if test="_databaseId == 'oracle'">'%'||#{withTheWay}||'%'</if>
+					<if test="_databaseId == 'mssql'">'%'+#{withTheWay}+'%'</if>
+					<if test="_databaseId == 'mysql'">concat('%',#{withTheWay},'%')</if>
+			</if>
+			<if test="outboundContent != null and outboundContent != ''">
+				AND a.outbound_content LIKE
+				    <if test="_databaseId == 'postgre'">'%'||#{outboundContent}||'%'</if>
+					<if test="_databaseId == 'oracle'">'%'||#{outboundContent}||'%'</if>
+					<if test="_databaseId == 'mssql'">'%'+#{outboundContent}+'%'</if>
+					<if test="_databaseId == 'mysql'">concat('%',#{outboundContent},'%')</if>
+			</if>
+			<if test="beginReturnTime != null and endReturnTime != null ">
+				AND a.return_time BETWEEN #{beginReturnTime} AND #{endReturnTime}
+			</if>
+			<if test="chargeApplicantPerson != null and chargeApplicantPerson != ''">
+				AND a.charge_applicant_person = #{chargeApplicantPerson}
+			</if>
+			<if test="officeHead != null and officeHead != '' ">
+				AND a.office_head = #{officeHead}
+			</if>
+			<if test="stateStep != null and stateStep != '' ">
+				AND a.statestep != #{stateStep}
+			</if>
+			<if test="state != null and state != '' ">
+				AND a.state = #{state}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="findListConAll" resultType="ConsignFileApproval">
+		SELECT
+		<include refid="consignFileApprovalColumns"/>
+		FROM consign_file_approval a
+		<where>
+			<if test="beginTime != null and endTime != '' ">
+				AND a.time BETWEEN #{beginTime} AND #{endTime}
+			</if>
+			<if test="applicantUnit != null and applicantUnit != ''">
+				AND a.applicant_unit LIKE concat('%',#{applicantUnit},'%')
+			</if>
+			<if test="withTheWay != null and withTheWay != ''">
+				AND a.with_the_way LIKE concat('%',#{withTheWay},'%')
+			</if>
+			<if test="applicantPerson != null and applicantPerson != ''">
+				AND a.applicant_person = #{applicantPerson}
+			</if>
+			<if test="beginReturnTime != null and endReturnTime != '' ">
+				AND a.return_time BETWEEN #{beginReturnTime} AND #{endReturnTime}
+			</if>
+
+
+			<if test="userId!=null and userId!='' ">
+				and ( a.applicant_person= #{userId}
+				or a.charge_applicant_person=#{userId}
+				or a.materialAuditor=#{userId}
+				or a.office_head=#{userId}
+				or a.office_supervisor_leader=#{userId} )
+
+			</if>
+			<if test="stateStep !=null and stateStep>0 ">
+				and a.stateStep !=#{stateStep}
+			</if>
+
+			<if test="state !=null   and state==1">
+				and a.stateStep != 5
+			</if>
+			<if test="state !=null   and state==2">
+				and a.state =#{state}  and a.stateStep = 5
+			</if>
+			<if test="state !=null   and state==3">
+				and a.state =#{state}
+			</if>
+
+
+
+		</where>
+		limit #{pageNo},#{pageSize}
+
+
+	</select>
+
+	<!--单独查询总数量-->
+	<select id="findListConAllCount" resultType="java.lang.Integer">
+         select count(1) from consign_file_approval a
+		<where>
+			<if test="userId!=null and userId!='' ">
+				or a.applicant_person= #{userId}
+				or a.charge_applicant_person=#{userId}
+				or a.materialAuditor=#{userId}
+				or a.office_head=#{userId}
+				or a.office_supervisor_leader=#{userId}
+			</if>
+		</where>
+	</select>
+
+
+
+	<select id="findAllList" resultType="ConsignFileApproval" >
+		SELECT 
+			<include refid="consignFileApprovalColumns"/>
+		FROM consign_file_approval a
+		<include refid="consignFileApprovalJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO consign_file_approval(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			time,
+			applicant_unit,
+			applicant_person,
+			goal_of_work,
+			with_the_way,
+			outbound_content,
+			quantity,
+			return_time,
+			charge_applicant_person,
+			office_head,
+			office_supervisor_leader,
+			charge_applicant_person_name,
+			office_head_name,
+			office_supervisor_leader_name,
+			materialAuditor,
+			materialAuditorName,
+			applicantPersonName
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{time},
+			#{applicantUnit},
+			#{applicantPerson},
+			#{goalOfWork},
+			#{withTheWay},
+			#{outboundContent},
+			#{quantity},
+			#{returnTime},
+			#{chargeApplicantPerson},
+			#{officeHead},
+			#{officeSupervisorLeader},
+			#{chargeApplicantPersonName},
+			#{officeHeadName},
+			#{officeSupervisorLeaderName},
+			#{materialAuditor},
+			#{materialAuditorName},
+			#{applicantPersonName}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE consign_file_approval SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			time = #{time},
+			applicant_unit = #{applicantUnit},
+			applicant_person = #{applicantPerson},
+			goal_of_work = #{goalOfWork},
+			with_the_way = #{withTheWay},
+			outbound_content = #{outboundContent},
+			quantity = #{quantity},
+			return_time = #{returnTime},
+			charge_applicant_person = #{chargeApplicantPerson},
+			office_head = #{officeHead},
+			office_supervisor_leader = #{officeSupervisorLeader},
+			state = #{state},
+			charge_applicant_person_name = #{chargeApplicantPersonName},
+			office_head_name = #{officeHeadName},
+			stateStep = #{stateStep},
+			office_supervisor_leader_name = #{officeSupervisorLeaderName},
+			materialAuditor = #{materialAuditor},
+			materialAuditorName = #{materialAuditorName},
+			applicantPersonName = #{applicantPersonName}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM consign_file_approval
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE consign_file_approval SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	<!--审核通过或不通过-->
+	<update id="updatePass">
+
+		update consign_file_approval set
+		   state = #{state},stateStep=#{sta},remarks=#{remarks}
+		where id = #{id}
+
+	</update>
+
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ConsignFileApproval" statementType="STATEMENT">
+		select * FROM consign_file_approval  where ${propertyName} = '${value}'
+	</select>
+
+
+
+</mapper>

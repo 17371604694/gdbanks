@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>分行部室</title>
+    <link rel="shortcut icon" href="${ctxStatic}/common/images/favicon.ico">
+    <link href="../../../static/common/css2/font.css" rel="stylesheet" type="text/css">
+    <link href="../../../static/common/css2/gdcontent.css" rel="stylesheet" type="text/css">
+    <!--导航下拉菜单-->
+    <!--引入jquery 注意jquery必须最先引入-->
+    <script src="../../../static/plugins/jquery/jquery.min.js"></script>
+    <script src="${ctxStatic}/plugins/layui/layer/layer.js"></script>
+    <style type="text/css">
+        .redirects1{
+            position: relative;
+            padding-bottom: 40px;
+        }
+        #redirects1_div{
+            position: absolute;
+            top: 55px;
+            width: 800px;
+        // height: 200px;
+            background-color: rgb(0, 52, 100);
+            border-radius: 3px;
+
+        }
+        #redirects1_div>div{
+
+            /*background-color: red;*/
+            height: 40px;
+            width: 160px;
+            float: left;
+            line-height: 40px;
+        }
+        .redirects1_div_a{
+            color: #B5B8BD;
+        }
+        .redirects1_div_a:hover{
+            color: white;
+        }
+
+        /*2*/
+        .redirects2{
+            position: relative;
+            padding-bottom: 40px;
+        }
+        #redirects2_div{
+            position: absolute;
+            top: 55px;
+            width: 800px;
+            background-color: rgb(0, 52, 100);
+            border-radius: 3px;
+        }
+        #redirects2_div>div{
+            height: 40px;
+            width: 160px;
+            float: left;
+            line-height: 40px;
+        }
+        .redirects2_div_a{
+            color: #B5B8BD;
+        }
+        .redirects2_div_a:hover{
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+     <div class="layout_deptbar">
+            <div class="navbar">
+                <div class="navbar">
+                    <div class="float_left"><img src="../../../static/common/image2/logo.png" /></div>
+                    <div class="float_left">
+                        <ul>
+                            <li class="text_nvabar_noselect redirects">首页</li>
+                            <li class="text_nvabar_noselect redirects">分行动态</li>
+                            <li class="text_nvabar_noselect redirects redirects1">分行部室<div id="redirects1_div"  style="display: none;"></div></li>
+                            <li class="text_nvabar_noselect redirects redirects2">经营机构<div id="redirects2_div"  style="display: none;"></div></li>
+                            <li class="text_nvabar_noselect redirects">规章制度</li>
+                            <li class="text_nvabar_noselect redirects">下载专区</li>
+                            <li class="text_nvabar_noselect " onclick="listtxl()">通讯录</li>
+                        </ul>
+                    </div>
+                    <div class="folt_right">
+                        <div class="float_left text_nvabar_noselect navbar_left" style="width:190px;">
+                            <img class="float_left selectParim" src="../../../static/common/image2/ico_search_01.png"  style="margin-top:-4px;"  />
+                            <input name="" type="text" value="欢迎访问光大内网！"  class="inputtext4 stParim" /></div>
+                        <div class="float_left text_nvabar_noselect navbar_left"  style="width:190px;">
+                            <a href="${ctx}/login">
+                                <img class="float_left photo" src="../../../static/common/image2/ico_loogin.png"
+                                     style="margin-top:-6px;width: 30px;height: 30px;border-radius: 50%;position: relative;left: 17%;" />
+                            </a>
+                            <span id="unameuser" ></span>
+                            <span class="uno" id="cardnum"></span>
+                        </div>
+                        <input  id="userInput" type="hidden"/>  <!--用户信息-->
+                        <input  id="userctx" value="${ctx}" type="hidden"/>  <!--${ctx}信息-->
+                        <div class="float_left text_nvabar_noselect navbar_left loginOutSystem"  style="width:100px;display: none">退出系统</div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="layout_dept">
+                <div style="width:500px;" class="float_left"><span style="    line-height: 1;
+    " class="font_bai_50h">${menu.name!}</span><br><br><br>
+                    <span class="font_bai_24h"> <br>
+         <br>
+        </span>
+                </div>
+                <div class="folt_right layout_dept_bg"><font class="font_bai_16h" style="margin-right:50%;">${menu.tel!}</font></div>
+            </div>
+        </div>
+
+    <div style="border: 0px solid green;clear: both">
+        <!-- 集合列表 -->
+        <div class="layout_group" id="layout_group" style="border: 0px solid red;margin-bottom: 2%">
+        </div>
+    </div>
+</div>
+<div class="layout_bottm" style="height:200px; ">
+    <div class="layout_ry_content">
+        <div class="float_left" style="width:400px; margin-top:70px;"><img src="../../../static/common/image2/logo_bottm.png"></div>
+        <div class="float_left font_bai_18h" style="width:400px; margin-top:90px; text-align:center;">中国光大银行武汉分行版权所有</div>
+    </div>
+</div>
+<script>
+        $(function () {
+
+            $.getJSON("/a/public/getNavMenu",function (data) {
+                for (var i = 0; i < data.length ; i++) {
+                    var $div=$("<div><a class=\"redirects1_div_a\" style=\"text-decoration: none\" href=\"/a/logins/grouplist?id="+data[i].id+"\">"+data[i].name+"</a> </div>");
+                    $("#redirects1_div").append($div);
+                }
+            });
+            $.getJSON("/a/public/getNavMenuInstitutions",function (data) {
+                for (var i = 0; i < data.length ; i++) {
+                    var $div=$("<div><a class=\"redirects2_div_a\" style=\"text-decoration: none\" href=\"/a/logins/programadatalist?id="+data[i].id+"\">"+data[i].name+"</a> </div>");
+                    $("#redirects2_div").append($div);
+                }
+            });
+
+            //首页li导航栏转跳
+            $(".redirects").click(function () {
+                var i=$(this).index();
+                if (i==0){ //首页
+                    location.href="/a/logins/indexNew"
+                }
+                if (i==1){ //分行动态
+                    location.href="/a/logins/programadatalist?id=4f8d74dc230b49e5b9aba3d7386f85bf&name="+encodeURI("分行动态")
+                }
+                if (i==4){ //
+                    location.href="/a/logins/programadatalist?id=06cdcb5fdbfa4aa7beb9718f2817b9f4&name="+encodeURI("规章制度")
+                }
+                if (i==5){ //
+                    location.href="/a/logins/down"
+                }
+                if (i==6){ //
+                    location.href="/a/logins/addressbook"
+                }
+            });
+
+            $(".redirects1").hover(function () {
+                $("#redirects1_div").show();
+            },function () {
+                $("#redirects1_div").hide();
+
+            })
+            $(".redirects2").hover(function () {
+                $("#redirects2_div").show();
+            },function () {
+                $("#redirects2_div").hide();
+
+            })
+
+            $(".stParim").focus(function () {
+                if ($(this).val()=="欢迎访问光大内网！" || $(this).val()=="请输入要搜索的标题内容！"){
+                    $(this).val("")
+                }
+            });
+            $(".stParim").blur(function () {
+                if ($(this).val()==""){
+                    $(this).val("欢迎访问光大内网！");
+                }
+            });
+            $(".selectParim").click(function () {
+                var selectParim=$(".stParim").val();
+                if (selectParim=="欢迎访问光大内网！" || selectParim==""){
+                    $(".stParim").val("请输入要搜索的标题内容！");
+                } else {
+                    location.href="/a/logins/list?title="+encodeURI(selectParim.trim());
+                }
+
+
+            });
+            $("#unameuser").click(function () {
+                if ($(this).html()!="登录") {
+                    layer.open({
+                        type: 2,
+                        shadeClose:true,
+                        id: 'update_user',
+                        title: ['修改用户信息', 'font-size:18px;'],
+                        area: ['1000px', '650px'],
+                        content: '/a/sys/user/info'
+                    });
+                }
+            });
+
+            $(".loginOutSystem").click(function () {
+                location.href="/a/logout";
+            });
+
+            var menuid = "${menu.id!}";
+                // var list;//二级菜单
+            $.ajaxSettings.async = false; //关闭异步
+            $.post("/a/public/getNavMenuList", {id: menuid}, function (data) {
+                // console.log(data);
+                var keys = new Array();
+                var valus = new Array();
+                var i = 0;
+                //将map 的key和value 分别存在数组中
+                for (var key in data) {
+                 //   console.log(key);
+                 //   console.log(data[key]);
+                    keys[i] = key;//获取key值
+                    valus[i] = data[key];//获取对应的value值
+                    i++;
+                }
+
+                //加载数据
+                var divlist = "";
+                for (var k = 0; k < keys.length; k++) {  //循环菜单栏目
+
+                    //console.log(valus[k][0]==undefined);
+                    var am="";
+                    if (valus[k][0]!=undefined) {
+                        am='<a target="_blank" href="/a/logins/programadatalist?id='+valus[k][0].programatId+'&name='+encodeURI(keys[k])+' "><span class="box_more">更多+</span></a>';
+                    }
+
+
+                    if (k % 2 == 0) {//左边
+                        divlist += '<div class="layout_group_list" style="overflow:hidden">' +
+                            '<div class="float_left layout_conent_list right_border">' +
+                            '<div class="" style="height:66px;">' +
+                            '<div class="font_back_24h float_left margin_top20"><span class="dept_title">'+keys[k]+'</span></div>' +
+                            '<div class="folt_right margin_top20">' +
+                            am +
+                            '</div>' +
+                            '</div>' +
+                            '<div>' +
+                            '<table width="100%" border="0" cellspacing="0" cellpadding="0">'
+                        for (var j = 0; j < valus[k].length; j++) {//循环栏目内容(table表格拼接)
+                            var time = valus[k][j].createDate.substring(5,10);
+                            var createtiem = valus[k][j].createDate.substring(0,10);
+                            var day2 = new Date();
+                            var nian = day2 .getFullYear();
+                            var yue = day2 .getMonth()+1;
+                            if(yue<10){
+                                yue = '0'+yue;
+                            }
+                            var tian = day2 .getDate();
+                            if(tian<10){
+                                tian = '0'+tian;
+                            }
+                            var now = nian+'-'+yue+'-'+tian;
+                            // alert("当前时间："+now+"发稿时间："+createtiem);
+                            divlist += '<tr>' +
+                                '<td width="10%" align="center" valign="middle" class="list_td_height">' ;
+                            if(createtiem===now){
+                                divlist += '<img src="../../../static/common/imagess/ico_new.jpg" width="39" height="17"/></td>';
+                            }else {
+                                divlist += '<img src="" width="39" height="17"/></td>'
+                            }
+                            divlist +=
+                                '<td align="left" valign="middle"><a target="_blank" href="/a/logins/content/?id='+valus[k][j].id+'" class="adeptlist14">' + valus[k][j].title.substring(0,23) + '</a></td>' +
+                                '<td width="15%" align="center" valign="middle"><a target="_blank" href="/a/logins/content?id='+valus[k][j].id+'" class="adeptlist14">' + time + '</a></td>' +
+                                '</tr>'
+                            // alert(valus[k][j].content);
+                        }
+                        divlist += '</table>' +
+                            '</div>' +
+                            '</div>'
+                    } else {//右边
+                        divlist +=
+                            '<div class="float_left layout_conent_list" style="margin-left:10px;overflow:hidden">' +
+                            '<div class="" style="height:66px;">' +
+                            '<div class="font_back_24h float_left margin_top20"><span class="dept_title">' + keys[k] + '</span></div>' +
+                            '<div class="folt_right margin_top20">' +
+                            am +
+                            '</div>' +
+                            '</div>' +
+                            '<div>' +
+                            '<table width="100%" border="0" cellspacing="0" cellpadding="0">'
+                        for (var j = 0; j < valus[k].length; j++) {//循环栏目内容(table表格拼接)
+                            var time = valus[k][j].createDate.substring(5,10);
+                            var createtiem = valus[k][j].createDate.substring(0,10);
+                            var day2 = new Date();
+                            var nian = day2 .getFullYear();
+                            var yue = day2 .getMonth()+1;
+                            if(yue<10){
+                                yue = '0'+yue;
+                            }
+                            var tian = day2 .getDate();
+                            if(tian<10){
+                                tian = '0'+tian;
+                            }
+                            var now = nian+'-'+yue+'-'+tian;
+                            divlist += '<tr>' +
+                                '<td width="10%" align="center" valign="middle" class="list_td_height">' ;
+                            if(createtiem===now){
+                                divlist += '<img src="../../../static/common/imagess/ico_new.jpg" width="39" height="17"/></td>';
+                            }else {
+                                divlist += '<img src="" width="39" height="17"/></td>'
+                            }
+                            divlist +=
+                                '<td align="left" valign="middle"><a target="_blank" href="/a/logins/content/?id='+valus[k][j].id+'" class="adeptlist14">'+valus[k][j].title.substring(0,23)+'</a></td>' +
+                                '<td width="15%" align="center" valign="middle"><a target="_blank" href="/a/logins/content/?id='+valus[k][j].id+'" class="adeptlist14">'+time+'</a></td>' +
+                                '</tr>'
+                        }
+                        divlist += '</table>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>'
+                    }
+
+                }
+                $("#layout_group").empty();
+                $("#layout_group").append(divlist);
+            })
+            $.ajaxSettings.async = true; //关闭异步
+        });
+</script>
+<script type="text/javascript">
+    function listtxl(){
+        var cardnum = $("#cardnum").text();
+        if (!cardnum) {
+            alert("请先登录");
+        }else {
+            location.href="/a/logins/addressbook";
+        }
+    }
+    var name="${fn.getUser()}".replace(/\s*/g,"");
+    var logis=name.length>360?"登录":"未登录";
+    var user=name.substring(name.indexOf('{')+1,name.lastIndexOf('}')).split(',');
+    if (logis=="登录"){
+        $("#unameuser").html(user[5].split('=')[1].replace(/'/g,""));
+        $(".photo").attr("src",user[12].split('=')[1].replace(/'/g,""));
+        $(".uno").html("("+user[2].split('=')[1].replace(/'/g,"")+")");
+        $("#userInput").val(name);
+        $(".loginOutSystem").show();
+
+    }
+
+</script>
+</body>
+
+</html>

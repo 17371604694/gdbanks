@@ -1,0 +1,164 @@
+
+.lb-box {
+  width: 448px;
+  height: 387px;
+  position: relative;
+  overflow: hidden;
+  padding-top:12px;
+  padding-left:12px;
+  padding-right:12px;
+}
+@media (max-width:568px) {
+  .lb-box {
+    width: 76%;
+    height: 220px;
+  }
+}
+
+.lb-content {
+  width: 100%;  
+  height: 100%;
+
+}
+
+.lb-item {
+  width: 448px;  
+  height: 249px;
+  display: none;
+  position: relative;   
+
+}
+
+.lb-item > a {
+  width: 100%;
+  height: 100%;
+  display: block;
+  text-decoration:none;
+}
+
+.lb-item > a > img {
+  width: 400px;
+  height: 229px;
+}
+
+.lb-item > a > span {
+  width: 100%;
+  display: block;
+  bottom: 0px;
+  padding: 5px;
+  /*font-size: 19px!important;*/
+  font-family: "MS Serif","New York","微软雅黑",serif;
+  color: #000;
+  /*font-weight: bold;*//*取消字体加粗*/
+
+  
+}
+@media (max-width:568px) {
+  .lb-item > a > span {
+    padding: 10px;
+  }
+}
+
+.lb-item.active {
+  display: block;
+  left: 0%;
+
+
+}
+.lb-item.active.left {
+  left: -110%;
+
+}
+.lb-item.active.right {
+  left: 110%;
+}
+
+/*  */
+.lb-item.next,
+.lb-item.prev {
+  display: block;
+  position: absolute;
+  top: 0px;
+  //left: -75px;
+  padding-top:12px;
+  padding-left:12px;
+  padding-right:12px;
+}
+.lb-item.next {
+  left: 100%;
+
+}
+.lb-item.prev {
+  left: -100%;
+
+}
+.lb-item.next.left,
+.lb-item.prev.right {
+  left: 0%;
+
+}
+
+.lb-sign {
+  position: absolute;
+  right: 50px;
+  top: 359px;
+  padding: 5px 3px;
+  border-radius: 6px;
+  list-style: none;
+  user-select: none;
+
+}
+
+.lb-sign li {
+    display: inline-block;
+    width: 60px;
+    height: 5px;
+    border-top: 5px solid #fff;
+    border-bottom: 0px solid #fff;
+    background-color: #ddd;
+    cursor: pointer;
+    -webkit-transition: background-color 0.2s;
+    transition: background-color 0.2s;
+  margin-right: 10px;
+}
+.lb-sign li:hover {
+  color: #fff;
+}
+.lb-sign li.active {
+  color: #000;
+  background-color: #9C78C3;
+}
+
+.lb-ctrl {
+  position: absolute;
+  top: 38%;
+  transform: translateY(-50%);
+  font-size: 30px;
+  font-weight: 900;
+  user-select: none;
+  background-color: #9C78C3;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.1s linear;
+}
+@media (max-width:568px) {
+  .lb-ctrl {
+    font-size: 30px;
+  }
+}
+.lb-ctrl.left {
+  left: -50px;
+}
+.lb-ctrl.right {
+  right: -50px;
+}
+.lb-box:hover .lb-ctrl.left {
+  left: 10px;
+}
+.lb-box:hover .lb-ctrl.right {
+  right: 10px;
+}
+.lb-ctrl:hover {
+  background-color: #9C78C3;
+}

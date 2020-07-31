@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.advertisingaudit.advertising.mapper.AdvertisingAuditMapper">
+    
+	<sql id="advertisingAuditColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.time AS "time",
+		a.applicant_unit AS "applicantUnit",
+		a.applicant_person AS "applicantPerson",
+		a.advertising_centent AS "advertisingCentent",
+		a.advertising_file AS "advertisingFile",
+		a.offer_principal AS "offerPrincipal",
+		a.satrap_principal AS "satrapPrincipal",
+		a.state AS "state",
+		a.stateStep AS "stateStep",
+		a.offer_principal_name AS "offerPrincipalName",
+		a.satrap_principal_name AS "satrapPrincipalName",
+		a.unit_principal_name AS "unitPrincipalName",
+		a.unit_principal AS "unitPrincipal",
+		a.department AS "department",
+		a.advertisingAuditor AS "advertisingAuditor",
+		a.applicantPersonName AS "applicantPersonName",
+		a.departmentName AS "departmentName",
+		a.advertisingAuditorName AS "advertisingAuditorName",
+		a.choices AS "choices"
+	</sql>
+	
+	<sql id="advertisingAuditJoins">
+		
+		LEFT JOIN sys_user offerPrincipal ON offerPrincipal.id = a.offer_principal
+		LEFT JOIN sys_user satrapPrincipal ON satrapPrincipal.id = a.satrap_principal
+	</sql>
+	
+    <resultMap type="AdvertisingAudit" id="AdvertisingAuditResult" autoMapping="true">
+    	<result column="advertisingCentent" property="advertisingCentent"   typeHandler="com.jeeplus.core.mapper.ConvertBlobTypeHandler"/>
+    </resultMap>
+    
+	<select id="get" resultMap="AdvertisingAuditResult" >
+		SELECT 
+			<include refid="advertisingAuditColumns"/>
+		FROM advertising_audit a
+		<include refid="advertisingAuditJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultMap="AdvertisingAuditResult" >
+		SELECT 
+			<include refid="advertisingAuditColumns"/>
+		FROM advertising_audit a
+		<include refid="advertisingAuditJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="beginTime != null and endTime != null ">
+				AND a.time BETWEEN #{beginTime} AND #{endTime}
+			</if>
+			<if test="applicantUnit != null and applicantUnit != ''">
+				AND a.applicant_unit = #{applicantUnit}
+			</if>
+			<if test="applicantPerson != null and applicantPerson != ''">
+				AND a.applicant_person = #{applicantPerson}
+			</if>
+			<if test="stateStep != null and stateStep != ''">
+				AND a.statestep != #{stateStep}
+			</if>
+			/*主要用于查看审核通过的 2,6 为通过*/
+			<if test="state != null and state != ''">
+				AND a.state = #{state} and a.statestep = 6
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultMap="AdvertisingAuditResult" >
+		SELECT 
+			<include refid="advertisingAuditColumns"/>
+		FROM advertising_audit a
+		<include refid="advertisingAuditJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO advertising_audit(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			time,
+			applicant_unit,
+			applicant_person,
+			advertising_centent,
+			advertising_file,
+			offer_principal,
+			satrap_principal,
+			state,
+			stateStep,
+			offer_principal_name,
+			satrap_principal_name,
+			unit_principal_name,
+			unit_principal,
+			department,
+			advertisingAuditor,
+			applicantPersonName,
+			departmentName,
+			advertisingAuditorName,
+			choices
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{time},
+			#{applicantUnit},
+			#{applicantPerson},
+			#{advertisingCentent, jdbcType=CLOB},
+			#{advertisingFile},
+			#{offerPrincipal},
+			#{satrapPrincipal},
+			#{state},
+			#{stateStep},
+			#{offerPrincipalName},
+			#{satrapPrincipalName},
+			#{unitPrincipalName},
+			#{unitPrincipal},
+			#{department},
+			#{advertisingAuditor},
+			#{applicantPersonName},
+			#{departmentName},
+			#{advertisingAuditorName},
+			#{choices}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE advertising_audit SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			time = #{time},
+			applicant_unit = #{applicantUnit},
+			applicant_person = #{applicantPerson},
+			advertising_centent = #{advertisingCentent, jdbcType=CLOB},
+			advertising_file = #{advertisingFile},
+			offer_principal = #{offerPrincipal},
+			satrap_principal = #{satrapPrincipal},
+			state = #{state},
+			stateStep = #{stateStep},
+			offer_principal_name = #{offerPrincipalName},
+			satrap_principal_name = #{satrapPrincipalName},
+			unit_principal_name = #{unitPrincipalName},
+			unit_principal = #{unitPrincipal},
+			department = #{department},
+			advertisingAuditor = #{advertisingAuditor},
+			applicantPersonName = #{applicantPersonName},
+			departmentName = #{departmentName},
+			advertisingAuditorName = #{advertisingAuditorName},
+			choices = #{choices}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM advertising_audit
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE advertising_audit SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="AdvertisingAudit" statementType="STATEMENT">
+		select * FROM advertising_audit  where ${propertyName} = '${value}'
+	</select>
+    <select id="findListConAll" resultType="AdvertisingAudit">
+
+		SELECT
+		<include refid="advertisingAuditColumns"/>
+		FROM advertising_audit a
+		<include refid="advertisingAuditJoins"/>
+		<where>
+			<if test="beginTime != null and endTime != '' ">
+				AND a.time BETWEEN #{beginTime} AND #{endTime}
+			</if>
+			<if test="applicantUnit != null and applicantUnit != ''">
+				AND a.applicant_unit = #{applicantUnit}
+			</if>
+			<if test="userId!=null and userId!='' ">
+				and ( a.applicant_person= #{userId}
+				or a.advertisingAuditor=#{userId}
+				or a.department like CONCAT('%',#{userId},'%')
+				or a.unit_principal=#{userId}
+				or a.offer_principal=#{userId}
+				or a.satrap_principal=#{userId}  )
+			</if>
+			<if test="stateStep !=null and stateStep>0 ">
+                 and a.stateStep !=#{stateStep}
+			</if>
+
+			<if test="state != null and state != ''">
+				AND a.state = #{state} and a.statestep = 6
+			</if>
+
+		</where>
+		limit #{pageNo},#{pageSize}
+	</select>
+    <select id="findListConAllCount" resultType="java.lang.Integer">
+
+		select count(1) from advertising_audit a
+		<where>
+			<if test="userId!=null and userId!='' ">
+				or a.applicant_person= #{userId}
+				or a.advertisingAuditor=#{userId}
+				or a.department like CONCAT('%',#{userId},'%')
+				or a.unit_principal=#{userId}
+				or a.offer_principal=#{userId}
+				or a.satrap_principal=#{userId}
+			</if>
+		</where>
+
+
+	</select>
+
+    <!--广告审核操作，更改操作步骤状态，审核状态-->
+	<update id="updataStateStepAndStateSuccess" >
+		UPDATE advertising_audit
+		SET
+			state = #{state},
+			stateStep = #{stateStep},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+    <update id="updatePass">
+
+		update advertising_audit set
+		   state = #{state},stateStep=#{sta},remarks=#{remarks}
+		where id = #{id}
+
+
+	</update>
+	<update id="updataChoices">
+		update advertising_audit set
+		   choices = #{choices}
+		where id = #{id}
+	</update>
+
+</mapper>

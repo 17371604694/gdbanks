@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.verifierts.verifier.mapper.BankVerifierMapper">
+    
+	<sql id="bankVerifierColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.programa AS "programa",
+		a.verifier_persion AS "verifierPersion",
+		(select name from sys_menu where id=a.programa) as "programaName",
+		(select name from sys_user where id=a.verifier_persion) as "verifierPersionName"
+	</sql>
+	
+	<sql id="bankVerifierJoins">
+		
+	</sql>
+
+
+
+	<select id="get" resultType="BankVerifier" >
+		SELECT 
+			<include refid="bankVerifierColumns"/>
+		FROM bank_verifier a
+
+		<include refid="bankVerifierJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BankVerifier" >
+		SELECT 
+			<include refid="bankVerifierColumns"/>
+		FROM bank_verifier a
+		<include refid="bankVerifierJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="programa != null and programa != ''">
+				AND a.programa LIKE
+				    <if test="_databaseId == 'postgre'">'%'||#{programa}||'%'</if>
+					<if test="_databaseId == 'oracle'">'%'||#{programa}||'%'</if>
+					<if test="_databaseId == 'mssql'">'%'+#{programa}+'%'</if>
+					<if test="_databaseId == 'mysql'">concat('%',#{programa},'%')</if>
+			</if>
+			<if test="verifierPersion != null and verifierPersion != ''">
+				AND a.verifier_persion LIKE
+				    <if test="_databaseId == 'postgre'">'%'||#{verifierPersion}||'%'</if>
+					<if test="_databaseId == 'oracle'">'%'||#{verifierPersion}||'%'</if>
+					<if test="_databaseId == 'mssql'">'%'+#{verifierPersion}+'%'</if>
+					<if test="_databaseId == 'mysql'">concat('%',#{verifierPersion},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BankVerifier" >
+		SELECT 
+			<include refid="bankVerifierColumns"/>
+		FROM bank_verifier a
+		<include refid="bankVerifierJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bank_verifier(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			programa,
+			verifier_persion
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{programa},
+			#{verifierPersion}
+		)
+	</insert>
+
+	<!--选中用户-->
+	<delete id="delUsers">
+		delete from bank_user
+		where uid =#{id}
+	<!--	<foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>-->
+
+	</delete>
+	<delete id="delUsersAll">
+		delete from bank_user
+	</delete>
+	<insert id="addUsers">
+		insert into bank_user values(#{uid},#{uname},#{uloginName})
+
+	</insert>
+	<select id="finBankUserAll" resultType="com.jeeplus.modules.verifierts.verifier.entity.BankUser">
+		select * from bank_user
+	</select>
+
+
+
+
+
+	<update id="update">
+		UPDATE bank_verifier SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			programa = #{programa},
+			verifier_persion = #{verifierPersion}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM bank_verifier
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE bank_verifier SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="BankVerifier" statementType="STATEMENT">
+		select * FROM bank_verifier  where ${propertyName} = '${value}'
+	</select>
+
+	<!--查询所有栏目-->
+	<select id="findLanMuAll" resultType="com.jeeplus.modules.sys.entity.Menu">
+
+		 SELECT * from sys_menu
+		 WHERE
+		  parent_id in (SELECT id from sys_menu  where parent_ids='0,1,' and `name` not in ('个人中心','单位组织',
+		 '常用工具','工作流程','敏捷开发','报表应用','系统管理','信息管理','系统监控','外链','通讯录','数据管理','栏目管理','稿件管理',      '会议室管理','档案借阅管理'))
+
+	</select>
+	<select id="findByParmName" resultType="com.jeeplus.modules.verifierts.verifier.entity.BankVerifier">
+
+		select * from bank_verifier where programa=(select id from sys_menu where name=#{name})
+
+	</select>
+	<select id="findBankMenuAll" resultType="com.jeeplus.modules.verifierts.verifier.entity.BankMenu">
+
+		 SELECT id,parent_id as parentId,`name` as pname from sys_menu
+		 WHERE
+		  parent_id in (SELECT id from sys_menu  where parent_ids='0,1,' and `name` not in ('个人中心','单位组织',
+		 '常用工具','工作流程','敏捷开发','报表应用','系统管理','信息管理','系统监控','外链','通讯录','数据管理','栏目管理','稿件管理',      '会议室管理','档案借阅管理'))
+
+	</select>
+
+	<!--查询所有一级栏目-->
+	<select id="findBankMenuFistAll" resultType="com.jeeplus.modules.verifierts.verifier.entity.BankMenu">
+
+		(SELECT id,name pname from sys_menu  where parent_ids='0,1,' and `name` not in ('个人中心','单位组织',
+		 '常用工具','工作流程','敏捷开发','报表应用','系统管理','信息管理','系统监控','外链','通讯录',
+		 '数据管理','栏目管理','稿件管理',      '会议室管理','档案借阅管理'))
+	</select>
+	<!--//查询该id下是否有其他下级栏目-->
+	<select id="findBankMenuExtByIdAll" resultType="com.jeeplus.modules.verifierts.verifier.entity.BankMenu">
+		 select id,parent_id as parentId,`name` as pname from sys_menu where parent_id=#{id}
+	</select>
+
+
+
+
+</mapper>

@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.employeevoice.leavemessage.mapper.BankEmployeeVoiceMapper">
+    
+	<sql id="bankEmployeeVoiceColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.leave_message AS "leaveMessage",
+		a.reply AS "reply",
+		a.leave_message_user_id AS "leaveMessageUserId",
+		a.reply_user_id AS "replyUserId",
+		a.reply_time AS "replyTime",
+		a.reply_name AS "replyName",
+		a.leave_message_name AS "leaveMessageName",
+		a.isReply AS "isReply",
+		a.type AS "type",
+		a.isshow AS "isShow",
+		a.reply_dept AS "replyDept",
+		a.reply_dept_name AS "replyDeptName",
+		b.id AS "employeeVoiceReplyId",
+		b.reply AS "replyB",
+		b.reply_name AS "replyNameB",
+		b.reply_time AS "replyTimeB",
+		b.reply_user_id AS "replyUserIdB"
+	</sql>
+
+	<sql id="replyColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.leave_message AS "leaveMessage",
+		a.reply AS "reply",
+		a.leave_message_user_id AS "leaveMessageUserId",
+		a.reply_user_id AS "replyUserId",
+		a.reply_time AS "replyTime",
+		a.reply_name AS "replyName",
+		a.leave_message_name AS "leaveMessageName",
+		a.isReply AS "isReply",
+		a.reply_dept AS "replyDept",
+		a.reply_dept_name AS "replyDeptName",
+	    b.id AS "employeeVoiceReplyId",
+		b.reply AS "replyB",
+		b.reply_name AS "replyNameB",
+		b.reply_time AS "replyTimeB",
+		b.reply_user_id AS "replyUserIdB"
+	</sql>
+
+	<sql id="bankEmployeeVoiceJoins">
+		LEFT JOIN bank_employee_voice_reply b ON b.employee_voice_id = a.id
+		LEFT JOIN sys_user leaveMessageUserId ON leaveMessageUserId.id = a.leave_message_user_id
+		LEFT JOIN sys_user replyUserId ON replyUserId.id = a.reply_user_id
+
+	</sql>
+    
+	<select id="get" resultType="BankEmployeeVoice" >
+		SELECT 
+			<include refid="bankEmployeeVoiceColumns"/>
+		FROM bank_employee_voice a
+		<include refid="bankEmployeeVoiceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<!--根据留言id查询回复-->
+	<select id="getReply" resultType="BankEmployeeVoice" >
+		SELECT
+		<!--<include refid="replyColumns"/>,-->
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		b.remarks as "remarks",
+		a.del_flag AS "delFlag",
+		a.leave_message AS "leaveMessage",
+		a.reply AS "reply",
+		a.leave_message_user_id AS "leaveMessageUserId",
+		a.reply_user_id AS "replyUserId",
+		a.reply_time AS "replyTime",
+		a.reply_name AS "replyName",
+		a.leave_message_name AS "leaveMessageName",
+		a.isReply AS "isReply",
+		a.isshow AS "isShow",
+		a.reply_dept_name AS "replyDeptName",
+		b.id AS "employeeVoiceReplyId",
+		b.reply AS "replyB",
+		b.reply_name AS "replyNameB",
+		b.reply_time AS "replyTimeB",
+		b.reply_user_id AS "replyUserIdB"
+		FROM bank_employee_voice a
+		LEFT JOIN bank_employee_voice_reply b ON b.employee_voice_id = a.id
+		WHERE a.id = #{id}
+		ORDER BY b.reply_time DESC
+	</select>
+
+	<select id="getReplyList" resultType="BankEmployeeVoice" >
+		SELECT
+		b.remarks as "remarks",
+		b.employee_voice_id as "id",
+		b.id AS "employeeVoiceReplyId",
+		b.reply AS "replyB",
+		b.reply_name AS "replyNameB",
+		b.reply_time AS "replyTimeB",
+		b.reply_user_id AS "replyUserIdB"
+		FROM bank_employee_voice_reply b
+		WHERE b.employee_voice_id = #{id}
+	</select>
+
+	<!--查询留言-->
+	<select id="findList" resultType="BankEmployeeVoice" >
+		SELECT 
+			<include refid="bankEmployeeVoiceColumns"/>
+		FROM bank_employee_voice a
+		<include refid="bankEmployeeVoiceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="beginCreateDate != null and endCreateDate != null ">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+			<if test="leaveMessageUserId != null and leaveMessageUserId != ''">
+				AND a.leave_message_user_id = #{leaveMessageUserId}
+			</if>
+			<if test="replyUserId != null and replyUserId != ''">
+				AND a.reply_user_id = #{replyUserId}
+			</if>
+			<if test="replyTime != null and replyTime != ''">
+				AND a.reply_time = #{replyTime}
+			</if>
+			<if test="replyName != null and replyName != ''">
+				AND a.reply_name = #{replyName}
+			</if>
+			<if test="replyDept != null and replyDept != ''">
+				AND a.reply_dept = #{replyDept}
+			</if>
+			<if test="leaveMessageName != null and leaveMessageName != ''">
+				AND a.leave_message_name = #{leaveMessageName}
+			</if>
+			<if test="isReply != null and isReply != ''">
+				AND a.isReply = #{isReply}
+			</if>
+			<if test="isShow != null and isShow != ''">
+				AND a.isshow = #{isShow}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BankEmployeeVoice" >
+		SELECT 
+			<include refid="bankEmployeeVoiceColumns"/>
+		FROM bank_employee_voice a
+		<include refid="bankEmployeeVoiceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<!--保存回复-->
+	<insert id="saveReply">
+		INSERT INTO bank_employee_voice_reply (
+			id,
+			reply_time,
+			del_flag,
+			reply,
+			reply_name,
+			reply_user_id,
+			employee_voice_id,
+			remarks
+		)VALUES (
+			#{leaveMessageUserId},
+			#{replyTime},
+			#{delFlag},
+			#{reply},
+			#{replyName},
+			#{replyUserId},
+			#{id},
+			#{remarks}
+		)
+	</insert>
+
+	<update id="updataReply">
+		update bank_employee_voice_reply set reply = #{reply} where employee_voice_id = #{id}
+	</update>
+
+	<insert id="insert">
+		INSERT INTO bank_employee_voice(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			leave_message,
+			reply,
+			leave_message_user_id,
+			reply_user_id,
+			reply_time,
+			reply_name,
+			leave_message_name,
+			isReply,
+			type,
+			isshow,
+			reply_dept,
+			reply_dept_name
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{leaveMessage},
+			#{reply},
+			#{leaveMessageUserId},
+			#{replyUserId},
+			#{replyTime},
+			#{replyName},
+			#{leaveMessageName},
+			#{isReply},
+			#{type},
+			#{isShow},
+			#{replyDept},
+			#{replyDeptName}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bank_employee_voice SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			leave_message = #{leaveMessage},
+			reply = #{reply},
+			leave_message_user_id = #{leaveMessageUserId},
+			reply_user_id = #{replyUserId},
+			reply_time = #{replyTime},
+			reply_name = #{replyName},
+			leave_message_name = #{leaveMessageName},
+			isReply = #{isReply},
+			isshow = #{isShow},
+			type = #{type},
+			reply_dept = #{replyDept},
+			reply_dept_name = #{replyDeptName}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateisReply">
+		UPDATE bank_employee_voice SET
+		isReply = #{isReply}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM bank_employee_voice
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE bank_employee_voice SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="BankEmployeeVoice" statementType="STATEMENT">
+		select * FROM bank_employee_voice  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

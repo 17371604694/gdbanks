@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.vote.vote.mapper.BankVoteMapper">
+    
+	<sql id="bankVoteColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.theme_name AS "themeName",
+		a.select_id AS "selectId",
+		a.begin_times AS "beginTimes",
+		a.end_times AS "endTimes",
+		a.select_result AS "selectResult"
+	</sql>
+	
+	<sql id="bankVoteJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="BankVote" >
+		SELECT 
+			<include refid="bankVoteColumns"/>
+		FROM bank_vote a
+		<include refid="bankVoteJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<!--查询主题集合-->
+	<select id="findList" resultType="BankVote" >
+		SELECT 
+			<include refid="bankVoteColumns"/>
+		FROM bank_vote a
+		<include refid="bankVoteJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="themeName != null and themeName != ''">
+				AND a.theme_name LIKE
+				    <if test="_databaseId == 'postgre'">'%'||#{themeName}||'%'</if>
+					<if test="_databaseId == 'oracle'">'%'||#{themeName}||'%'</if>
+					<if test="_databaseId == 'mssql'">'%'+#{themeName}+'%'</if>
+					<if test="_databaseId == 'mysql'">concat('%',#{themeName},'%')</if>
+			</if>
+			<if test="beginBeginTimes != null and endBeginTimes != null ">
+				AND a.begin_times BETWEEN #{beginBeginTimes} AND #{endBeginTimes}
+			</if>
+			<if test="beginEndTimes != null and endEndTimes != null ">
+				AND a.end_times BETWEEN #{beginEndTimes} AND #{endEndTimes}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<!--查询选项集合-->
+	<select id="findPage1" resultType="BankVote" >
+		SELECT
+			a.id as "id",
+			a.describes as "describe",
+			a.content as "content",
+			a.vote_num as "voteNum",
+			a.img as "img",
+			a.video as "video",
+			b.theme_name as "themeName",
+			b.end_times as "endTimes"
+		FROM
+			bank_vote_select a
+		LEFT JOIN bank_vote b ON a.bank_vote_id = b.id
+		WHERE
+			b.id = #{id}
+	</select>
+	
+	<select id="findAllList" resultType="BankVote" >
+		SELECT 
+			<include refid="bankVoteColumns"/>
+		FROM bank_vote a
+		<include refid="bankVoteJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<!--插入主题-->
+	<insert id="insert">
+		INSERT INTO bank_vote(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			theme_name,
+			select_id,
+			begin_times,
+			end_times,
+			select_result
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{themeName},
+			#{selectId},
+			#{beginTimes},
+			#{endTimes},
+			#{selectResult}
+		)
+	</insert>
+
+	<!--更新主题-->
+	<update id="update">
+		UPDATE bank_vote SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			theme_name = #{themeName},
+			select_id = #{selectId},
+			begin_times = #{beginTimes},
+			end_times = #{endTimes},
+			select_result = #{selectResult}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM bank_vote
+		WHERE id = #{id}
+	</update>
+
+	<!--插入选项-->
+	<insert id="saveselect">
+		INSERT INTO bank_vote_select(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			img,
+			video,
+			bank_vote_id,
+			describes,
+			content,
+			vote_num,
+			vote_preson
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{img},
+			#{video},
+			#{bankVoteId},
+			#{describe},
+			#{content},
+			#{voteNum},
+			#{votePreson}
+		)
+	</insert>
+
+	<!--更新选项投票数-->
+	<update id="updatevotenum">
+		UPDATE bank_vote_select SET
+			vote_num = #{voteNum}
+		WHERE id = #{id}
+	</update>
+
+	<!--物理删除选项-->
+	<update id="deleteselect">
+		DELETE FROM bank_vote_select
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE bank_vote SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="BankVote" statementType="STATEMENT">
+		select * FROM bank_vote  where ${propertyName} = '${value}'
+	</select>
+
+	<!--查询选项投票数-->
+	<select id="votenum" resultType="BankVote">
+		select vote_num AS "voteNum" from bank_vote_select where id = #{id}
+	</select>
+
+	<!--查询投票详情页面-->
+	<select id="voteinfodata" resultType="BankVote">
+		SELECT
+			a.id as "selectId",
+			a.describes as "describe",
+			a.content as "content",
+			a.vote_num as "voteNum",
+			a.img as "img",
+			a.video as "video",
+			b.theme_name as "themeName",
+			b.end_times as "endTimes"
+		FROM
+			bank_vote_select a
+		LEFT JOIN bank_vote b ON a.bank_vote_id = b.id
+		WHERE
+			b.id = #{id}
+	</select>
+
+	<!--查询选项信息-->
+	<select id="getSelectInfo" resultType="BankVote">
+		SELECT
+			a.id as "selectId",
+			a.describes as "describe",
+			a.content as "content",
+			a.vote_num as "voteNum",
+			a.img as "img",
+			a.video as "video",
+			b.theme_name as "themeName",
+			b.end_times as "endTimes",
+			b.id as "bankVoteId"
+		FROM
+			bank_vote_select a
+		LEFT JOIN bank_vote b ON a.bank_vote_id = b.id
+		WHERE
+			a.id = #{id}
+	</select>
+
+	<!--根据用户id和主题id查询投票记录-->
+	<select id="getTpList" resultType="BankVote">
+		SELECT
+			*
+		FROM
+			bank_vote_select_tp a
+		WHERE
+			a.bank_vote_id = #{bankVoteId} and a.vote_preson = #{votePreson}
+	</select>
+
+	<!--更新选项-->
+	<update id="updataselect">
+		update bank_vote_select set
+			img = #{img},
+			video = #{video},
+			describes = #{describe},
+			content = #{content}
+		where id = #{selectId}
+	</update>
+
+	<insert id="saveTpRecord">
+		insert  into bank_vote_select_tp
+			(	id,
+				select_id,
+				bank_vote_id,
+				vote_preson
+			)
+		values
+			(	#{id},
+				#{selectId},
+				#{bankVoteId},
+				#{votePreson}
+			)
+	</insert>
+
+	<!--根据开始时间查询最近的一个投票主题-->
+	<select id="selectVoteId" resultType="BankVote">
+		select
+			*
+		from
+			bank_vote
+		where
+			begin_times = (select max(begin_times) from bank_vote )
+	</select>
+</mapper>

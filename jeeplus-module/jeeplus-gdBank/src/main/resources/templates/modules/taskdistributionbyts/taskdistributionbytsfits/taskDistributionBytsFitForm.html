@@ -1,0 +1,89 @@
+<%
+layout("/include/_dialog.html"){
+%>
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+            // $('#executorTime').datetimepicker({
+			// 	 format:'Y-m-d H:i'
+		    // });
+            //默认选中当前时间
+            var date=new Date();
+            var t=date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+            if ($("input[name=executorTime]").val().trim()=="" || $("input[name=executorTime]").val()==null){
+                $("input[name=executorTime]").val(t);
+            }
+		});
+
+		function save() {
+            var isValidate = jp.validateForm('#inputForm');//校验表单
+            if(!isValidate){
+                return false;
+			}else{
+                var index = jp.loading();
+                jp.post("${ctx}/taskdistributionbyts/taskdistributionbytsfits/taskDistributionBytsFit/save",$('#inputForm').serialize(),function(data){
+                    if(data.success){
+                        jp.getParent().refresh();
+                        var dialogIndex = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                        parent.layer.close(dialogIndex);
+                        jp.toastr_success(data.msg)
+
+                    }else{
+                        jp.toastr_error(data.msg);
+                    }
+                    jp.close(index);
+                })
+			}
+
+        }
+	</script>
+<form id="inputForm"  method="post"  class="form-horizontal p-15">
+    <input type="hidden" name="id" value="${taskDistributionBytsFit.id!}"/>
+    <table class="table table-bordered">
+       <tbody>
+            <tr>
+               <!-- <td class="width-15 active"><label class="pull-right">执行人id：</label></td>
+                <td class="width-35">
+                    <input name="executorId" value="${taskDistributionBytsFit.executorId!}"    class="form-control "/>
+            </td>-->
+                <td class="width-15 active"><label class="pull-right">执行人名称：</label></td>
+                <td class="width-35" colspan="3">
+                    <input name="executorName" value="${taskDistributionBytsFit.executorName!}"   readonly class="form-control "/>
+                    <input name="executorId" value="${taskDistributionBytsFit.executorId!}"  hidden  class="form-control "/>
+            </td>
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>执行文件：</label></td>
+                <td class="width-35" colspan="3">
+                    <#fileUpload id="executorFile" name="executorFile"
+                    value="${taskDistributionBytsFit.executorFile}" type="file" class="form-control required"
+                    uploadPath="/taskdistributionbyts/taskdistributionbytsfits/taskDistributionBytsFit"/>
+            </td>
+
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>执行说明：</label></td>
+                <td class="width-35" colspan="3">
+                    <input name="executorGive" value="${taskDistributionBytsFit.executorGive!}"    class="form-control required"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="width-15 active"><label class="pull-right"><font color="red">*</font>执行时间：</label></td>
+                <td class="width-35" colspan="3">
+                    <div class="input-group">
+                        <input readonly="readonly" id="executorTime"  name="executorTime"  placeholder="请选择日期" class="form-control  required"   value="${fn.formatDate(taskDistributionBytsFit.executorTime!, 'yyyy-MM-dd HH:mm:ss')}">
+                        <div class="input-group-append" readonly="readonly">
+                            <span class="input-group-text btn-custom border text-white"><i class="ti-calendar"></i></span>
+                        </div>
+                    </div>
+            </td>
+                <td style="display: none" class="width-15 active"><label class="pull-right" style="display: none">主表id：</label></td>
+                <td class="width-35" style="display: none">
+                    <input name="taskDistributionBytsId" value="${taskDistributionBytsFit.taskDistributionBytsId!}"    class="form-control "/>
+                    <input name="state" value="${taskDistributionBytsFit.state!}"    class="form-control "/>
+            </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+<% } %>

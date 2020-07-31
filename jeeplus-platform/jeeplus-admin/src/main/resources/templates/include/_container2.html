@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<% include("_common_header.html"){} %>
+<body>
+<style>
+
+</style>
+<div class="layout_contentbar" style="position: absolute">
+    <div class="navbar1" >
+            <div class="float_left"><img src="../../../static/common/image2/logo.png" /></div>
+            <div class="float_left" style="margin-top: 10px;">
+                <ul>
+                    <li class="text_nvabar_noselect redirects">首页</li>
+                    <li class="text_nvabar_noselect redirects">分行动态</li>
+                    <li class="text_nvabar_noselect redirects redirects1">分行部室<div id="redirects1_div"  style="display: none;z-index: 999"></div></li>
+                    <li class="text_nvabar_noselect redirects redirects2">经营机构<div id="redirects2_div"  style="display: none;z-index: 999"></div></li>
+                    <li class="text_nvabar_noselect redirects">规章制度</li>
+                    <li class="text_nvabar_noselect redirects">下载专区</li>
+                    <li class="text_nvabar_noselect " onclick="addresstxl()">通讯录</li>
+                </ul>
+            </div>
+            <div class="folt_right">
+                <div class="float_left text_nvabar_noselect navbar_left" style="width:190px;">
+                    <img class="float_left selectParim" src="../../../static/common/image2/ico_search_01.png"  style="margin-top:-4px;"  />
+                    <input name="" type="text" value="欢迎访问光大内网！"  class="inputtext4 stParim" /></div>
+                <div class="float_left text_nvabar_noselect navbar_left"  style="width:190px;">
+                    <a href="${ctx}/login">
+                        <img class="float_left photo" src="../../../static/common/image2/ico_loogin.png"
+                             style="margin-top:-6px;width: 30px;height: 30px;border-radius: 50%;position: relative;left: 17%;" />
+                    </a>
+                    <span id="unameuser" id="cardnum"></span>
+                    <span class="uno"></span>
+                </div>
+                <input  id="userInput" type="hidden"/>  <!--用户信息-->
+                <input  id="userctx" value="${ctx}" type="hidden"/>  <!--${ctx}信息-->
+                <div class="float_left text_nvabar_noselect navbar_left loginOutSystem"  style="width:100px;display: none">退出系统</div>
+            </div>
+    </div>
+</div>
+<div style="clear: both"></div>
+<div class="p-15" style="position: relative;top:70px ">
+<% if(fn.getCookie(request,'content-tab') == '2'){ %>
+    <div class="row" style="margin-bottom: -35px">
+        <div class="col-sm-12">
+            <div class="btn-group float-right m-b-20">
+                <ol class="breadcrumb pull-right">
+                    <li class="breadcrumb-item"><a href="javascript:;">${parent}</a></li>
+                    <li class="breadcrumb-item"><a href="javascript:;">${title}</a></li>
+                </ol>
+            </div>
+            <h4 class="page-title">${title}</h4>
+
+        </div>
+    </div>
+<% } %>
+    ${layoutContent}
+</div>
+</body>
+</html>

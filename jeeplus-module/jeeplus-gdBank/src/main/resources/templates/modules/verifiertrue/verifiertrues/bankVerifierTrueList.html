@@ -1,0 +1,17 @@
+<%
+layout("/include/_container.html", {title:"列表", parent:"审核栏目人"}){
+%>
+	<div class="white-box">
+
+	<!-- 工具栏 -->
+	<div id="toolbar">
+					<!-- <% if(shiro.hasPermission("verifiertrue:verifiertrues:bankVerifierTrue:add") ){ %>
+						<button id="add" class="btn btn-custom waves-effect w-xs waves-light" onclick="add()"><i class="fa fa-plus"></i> 新建</button>&lt;!&ndash; 增加按钮 &ndash;&gt;
+					<% } %>-->
+		            <button id="expandAllBtn"  class="btn btn-white waves-effect w-xs waves-light">展开/折叠 所有</button>			</div>
+			<table id="bankVerifierTrueTreeTable" class="table-bordered">
+			</table>
+	</div>
+
+	<% include("bankVerifierTrueList.js"){} %>
+	<% } %>

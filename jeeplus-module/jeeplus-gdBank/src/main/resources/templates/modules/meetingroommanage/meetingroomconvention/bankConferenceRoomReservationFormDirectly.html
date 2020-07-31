@@ -1,0 +1,271 @@
+<%
+layout("/include/_dialog.html"){
+%>
+<!--在会议室查看表中直接预定会议室-->
+<style>
+    /*不显示秒*/
+    /*.layui-laydate-content>.layui-laydate-list {*/
+    /*    padding-bottom: 0px;*/
+    /*    overflow: hidden;*/
+    /*}*/
+    /*.layui-laydate-content>.layui-laydate-list>li{*/
+    /*    width:50%*/
+    /*}*/
+
+    /*.merge-box .scrollbox .merge-list {*/
+    /*    padding-bottom: 5px;*/
+    /*}*/
+    input[readonly] {
+        cursor: pointer;
+    }
+
+    /**以30分钟为单位 */
+    .layui-laydate-list.laydate-time-list > li {
+        width: 50%;
+    }
+
+    .layui-laydate-list.laydate-time-list > li:nth-child(3) {
+        display: none !important;
+    }
+
+    .layui-laydate-list.laydate-time-list > li:nth-child(2) > ol > li {
+        display: none;
+    }
+
+    .layui-laydate-list.laydate-time-list > li:nth-child(2) > ol > li:nth-child(30n+1) {
+        display: list-item;
+    }
+
+    .layui-laydate-list.laydate-time-list > li:nth-child(1) > ol > li {
+        display: none;
+    }
+
+    .layui-laydate-list.laydate-time-list > li:nth-child(1) > ol > li:nth-child(9) {
+        display: list-item;
+    }
+    .layui-laydate-list.laydate-time-list > li:nth-child(1) > ol > li:nth-child(10) {
+        display: list-item;
+    }
+    .layui-laydate-list.laydate-time-list > li:nth-child(1) > ol > li:nth-child(11) {
+        display: list-item;
+    }
+    .layui-laydate-list.laydate-time-list > li:nth-child(1) > ol > li:nth-child(12) {
+        display: list-item;
+    }
+    .layui-laydate-list.laydate-time-list > li:nth-child(1) > ol > li:nth-child(13) {
+        display: list-item;
+    }
+    .layui-laydate-list.laydate-time-list > li:nth-child(1) > ol > li:nth-child(14) {
+        display: list-item;
+    }
+    .layui-laydate-list.laydate-time-list > li:nth-child(1) > ol > li:nth-child(15) {
+        display: list-item;
+    }
+    .layui-laydate-list.laydate-time-list > li:nth-child(1) > ol > li:nth-child(16) {
+        display: list-item;
+    }
+    .layui-laydate-list.laydate-time-list > li:nth-child(1) > ol > li:nth-child(17) {
+        display: list-item;
+    }
+    .layui-laydate-list.laydate-time-list > li:nth-child(1) > ol > li:nth-child(18) {
+        display: list-item;
+    }
+    .layui-laydate-list.laydate-time-list > li:nth-child(1) > ol > li:nth-child(19) {
+        display: list-item;
+    }
+    .layui-laydate-list.laydate-time-list > li:nth-child(1) > ol > li:nth-child(20) {
+        display: list-item;
+    }
+    .layui-laydate-list.laydate-time-list > li:nth-child(1) > ol > li:nth-child(21) {
+        display: list-item;
+    }
+    .layui-laydate-list.laydate-time-list > li:nth-child(1) > ol > li:nth-child(22) {
+        display: list-item;
+    }
+    .layui-laydate-list.laydate-time-list > li:nth-child(1) > ol > li:nth-child(23) {
+        display: list-item;
+    }
+</style>
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+            //初始化layui时间控件
+            laydate.render({
+                elem: '#beginTime'
+                ,type: 'datetime'
+                ,trigger:'click'
+                ,min: 0
+                ,max: 7
+            });
+
+            laydate.render({
+                elem: '#endTime'
+                ,type: 'datetime'
+                ,trigger:'click'
+                ,min: 0
+                ,max: 7
+            });
+				//富文本初始化
+			// $('#context').summernote({
+			// 	height: 300,
+            //     lang: 'zh-CN',
+            //     callbacks: {
+            //         onChange: function(contents, $editable) {
+            //             $("input[name='context']").val($('#context').summernote('code'));//取富文本的值
+            //         }
+            //     }
+            // });
+		});
+
+		//加载会议室下拉表
+		jp.getRoom("conferenceRoom");
+		function save() {
+            var isValidate = jp.validateForm('#inputForm');//校验表单
+            if(isAppointment()){
+                if(!isValidate){
+                    return false;
+                }else{
+                    jp.post("${ctx}/meetingroommanage/meetingroomconvention/bankConferenceRoomReservation/save",$('#inputForm').serialize(),function(data){
+                        if(data.success){
+                            alert(data.msg);
+                            var dialogIndex = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                            parent.layer.close(dialogIndex);
+                        }else{
+                            alert(data.msg);
+                        }
+                    })
+                }
+            }
+
+        }
+
+        //是否被占用
+        function isAppointment() {
+            var room = $("#conferenceRoom").val();
+            var endTime = $("#endTime").val();
+            var beginTime = $("#beginTime").val();
+            if(endTime<=beginTime){
+                alert("会议结束时间不得小于开始时间！")
+                return false;
+            }else {
+                var arrayend = endTime.trim().split(/\s+/);
+                var arraybeg =beginTime.trim().split(/\s+/);
+                if(arrayend[1]=='00:00:00'||arraybeg[1]=='00:00:00'){
+                    alert("会议时间选者非法，时分必须选择！不可为0时0分！");
+                    return false;
+                }else if(arrayend[1]=='08:00:00'){
+                    alert("结束时分不可选择为08:00");
+                    return false;
+                }else {
+                    return true;
+                }
+            }
+
+        }
+
+        function jssj() {
+            var endTime = $("#endTime").val();
+            var beginTime = $("#beginTime").val();
+            if(!beginTime){
+                alert("请先选择开始时间！")
+            }
+        }
+
+
+	</script>
+<form id="inputForm"  method="post"  class="form-horizontal p-15" action="${ctx}/meetingroommanage/meetingroomconvention/bankConferenceRoomReservation/save">
+    <input type="hidden" name="id" value="${bankConferenceRoomReservation.id!}"/>
+    <table class="table table-bordered">
+       <tbody>
+            <tr>
+                <td  style="width: 12%"><label class="pull-right"><font color="red">*</font>会议主题：</label></td>
+                <td class="width-35" colspan="3">
+                    <input name="conferenceTheme" value="${bankConferenceRoomReservation.conferenceTheme!}"    class="form-control required"/>
+                </td>
+            </tr>
+            <tr>
+                <td  style="width: 12%"><label class="pull-right"><font color="red">*</font>主办部门：</label></td>
+                <td class="width-35" colspan="3">
+                    <#treeselect id="" name="hostDept"  labelName="hostDeptName" labelValue="${bankConferenceRoomReservation.hostDeptName!}"
+                    allowClear="true" title="部门" url="/sys/office/treeData?type=2" class="form-control required" allowSearch="true" notAllowSelectRoot="${true}"/>
+<!--                    <input name="hostDept" value="${bankConferenceRoomReservation.hostDept!}"    class="form-control required "/>-->
+                </td>
+            </tr>
+            <tr>
+                <td  style="width: 12%"><label class="pull-right"><font color="red">*</font>会议联系人：</label></td>
+                <td class="width-35">
+                    <input name="conferenceContactPreson" value="${bankConferenceRoomReservation.conferenceContactPreson!}"    class="form-control required "/>
+                </td>
+                <td  style="width: 12%"><label class="pull-right"><font color="red">*</font>联系电话：</label></td>
+                <td class="width-35">
+                    <input name="conferenceContactPhone" value="${bankConferenceRoomReservation.conferenceContactPhone!}"    class="form-control required isTel"/>
+                </td>
+            </tr>
+            <tr>
+                <td  style="width: 12%"><label class="pull-right"><font color="red">*</font>会议室：</label></td>
+                <td class="width-35" colspan="3">
+                    <select id="conferenceRoom" name="conferenceRoom" value="${bankConferenceRoomReservation.conferenceRoom!}"    class="form-control required "/>
+            </td>
+            </tr>
+            <tr>
+                <td  style="width: 12%"><label class="pull-right"><font color="red">*</font>开始时间：</label></td>
+                <td class="width-35">
+                    <div class="input-group">
+                        <input id="beginTime"  name="beginTime"  placeholder="请选择日期" class="form-control required  "   value="${fn.formatDate(bankConferenceRoomReservation.beginTime!, 'yyyy-MM-dd HH:mm:ss')}"/>
+                        <div class="input-group-append required">
+                            <span class="input-group-text btn-custom border text-white"><i class="ti-calendar"></i></span>
+                        </div>
+                    </div>
+                </td>
+                <td  style="width: 12%"><label class="pull-right"><font color="red">*</font>结束时间：</label></td>
+                <td class="width-35">
+                    <div class="input-group" onclick="jssj()">
+                        <input id="endTime"  name="endTime"  placeholder="请选择日期" class="form-control  required "   value="${fn.formatDate(bankConferenceRoomReservation.endTime!, 'yyyy-MM-dd HH:mm:ss')}"/>
+                        <div class="input-group-append required" >
+                            <span class="input-group-text btn-custom border text-white"><i class="ti-calendar"></i></span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td  style="width: 12%" > <label class="pull-right"><font color="red">*</font>会议类型：</label></td>
+                <td class="width-35 " colspan="3">
+                    <#select path="conferenceType" value="${bankConferenceRoomReservation.conferenceType!}" items="${fn.getDictList('meeting_type')}" itemLabel="label" itemValue="value" class="required"/>
+                </td>
+            </tr>
+            <tr>
+                <td ><label class="pull-right">参会人员：</label></td>
+                <td class="width-35" colspan="3">
+                    <#userselect id="conferencePresonId" name="conferencePresonId" value="${bankConferenceRoomReservation.conferencePresonId!}"
+                    labelName="conferencePreson" labelValue="${bankConferenceRoomReservation.conferencePreson!}"
+                    cssClass="form-control" isMultiSelected="${true}"/>
+                </td>
+
+            </tr>
+            <tr>
+                <td  style="width: 12%"><label class="pull-right">附件：</label></td>
+                <td class="width-35" colspan="3">
+                    <#fileUpload id="accessory" name="accessory"  value="${bankConferenceRoomReservation.accessory!}" type="file" class="form-control " uploadPath="/meetingroommanage/meetingroomconvention/meetingroomconvention"/>
+                </td>
+            </tr>
+            <tr>
+                <td  style="width: 12%"><label class="pull-right">会议内容：</label></td>
+                <td class="width-35" colspan="3">
+                    <textarea name="context" rows="4"    class="form-control ">${bankConferenceRoomReservation.context!}</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td  style="width: 12%"><label class="pull-right">会议需求：</label></td>
+                <td class="width-35" colspan="3">
+                    <textarea name="conferenceDemand" rows="4" placeholder="请填写会议需求，若无需求,请填写无需求"   class="form-control ">${bankConferenceRoomReservation.conferenceDemand!}</textarea>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="form-group row m-b-0">
+        <div class="offset-sm-1 col-sm-9 m-t-15">
+            <button onclick="save()" type="button" data-loading-text="正在提交..." class="btn btn-custom waves-effect waves-light w-xs m-b-5">提交</button>
+        </div>
+    </div>
+</form>
+<% } %>

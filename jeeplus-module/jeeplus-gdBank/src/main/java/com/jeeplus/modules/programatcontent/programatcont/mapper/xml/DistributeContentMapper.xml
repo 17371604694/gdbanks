@@ -1,0 +1,846 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.programatcontent.programatcont.mapper.DistributeContentMapper">
+    
+	<sql id="distributeContentColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.programat_id AS "programatId",
+		a.programat_parentid AS "programatParentid",
+		a.title AS "title",
+		a.tag_title AS "tagTitle",
+		a.stick AS "stick",
+		a.content_type AS "contentType",
+		a.accessorys AS "accessorys",
+		a.file_name AS "fileName",
+		a.reservec AS "reservec",
+		a.statepid AS "statepid",
+		a.stateparentid AS "stateparentid",
+		a.author AS "author",
+		a.officeName AS "officeName",
+		a.stepSum AS "stepSum",
+		a.onclickNum AS "onclickNum",
+		a.accessorysImg AS "accessorysImg",
+		a.departmentReviewer AS "departmentReviewer",
+		a.meeting_time AS "meetingTime",
+		a.programatParentidNameList AS "programatParentidNameList",
+		(select name from sys_menu where id=a.programat_id) AS "programatIdName",
+		(select name from sys_menu where id=a.programat_parentid) AS "programatParentidName",
+		(select name from sys_user where id=a.departmentReviewer) AS "departmentReviewerName",
+		a.sorts AS "sorts"
+	</sql>
+
+	<sql id="distributeContentColumns1">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.programat_id AS "programatId",
+		a.programat_parentid AS "programatParentid",
+		a.title AS "title",
+		a.tag_title AS "tagTitle",
+		a.stick AS "stick",
+		a.content_type AS "contentType",
+		a.accessorys AS "accessorys",
+		a.reservec AS "reservec",
+		a.statepid AS "statepid",
+		a.stateparentid AS "stateparentid",
+		a.author AS "author",
+		a.officeName AS "officeName",
+		a.stepSum AS "stepSum",
+		a.onclickNum AS "onclickNum",
+		a.accessorysImg AS "accessorysImg",
+		a.departmentReviewer AS "departmentReviewer",
+		a.meeting_time AS "meetingTime",
+		a.programatParentidNameList AS "programatParentidNameList",
+		(select name from sys_menu where id=a.programat_id) AS "programatIdName",
+		(select name from sys_menu where id=a.programat_parentid) AS "programatParentidName",
+		(select name from sys_user where id=a.departmentReviewer) AS "departmentReviewerName",
+		a.sorts AS "sorts"
+	</sql>
+	
+	<sql id="distributeContentJoins">
+		
+	</sql>
+
+	<resultMap type="DistributeContent" id="DistributeContentResult" autoMapping="true">
+    	<result column="content" property="content"   typeHandler="com.jeeplus.core.mapper.ConvertBlobTypeHandler"/>
+    </resultMap>
+    
+	<select id="get" resultMap="DistributeContentResult" >
+		SELECT 
+			<include refid="distributeContentColumns"/>
+			,
+			(select content from distribute_content_text where id  = #{id}) as content
+		FROM distribute_content a
+		<include refid="distributeContentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<!--查询全部发稿，或者栏目发稿-->
+	<select id="findList" resultMap="DistributeContentResult" >
+		SELECT 
+			<include refid="distributeContentColumns1"/>
+		FROM distribute_content a
+		<include refid="distributeContentJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="programatIdList != null">
+				and
+				a.programat_id in
+				<foreach item="item" index="index"  open="(" separator="," close=")" collection="programatIdList">
+					${item}
+				</foreach>
+			</if>
+			${dataScope}
+			<if test="programatId != null and programatId != ''">
+				AND a.programat_id = #{programatId}
+			</if>
+			<if test="createBy != null ">
+				<if test="createBy.id !=null and createBy.id !=''">
+					AND (a.create_by = #{createBy.id}
+					or a.departmentReviewer = #{loginid}
+					or a.reservec = #{loginid}
+					or a.remarks like concat('%',#{loginid},'%'))
+				</if>
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE
+				    <if test="_databaseId == 'postgre'">'%'||#{title}||'%'</if>
+					<if test="_databaseId == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="_databaseId == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="_databaseId == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="tagTitle != null and tagTitle != ''">
+				AND a.tag_title LIKE
+				    <if test="_databaseId == 'postgre'">'%'||#{tagTitle}||'%'</if>
+					<if test="_databaseId == 'oracle'">'%'||#{tagTitle}||'%'</if>
+					<if test="_databaseId == 'mssql'">'%'+#{tagTitle}+'%'</if>
+					<if test="_databaseId == 'mysql'">concat('%',#{tagTitle},'%')</if>
+			</if>
+			<if test="stick != null and stick != ''">
+				AND a.stick = #{stick}
+			</if>
+			<if test="contentType != null and contentType != ''">
+				AND a.content_type = #{contentType}
+			</if>
+			<if test="programatIdName != null and programatIdName != ''">
+				AND a.programat_id=(
+									select id from sys_menu where name=#{programatIdName}
+										<if test="programatParentidName !=null and programatParentidName !='' ">
+											and parent_id = (select id from sys_menu where name=#{programatParentidName})
+										</if>
+									)
+			</if>
+			<if test="statepid != null and statepid != '' and statepid != 0 ">
+				AND a.statepid in (3,2)
+			</if>
+			<if test="stateparentid != null and stateparentid != ''and stateparentid != 0 ">
+				AND a.stateparentid = 6
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<!--已审核列表数据查询-->
+	<select id="findListSearch" resultMap="DistributeContentResult" >
+		SELECT
+		<include refid="distributeContentColumns1"/>
+		FROM distribute_content a
+		<include refid="distributeContentJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="programatIdList != null">
+				and
+				a.programat_id in
+				<foreach item="item" index="index"  open="(" separator="," close=")" collection="programatIdList">
+					${item}
+				</foreach>
+			</if>
+
+			${dataScope}
+
+			<if test="programatId != null and programatId != ''">
+				AND (a.programat_id = #{programatId}
+				or a.programat_parentid like concat('%',#{programatId},'%')
+				)
+			</if>
+			<if test="createBy != null ">
+				<if test="createBy.id !=null and createBy.id !=''">
+					AND (a.create_by = #{createBy.id}
+					or a.departmentReviewer = #{loginid}
+					or a.reservec = #{loginid}
+					or a.remarks like concat('%',#{loginid},'%')
+					)
+				</if>
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE
+				<if test="_databaseId == 'postgre'">'%'||#{title}||'%'</if>
+				<if test="_databaseId == 'oracle'">'%'||#{title}||'%'</if>
+				<if test="_databaseId == 'mssql'">'%'+#{title}+'%'</if>
+				<if test="_databaseId == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="tagTitle != null and tagTitle != ''">
+				AND a.tag_title LIKE
+				<if test="_databaseId == 'postgre'">'%'||#{tagTitle}||'%'</if>
+				<if test="_databaseId == 'oracle'">'%'||#{tagTitle}||'%'</if>
+				<if test="_databaseId == 'mssql'">'%'+#{tagTitle}+'%'</if>
+				<if test="_databaseId == 'mysql'">concat('%',#{tagTitle},'%')</if>
+			</if>
+			<if test="stick != null and stick != ''">
+				AND a.stick = #{stick}
+			</if>
+			<if test="contentType != null and contentType != ''">
+				AND a.content_type = #{contentType}
+			</if>
+			<if test="programatIdName != null and programatIdName != ''">
+				AND a.programat_id=(
+									select id from sys_menu where name=#{programatIdName}
+										<if test="programatParentidName !=null and programatParentidName !='' ">
+											and parent_id = (select id from sys_menu where name=#{programatParentidName})
+										</if>
+									)
+			</if>
+			<if test="statepid != null and statepid != ''">
+				AND a.statepid in (3,2)
+			</if>
+			<if test="stateparentid != null and stateparentid != ''">
+				AND a.stateparentid = 6
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<!--首页栏目数据查询，需要审核通过的-->
+	<select id="findListtg" resultMap="DistributeContentResult" >
+		SELECT
+		<include refid="distributeContentColumns1"/>
+		FROM distribute_content a
+		<include refid="distributeContentJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="programatIdList != null">
+				and
+				a.programat_id in
+				<foreach item="item" index="index"  open="(" separator="," close=")" collection="programatIdList">
+				${item}
+			</foreach>
+			</if>
+
+			${dataScope}
+
+			<if test="programatId != null and programatId != ''">
+				AND a.programat_id = #{programatId}
+			</if>
+			<if test="officeId != null and officeId != ''">
+				AND a.office_id  = #{officeId}
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE
+				<if test="_databaseId == 'postgre'">'%'||#{title}||'%'</if>
+				<if test="_databaseId == 'oracle'">'%'||#{title}||'%'</if>
+				<if test="_databaseId == 'mssql'">'%'+#{title}+'%'</if>
+				<if test="_databaseId == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="tagTitle != null and tagTitle != ''">
+				AND a.tag_title LIKE
+				<if test="_databaseId == 'postgre'">'%'||#{tagTitle}||'%'</if>
+				<if test="_databaseId == 'oracle'">'%'||#{tagTitle}||'%'</if>
+				<if test="_databaseId == 'mssql'">'%'+#{tagTitle}+'%'</if>
+				<if test="_databaseId == 'mysql'">concat('%',#{tagTitle},'%')</if>
+			</if>
+			<if test="stick != null and stick != ''">
+				AND a.stick = #{stick}
+			</if>
+			<if test="contentType != null and contentType != ''">
+				AND a.content_type = #{contentType}
+			</if>
+			<if test="id != null and id != ''">
+				AND (a.programat_id = #{id}
+				or a.programat_parentid LIKE CONCAT('%',#{id},'%')
+				)
+			</if>
+			<if test="statepid != null and statepid != ''">
+				AND a.statepid = #{statepid}
+			</if>
+			<if test="stateparentid != null and stateparentid != ''">
+				AND a.stateparentid = #{stateparentid}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY
+				a.sorts DESC,
+				a.create_date DESC
+			</otherwise>
+		</choose>
+		limit 0,10
+	</select>
+
+	<!--查询首页二级页面栏目的数据，需要审核通过的-->
+	<select id="findPage1" resultMap="DistributeContentResult" >
+		SELECT
+		<include refid="distributeContentColumns1"/>
+		FROM distribute_content a
+		<include refid="distributeContentJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="programatIdList != null">
+				and
+				a.programat_id in
+				<foreach item="item" index="index"  open="(" separator="," close=")" collection="programatIdList">
+					${item}
+				</foreach>
+			</if>
+			${dataScope}
+			<if test="programatId != null and programatId != ''">
+				AND (
+					a.programat_id = #{programatId}
+					or a.programat_parentid LIKE CONCAT('%',#{programatId},'%')
+					)
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE
+				<if test="_databaseId == 'postgre'">'%'||#{title}||'%'</if>
+				<if test="_databaseId == 'oracle'">'%'||#{title}||'%'</if>
+				<if test="_databaseId == 'mssql'">'%'+#{title}+'%'</if>
+				<if test="_databaseId == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="tagTitle != null and tagTitle != ''">
+				AND a.tag_title LIKE
+				<if test="_databaseId == 'postgre'">'%'||#{tagTitle}||'%'</if>
+				<if test="_databaseId == 'oracle'">'%'||#{tagTitle}||'%'</if>
+				<if test="_databaseId == 'mssql'">'%'+#{tagTitle}+'%'</if>
+				<if test="_databaseId == 'mysql'">concat('%',#{tagTitle},'%')</if>
+			</if>
+			<if test="stick != null and stick != ''">
+				AND a.stick = #{stick}
+			</if>
+			<if test="contentType != null and contentType != ''">
+				AND a.content_type = #{contentType}
+			</if>
+			<if test="id != null and id != ''">
+				AND a.programat_parentid LIKE CONCAT('%',#{id},'%')
+			</if>
+				AND a.statepid = 2
+				AND a.stateparentid = 6
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY
+				a.sorts DESC,
+				a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<!--根据父级栏目名称和子栏目名查询栏目id-->
+	<select id="findprogramatId" resultType="DistributeContent">
+		select id from sys_menu where name=#{programatIdName}
+		<if test="programatParentidName !=null and programatParentidName !='' ">
+			and parent_id = (select id from sys_menu where name=#{programatParentidName})
+		</if>
+	</select>
+
+	<!--查询发稿数排行按部室-->
+	<select id="findStatisticalList" resultType="DistributeContent">
+		select officename,author,
+		count(1) as stepSum,
+		(select name from sys_menu where id=d.programat_id) as content
+		from distribute_content d
+		<where>
+			d.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="beginTime != null and endTime != null">
+				and d.create_date between  #{beginTime} and #{endTime}
+			</if>
+		</where>
+		GROUP BY
+		<if test="statepid==0"> d.author</if>
+		<if test="statepid==1 "> d.officename</if>
+		<if test="statepid==2"> d.programat_id</if>
+		ORDER BY stepSum desc
+	</select>
+
+	<select id="findAllList" resultMap="DistributeContentResult" >
+		SELECT 
+			<include refid="distributeContentColumns1"/>
+		FROM distribute_content a
+		<include refid="distributeContentJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<!--插入发稿记录-->
+	<insert id="insert">
+		INSERT INTO distribute_content(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			programat_id,
+			programat_parentid,
+			title,
+			tag_title,
+			stick,
+			content_type,
+			accessorys,
+			reservec,
+			statepid,
+			stateparentid,
+			author,
+			stepSum,
+			officeName,
+			accessorysImg,
+			sorts,
+			departmentReviewer,
+			programatParentidNameList,
+			office_id,
+			meeting_time
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{programatId},
+			#{programatParentid},
+			#{title},
+			#{tagTitle},
+			#{stick},
+			#{contentType},
+			#{accessorys},
+			#{reservec},
+			#{statepid},
+			#{stateparentid},
+			#{author},
+			#{stepSum},
+			#{officeName},
+			#{accessorysImg},
+			#{sorts},
+			#{departmentReviewer},
+			#{programatParentidNameList},
+			#{officeId},
+			#{meetingTime}
+		)
+	</insert>
+
+	<!--插入发稿正文-->
+	<insert id="insertContentText">
+		INSERT INTO distribute_content_text(
+			id,
+			content
+		) VALUES (
+			#{id},
+			#{content, jdbcType=CLOB}
+		)
+	</insert>
+
+	<!--更新正文-->
+	<update id="updataContentText">
+		UPDATE distribute_content_text SET
+			content = #{content, jdbcType=CLOB}
+		WHERE id = #{id}
+	</update>
+
+	<update id="update">
+		UPDATE distribute_content SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			programat_id = #{programatId},
+			programat_parentid  = #{programatParentid},
+			statepid = #{statepid},
+			stateparentid = #{stateparentid},
+			title = #{title},
+			tag_title = #{tagTitle},
+			stick = #{stick},
+			content_type = #{contentType},
+			accessorys = #{accessorys},
+			reservec = #{reservec},
+			stepSum = #{stepSum},
+			accessorysImg = #{accessorysImg},
+			sorts = #{sorts},
+			departmentReviewer = #{departmentReviewer},
+			programatParentidNameList = #{programatParentidNameList},
+			meeting_time = #{meetingTime}
+		WHERE id = #{id}
+	</update>
+
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM distribute_content
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteContentText">
+		delete from distribute_content_text
+		where id = #{id}
+	</update>
+
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE distribute_content SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="DistributeContent" statementType="STATEMENT">
+		select * FROM distribute_content  where ${propertyName} = '${value}'
+	</select>
+
+    <select id="findBMAll" resultType="com.jeeplus.modules.programatcontent.programatcont.entity.BankMnue">
+         SELECT id,parent_id prantId,name,sort from sys_menu
+		 WHERE
+		 parent_id='10b93924e01f4ae48aba7949da22eaf1'
+	</select>
+
+	<!--根据name查id-->
+	<select id="findByName" resultType="com.jeeplus.modules.programatcontent.programatcont.entity.BankMnue">
+       select id,parent_id prantId,name from sys_menu where name=#{name}
+	</select>
+
+	<!--根据id查-->
+	<select id="findById" resultType="com.jeeplus.modules.programatcontent.programatcont.entity.BankMnue">
+		select id,parent_id prantId,name from sys_menu where id=#{id}
+	</select>
+
+	<select id="findByDisbuteContentId" resultType="com.jeeplus.modules.verifierts.verifier.entity.BankVerifier">
+     select * from bank_verifier where programa=(select programat_id from distribute_content where id=#{id})
+	</select>
+
+	<select id="findByDisbuteContentFuId" resultType="com.jeeplus.modules.verifierts.verifier.entity.BankVerifier">
+		 select * from bank_verifier where programa=(select programat_parentid from distribute_content where id=#{id})
+	</select>
+
+	<select id="findChenkBankdVer" resultType="java.lang.Integer">
+		 select count(1) from bank_distribute_verifier where vid=#{vid} and vtype=#{type} and distributeContentId=#{disContentId}
+	</select>
+
+	<select id="findStateChents" resultType="com.jeeplus.modules.programatcontent.programatcont.entity.StateChenck">
+		select
+        (select count(1) from bank_distribute_verifier where distributeContentId=#{distributeContentId} and vtype=1) sumP,
+        (select count(1) from bank_distribute_verifier where distributeContentId=#{distributeContentId} and vtype=2) sumPrant,
+        (select count(1) from bank_distribute_verifier where distributeContentId=#{distributeContentId} and vtype=1 and vstate=2) sumY1,
+        (select count(1) from bank_distribute_verifier where distributeContentId=#{distributeContentId} and vtype=2 and vstate=2) sumY2,
+        (select count(1) from bank_distribute_verifier where distributeContentId=#{distributeContentId} and vtype=1 and vstate=3) sumN1,
+        (select count(1) from bank_distribute_verifier where distributeContentId=#{distributeContentId} and vtype=2 and vstate=3) sumN2
+	</select>
+
+	<select id="findBankDistributeVerifierList" resultType="com.jeeplus.modules.programatcontent.programatcont.entity.BankDistributeVerifier">
+		select * from bank_distribute_verifier where distributeContentId=#{distributeContentId}
+	</select>
+
+	<insert id="addBankDistributeVerifier">
+           /*默认状态是1未通过,2通过*/
+		insert into bank_distribute_verifier values(default,#{vid},default,default,#{vtype},#{distributeContentId},#{vname})
+	</insert>
+
+	<delete id="deleteBankdVer">
+         DELETE from bank_distribute_verifier where distributeContentId=#{distributeContentId}
+	</delete>
+
+	<update id="updateBybank_distribute_verifier">
+       update bank_distribute_verifier set vstate=#{state} where distributeContentId=#{ids} and vid=#{userId}
+	</update>
+
+	<update id="updateDistributeContentState">
+		update distribute_content
+		<set>
+			<if test="statepid!=null">statepid=#{statepid}, </if>
+			<if test="stateparentid!=null">stateparentid=#{stateparentid}, </if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="findByProgramatID"
+			resultType="com.jeeplus.modules.verifiertrue.verifiertrues.entity.BankVerifierTrue">
+       select * from bank_verifier_true where column_id=#{programid}
+	</select>
+
+    <select id="findOfficeId" resultType="java.lang.String">
+		select name from sys_office where id=(select office_id from sys_user where name=#{id} )
+	</select>
+
+	<select id="findOffice" resultType="java.lang.String">
+		select id from sys_office where id=(select office_id from sys_user where name=#{id} )
+	</select>
+
+	<!--定时器统计数据-->
+	<insert id="addDisSum">
+		insert into distribute_content_sum values(default,#{type},#{sum},#{nowMonth},#{officename})
+	</insert>
+
+	<delete id="delDisSum">
+		delete from distribute_content_sum
+	</delete>
+
+
+	<select id="distributeContentSumAll"
+			resultType="com.jeeplus.modules.programatcontent.programatcont.entity.DistributeContentSum">
+		select * from distribute_content_sum where type=#{type} and nowMonth=#{month} ORDER BY sum desc
+	</select>
+
+	<!--传入一个author 如果author为null 就查询本月,否则就查询历史-->
+	<select id="distributeContentType1" resultType="com.jeeplus.modules.programatcontent.programatcont.entity.DistributeContent">
+        select officename,
+		count(1) as stepSum
+		from distribute_content d
+		<where>
+			<if test="author==null || author=='' ">
+				d.create_date between (select date_add(curdate(), interval - day(curdate()) + 1 day)) and (select last_day(curdate()))
+			</if>
+		</where>
+		GROUP BY d.officename
+	</select>
+
+	<select id="distributeContentType2"
+			resultType="com.jeeplus.modules.programatcontent.programatcont.entity.DistributeContent">
+		select  d.author as officename,
+		count(1) as stepSum
+		from distribute_content d
+		<where>
+			<if test="author==null || author=='' ">
+				d.create_date between (select date_add(curdate(), interval - day(curdate()) + 1 day)) and (select last_day(curdate()))
+			</if>
+		</where>
+		GROUP BY d.author
+	</select>
+
+	<select id="distributeContentType3"
+			resultType="com.jeeplus.modules.programatcontent.programatcont.entity.DistributeContent">
+		select d.title as officename,
+		d.onclickNum as stepSum
+		from distribute_content d
+		<where>
+			<if test="author==null || author=='' ">
+				d.create_date between (select date_add(curdate(), interval - day(curdate()) + 1 day)) and (select last_day(curdate()))
+			</if>
+		</where>
+		order BY d.onclickNum DESC
+	</select>
+
+	<!--根据栏目id查询发稿-->
+	<select id="getContentById" resultType="com.jeeplus.modules.programatcontent.programatcont.entity.DistributeContent">
+		select * from distribute_content
+		where programat_id = #{menuId}
+		AND statepid = 2
+		AND stateparentid = 6
+		order by create_date desc
+		LIMIT 0,8
+	</select>
+
+	<!--更新查阅量-->
+	<update id="updateOnclickNum">
+		update distribute_content
+		<set>
+			<if test="onclickNum!=null">onclickNum=#{onclickNum}</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<!--置顶-->
+	<update id="admintop">
+		update distribute_content
+		<set>
+			sorts=#{sorts}
+		</set>
+		where id=#{id}
+	</update>
+
+	<update id="updateVeriftyByID">
+		update distribute_content u
+		set u.reservec=#{programat_id}
+        where
+		u.statepid <![CDATA[<= ]]> 2  and u.stateparentid <![CDATA[!= ]]> 6  and u.programat_id=#{veriftyId}
+	</update>
+
+	<update id="updateVeriftyByParentid">
+		update distribute_content u
+		set u.remarks=#{remark}
+		where u.id=#{did}
+	</update>
+
+	<update id="updateRemarksById">
+		update distribute_content set remarks=#{remark} where id=#{id}
+	</update>
+
+	<!--查询待审核发稿-->
+	<select id="findallPage" resultMap="DistributeContentResult" >
+		SELECT
+		<include refid="distributeContentColumns1"/>
+		FROM distribute_content a
+		<include refid="distributeContentJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="programatId != null and programatId != ''">
+				AND a.programat_id = #{programatId}
+			</if>
+			<if test="createBy != null ">
+				<if test="createBy.id !=null and createBy.id !=''">
+					AND (
+						a.create_by = #{createBy.id}
+						or a.departmentReviewer = #{loginid}
+						or a.reservec = #{loginid}
+						or a.remarks like concat('%',#{loginid},'%')
+					)
+				</if>
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE
+				<if test="_databaseId == 'postgre'">'%'||#{title}||'%'</if>
+				<if test="_databaseId == 'oracle'">'%'||#{title}||'%'</if>
+				<if test="_databaseId == 'mssql'">'%'+#{title}+'%'</if>
+				<if test="_databaseId == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="tagTitle != null and tagTitle != ''">
+				AND a.tag_title LIKE
+				<if test="_databaseId == 'postgre'">'%'||#{tagTitle}||'%'</if>
+				<if test="_databaseId == 'oracle'">'%'||#{tagTitle}||'%'</if>
+				<if test="_databaseId == 'mssql'">'%'+#{tagTitle}+'%'</if>
+				<if test="_databaseId == 'mysql'">concat('%',#{tagTitle},'%')</if>
+			</if>
+			<if test="stick != null and stick != ''">
+				AND a.stick = #{stick}
+			</if>
+			<if test="contentType != null and contentType != ''">
+				AND a.content_type = #{contentType}
+			</if>
+			<if test="programatIdName != null and programatIdName != ''">
+				AND a.programat_id=(select id from sys_menu where name=#{programatIdName})
+			</if>
+			<if test="stateparentid != null and stateparentid != ''">
+				AND a.stateparentid  != #{stateparentid}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<!--返回用户名,用户id,部门id-->
+	<select id="findDepartmentReviewerAll"
+			resultType="com.jeeplus.modules.programatcontent.programatcont.entity.BankMnue">
+			SELECT a.name,a.id,a.office_id AS officeId,b.role_id as prantId FROM
+			sys_user a
+			LEFT JOIN sys_user_role b
+			on  a.id = b.user_id
+			where b.role_id in ('ac9e43c43f2145418cdf286abc385ac3','970c4ff96e3a4c29b3f566001b014d5a')
+	</select>
+
+	<select id="findDistrByProgramatParentid"
+			resultType="com.jeeplus.modules.programatcontent.programatcont.entity.DistributeContent">
+		select * from distribute_content u
+		where u.statepid <![CDATA[<= ]]> 2
+		and u.stateparentid <![CDATA[!= ]]> 6
+		and u.programat_parentid
+		like concat('%',#{programat_parentid},'%')
+	</select>
+
+    <select id="findOpenItemAll"  resultType="com.jeeplus.modules.programatcontent.programatcont.entity.BankOpenItem">
+		select * from bank_open_item a
+		<where>
+			<if test="columnid !=null and columnid!='' ">
+				a.columnid=#{columnid}
+			</if>
+			<if test="name !=null and name!='' ">
+				a.name=#{name}
+			</if>
+			<if test="type !=null  ">
+				a.type=#{type}
+			</if>
+
+		</where>
+		order by a.sort
+		limit #{pageNo},#{pageSize}
+	</select>
+
+	<select id="findAllOpenItemCount" resultType="java.lang.Integer">
+		select count(1) from bank_open_item
+	</select>
+
+	<update id="updateBankOpenItem">
+      update bank_open_item a
+      <set>
+		  <if test="columnid !=null and columnid!='' ">
+			  a.columnid=#{columnid} ,
+		  </if>
+		  <if test="name !=null and name!='' ">
+			  a.name=#{name} ,
+		  </if>
+		  <if test="type !=null  ">
+			  a.type=#{type}
+		  </if>
+		  <if test="sort !=null  ">
+			  a.sort=#{sort}
+		  </if>
+
+	  </set>
+	 where a.id=#{id}
+	</update>
+
+	<delete id="delBaknOpenItem">
+		delete from bank_open_item
+	</delete>
+
+	<insert id="addBankOpenItem">
+         insert into bank_open_item(id,columnid,name,type,sort)  values (#{id},#{columnid},#{name},#{type},#{sort})
+	</insert>
+
+	<update id="again">
+		update distribute_content set statepid = 1,
+			stateparentid = 1 where id=#{id}
+	</update>
+
+</mapper>
+

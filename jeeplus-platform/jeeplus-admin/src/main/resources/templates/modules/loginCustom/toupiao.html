@@ -1,0 +1,417 @@
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta charset="utf-8">
+    <title>投票详情</title>
+    <link rel="shortcut icon" href="${ctxStatic}/common/images/favicon.ico">
+    <!--引入jquery 注意jquery必须最先引入-->
+    <script src="../../../static/common/js/jquery-3.3.1.min.js"></script>
+    <!-- 引入layer插件,当做独立组件使用，不使用layui模块 -->
+    <script src="${ctxStatic}/plugins/layui/layer/layer.js"></script>
+    <link href="../../../static/common/css2/font.css" rel="stylesheet" type="text/css">
+    <link href="../../../static/common/css2/gdcontent.css" rel="stylesheet" type="text/css">
+    <script src="../../../static/common/js/jeeplus.js" type="text/javascript"></script>
+    <style type="text/css">
+        .redirects1{
+            position: relative;
+            padding-bottom: 40px;
+        }
+        #redirects1_div{
+            position: absolute;
+            top: 55px;
+            width: 800px;
+        // height: 200px;
+            background-color: rgb(0, 52, 100);
+            border-radius: 3px;
+
+        }
+        #redirects1_div>div{
+
+            /*background-color: red;*/
+            height: 40px;
+            width: 160px;
+            float: left;
+            line-height: 40px;
+        }
+        .redirects1_div_a{
+            color: #B5B8BD;
+        }
+        .redirects1_div_a:hover{
+            color: white;
+        }
+
+        /*2*/
+        .redirects2{
+            position: relative;
+            padding-bottom: 40px;
+        }
+        #redirects2_div{
+            position: absolute;
+            top: 55px;
+            width: 800px;
+            background-color: rgb(0, 52, 100);
+            border-radius: 3px;
+        }
+        #redirects2_div>div{
+            height: 40px;
+            width: 160px;
+            float: left;
+            line-height: 40px;
+        }
+        .redirects2_div_a{
+            color: #B5B8BD;
+        }
+        .redirects2_div_a:hover{
+            color: white;
+        }
+
+
+
+    </style>
+    <style>
+        .famous_school_question_bank {
+            width: 100%;
+            background: rgba(255,255,255,255);
+            box-shadow: 0px 4px 4px 0px rgba(232,232,232,0.5);
+            /* border: 5px solid red; */
+        }
+        .famous_school_question_bank_ontent {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        .famous_school_question_bank_ontent_title {
+            text-align: center;
+            margin: 30px ;
+        }
+        .famous_school_question_bank_ontent_detail {
+            display: flex;
+            display: -webkit-flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding-bottom: 32px;
+        }
+        .famous_school_question_bank_ontent_detail_num {
+            width: 596px;
+            height: 150px;
+            background: rgba(255,255,255,1);
+            box-shadow: 2px 2px 14px 0px rgba(190,190,190,0.5);
+            border-radius: 10px;
+            margin-top: 13px;
+            line-height: 73px;
+        }
+        .famous_school_question_bank_ontent_detail_num .dot, .paper_name {
+            float: left;
+            margin-left: 19px;
+        }
+        img {
+            vertical-align: middle;
+        }
+        .dot{
+            margin-top: 5%;
+        }
+        .famous_school_question_bank_ontent_detail_num .dot .paper_name {
+            float: left;
+            margin-left: 19px;
+        }
+        .famous_school_question_bank_ontent_detail_num .download_paper {
+            float: right;
+            margin-right: 40px;
+        }
+        .famous_school_question_bank_ontent_detail_num .vip {
+            float: right;
+            margin-right: 40px;
+        }
+        .famous_school_question_bank_ontent_detail_num .download_paper a {
+            padding: 7px 23px;
+            border-radius: 4px;
+            background: linear-gradient(135deg,rgba(93,169,255,1) 0%,rgba(207,164,255,1) 100%);
+            font-size: 16px;
+            font-family: "微软雅黑";
+            font-weight: 300;
+            color: rgba(255,255,255,1);
+            line-height: 20px;
+        }
+        .download_paper{
+            margin-top: 5%;
+        }
+        .vipimg{
+            width: 60px;
+            height: 50px;
+            margin-top: 20%;
+        }
+        .dp{
+            float: right;
+            margin-right: -25%;
+            color: teal;
+            margin-top: 13%;
+        }
+        .tp{
+            padding: 7px 23px;
+            border-radius: 4px;
+            background: linear-gradient(135deg,rgba(93,169,255,1) 0%,rgba(207,164,255,1) 100%);
+            font-size: 16px;
+            font-family: "微软雅黑";
+            font-weight: 300;
+            color: rgba(255,255,255,1);
+            line-height: 20px;
+        }
+    </style>
+
+</head>
+<%
+layout("/include/_container2.html",{title:"用户管理", parent:"单位组织"}){
+%>
+<body>
+<!--<button type="button" value="222" onclick="tp(this)"></button>-->
+<!--选项-->
+<div class="famous_school_question_bank">
+
+    <div class="famous_school_question_bank_ontent">
+
+        <div id="team" class="famous_school_question_bank_ontent_title">
+            <div style="width: 100%;overflow: hidden;text-align: center;margin-bottom: 1%">
+                  <span style="
+                    font-size: 30px;">我最喜欢的电影?
+                  </span><br><br>
+                <span>投票截止时间 <span> 2018-02-02</span>
+                  </span>
+            </div>
+            <img width="200px" height="130px" src="../../../static/common/image2/toupiao.jpg">
+        </div>
+
+        <div id="selects" class="famous_school_question_bank_ontent_detail">
+            <div class="famous_school_question_bank_ontent_detail_num">
+                <div class="dot">
+                    <img width="10px;" src="">
+                </div>
+                <div class="paper_name">
+                    <span></span>
+                </div>
+                <div class="download_paper">
+                    <a href="/a/public/vote">投票</a>
+                </div>
+                <div  class="vip">
+                    <img class="vipimg" src="../../../static/common/image2/wu.jpg">
+                </div>
+                <div  class="dp">
+                    <sapn>得票数:</sapn><span>10</span>
+                </div>
+            </div>
+
+            <div class="famous_school_question_bank_ontent_detail_num">
+                <div class="dot">
+                    <img width="10px;" src="">
+                </div>
+                <div class="paper_name">
+                    <span></span>
+                </div>
+                <div class="download_paper">
+                    <a href="/a/public/vote">投票</a>
+                </div>
+                <div  class="vip">
+                    <img class="vipimg" src="../../../static/common/image2/wu.jpg">
+                </div>
+                <div  class="dp">
+                    <sapn>得票数:</sapn><span>10</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+<% include("bankConferenList.js"){} %>
+<% } %>
+<script>
+    function tp(e) {
+        var id = $(e).val();
+        $.post("/a/public/vote",{id:id},function (data) {
+            if(data.success){
+                alert(data.msg);
+            }else {
+                alert(data.msg);
+            }
+            location.reload();
+        })
+    }
+    $(document).ready(function() {
+        var id = '${id!}';
+        $.post("/a/public/voteinfodata",{id:id},function (data) {
+            // console.log(data);
+            if(data){
+                $("#selects").empty();
+                //主题
+                $("#team").empty();
+                var team = '  <div style="width: 100%;overflow: hidden;text-align: center;margin-bottom: 1%">' +
+                    '                  <span style="' +
+                    '                    font-size: 30px;">'+data[0].themeName+'?' +
+                    '                  </span><br><br>' +
+                    '                <span>投票截止时间 <span> '+data[0].endTimes+'</span>' +
+                    '                  </span>' +
+                    '            </div>' +
+                    '            <img width="200px" height="130px" src="../../../static/common/image2/toupiao.jpg">';
+                $("#team").append(team);
+                //选项
+                var divs = '';
+                for(var i =0;i<data.length;i++){
+                    divs +=  '<div class="famous_school_question_bank_ontent_detail_num">' +
+                        '                <div class="dot">' +
+                        '                    <img width="10px;" src="">' +
+                        '                </div>' +
+                        '                <div class="paper_name">' +
+                        '                    <span>'+data[i].content+'</span>' +
+                        '                </div>' +
+                        '                <div class="download_paper">' +
+                        '                    <button class="tp" type="button" value="'+data[i].selectId+'" onclick="tp(this)">投票</button>' +
+                        '                </div>';
+                            if(data[i].img){
+                                if(data[i].video){
+                                    divs +=
+                                    '                <div  class="vip">' +
+                                    '                    <video poster="../../../static/common/image2/bf.png" class="vipimg" width="60" height="50" controls>'+
+                                    '                       <source src='+data[i].video+' type="video/mp4">'+
+                                    '                       <source src='+data[i].video+' type="video/ogg">'+
+                                    '                       您的浏览器不支持 video 标签。'+
+                                    '                    </video>' +
+                                    '                </div>';
+                                }else {
+                                    divs +=
+                                        '                <div  class="vip">' +
+                                        '                    <a href='+data[i].img+'><img class="vipimg" src='+data[i].img+'></a>' +
+                                        '                </div>';
+                                }
+                            }else {
+                                if(data[i].video){
+                                    divs +=
+                                        '                <div  class="vip">' +
+                                        '                    <video poster="../../../static/common/image2/bf.png" class="vipimg" width="60" height="50" controls>'+
+                                        '                       <source src='+data[i].video+' type="video/mp4">'+
+                                        '                       <source src='+data[i].video+' type="video/ogg">'+
+                                        '                       您的浏览器不支持 video 标签。'+
+                                        '                    </video>' +
+                                        '                </div>';
+
+                                }else {
+                                    divs +=
+                                        '                <div  class="vip">' +
+                                        '                <img class="vipimg" src="../../../static/common/image2/wu.jpg">' +
+                                        '                </div>';
+                                }
+                            }
+                    divs +=
+                        '                <div  class="dp">' +
+                        '                    <sapn>得票数:</sapn><span>'+data[i].voteNum+'</span>' +
+                        '                </div>' +
+                        '            </div>'
+                }
+                $("#selects").append(divs);
+            }
+
+        })
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $.getJSON("/a/public/getNavMenu",function (data) {
+            for (var i = 0; i < data.length ; i++) {
+                var $div=$("<div><a class=\"redirects1_div_a\" style=\"text-decoration: none\" href=\"/a/logins/grouplist?id="+data[i].id+"\">"+data[i].name+"</a> </div>");
+                $("#redirects1_div").append($div);
+            }
+        });
+        $.getJSON("/a/public/getNavMenuInstitutions",function (data) {
+            for (var i = 0; i < data.length ; i++) {
+                var $div=$("<div><a class=\"redirects2_div_a\" style=\"text-decoration: none\" href=\"/a/logins/grouplist?id="+data[i].id+"\">"+data[i].name+"</a> </div>");
+                $("#redirects2_div").append($div);
+            }
+        });
+
+        //首页li导航栏转跳
+        $(".redirects").click(function () {
+            var i=$(this).index();
+            if (i==0){ //首页
+                location.href="/a/logins/indexNew"
+            }
+            if (i==1){ //分行动态
+                location.href="/a/logins/programadatalist?id=4f8d74dc230b49e5b9aba3d7386f85bf&name="+encodeURI("分行动态")
+            }
+            if (i==4){ //
+                location.href="/a/logins/programadatalist?id=06cdcb5fdbfa4aa7beb9718f2817b9f4&name="+encodeURI("规章制度")
+            }
+            if (i==5){ //分行动态
+                location.href="/a/logins/down"
+            }
+            if (i==6){ //分行动态
+                location.href="/a/logins/addressbook"
+            }
+        });
+
+        $(".redirects1").hover(function () {
+            $("#redirects1_div").show();
+        },function () {
+            $("#redirects1_div").hide();
+
+        })
+        $(".redirects2").hover(function () {
+            $("#redirects2_div").show();
+        },function () {
+            $("#redirects2_div").hide();
+
+        })
+
+        $(".stParim").focus(function () {
+            if ($(this).val()=="欢迎访问光大内网！" || $(this).val()=="请输入要搜索的标题内容！"){
+                $(this).val("")
+            }
+        });
+        $(".stParim").blur(function () {
+            if ($(this).val()==""){
+                $(this).val("欢迎访问光大内网！");
+            }
+        });
+        $(".selectParim").click(function () {
+            var selectParim=$(".stParim").val();
+            if (selectParim=="欢迎访问光大内网！" || selectParim==""){
+                $(".stParim").val("请输入要搜索的标题内容！");
+            } else {
+                location.href="/a/logins/list?title="+selectParim.trim();
+            }
+
+
+        });
+        $("#unameuser").click(function () {
+            if ($(this).html()!="登录") {
+                layer.open({
+                    type: 2,
+                    shadeClose:true,
+                    id: 'update_user',
+                    title: ['修改用户信息', 'font-size:18px;'],
+                    area: ['1000px', '650px'],
+                    content: '/a/sys/user/info'
+                });
+            }
+        });
+
+        $(".loginOutSystem").click(function () {
+            location.href="/a/logout";
+        });
+    });
+</script>
+<script type="text/javascript">
+    var name="${fn.getUser()}".replace(/\s*/g,"");
+    var logis=name.length>360?"登录":"未登录";
+    // console.log(logis)
+    // var mm=name.substring(name.indexOf('{')).replace(/=/g,":");
+    var user=name.substring(name.indexOf('{')+1,name.lastIndexOf('}')).split(',');
+    if (logis=="登录"){
+        $("#unameuser").html(user[5].split('=')[1].replace(/'/g,""));
+        $(".photo").attr("src",user[12].split('=')[1].replace(/'/g,""));
+        $(".uno").html("("+user[4].split('=')[1].replace(/'/g,"")+")");
+        $("#userInput").val(name);
+        $(".loginOutSystem").show();
+
+    }
+</script>
+</html>

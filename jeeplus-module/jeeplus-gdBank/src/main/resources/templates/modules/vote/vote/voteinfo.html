@@ -1,0 +1,223 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>投票详情</title>
+    <link rel="shortcut icon" href="${ctxStatic}/common/images/favicon.ico">
+    <!--引入jquery 注意jquery必须最先引入-->
+    <script src="${ctxStatic}/common/js/jquery-3.3.1.min.js"></script>
+    <!-- 引入layer插件,当做独立组件使用，不使用layui模块 -->
+    <script src="${ctxStatic}/plugins/layui/layer/layer.js"></script>
+    <style>
+        .famous_school_question_bank {
+            width: 100%;
+            background: rgba(255,255,255,255);
+            box-shadow: 0px 4px 4px 0px rgba(232,232,232,0.5);
+            /* border: 5px solid red; */
+        }
+        .famous_school_question_bank_ontent {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        .famous_school_question_bank_ontent_title {
+            text-align: center;
+            margin: 30px ;
+        }
+        .famous_school_question_bank_ontent_detail {
+            display: flex;
+            display: -webkit-flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding-bottom: 32px;
+        }
+        .famous_school_question_bank_ontent_detail_num {
+            width: 596px;
+            height: 150px;
+            background: rgba(255,255,255,1);
+            box-shadow: 2px 2px 14px 0px rgba(190,190,190,0.5);
+            border-radius: 10px;
+            margin-top: 13px;
+            line-height: 73px;
+        }
+        .famous_school_question_bank_ontent_detail_num .dot, .paper_name {
+            float: left;
+            margin-left: 19px;
+        }
+        img {
+            vertical-align: middle;
+        }
+        .dot{
+            margin-top: 5%;
+        }
+        .famous_school_question_bank_ontent_detail_num .dot .paper_name {
+            float: left;
+            margin-left: 19px;
+        }
+        .famous_school_question_bank_ontent_detail_num .download_paper {
+            float: right;
+            margin-right: 40px;
+        }
+        .famous_school_question_bank_ontent_detail_num .vip {
+            float: right;
+            margin-right: 40px;
+        }
+        .famous_school_question_bank_ontent_detail_num .download_paper a {
+            padding: 7px 23px;
+            border-radius: 4px;
+            background: linear-gradient(135deg,rgba(93,169,255,1) 0%,rgba(207,164,255,1) 100%);
+            font-size: 16px;
+            font-family: "微软雅黑";
+            font-weight: 300;
+            color: rgba(255,255,255,1);
+            line-height: 20px;
+        }
+        .download_paper{
+            margin-top: 5%;
+        }
+        .vipimg{
+            width: 60px;
+            height: 60px;
+            margin-top: 20%;
+        }
+        .dp{
+            float: right;
+            margin-right: -25%;
+            color: teal;
+            margin-top: 13%;
+        }
+        .tp{
+            padding: 7px 23px;
+            border-radius: 4px;
+            background: linear-gradient(135deg,rgba(93,169,255,1) 0%,rgba(207,164,255,1) 100%);
+            font-size: 16px;
+            font-family: "微软雅黑";
+            font-weight: 300;
+            color: rgba(255,255,255,1);
+            line-height: 20px;
+        }
+    </style>
+
+</head>
+
+<!--<button type="button" value="222" onclick="tp(this)"></button>-->
+<!--选项-->
+
+<div class="famous_school_question_bank">
+
+    <div class="famous_school_question_bank_ontent">
+
+        <div id="team" class="famous_school_question_bank_ontent_title">
+            <div style="width: 100%;overflow: hidden;text-align: center;margin-bottom: 1%">
+                  <span style="
+                    font-size: 30px;">我最喜欢的电影?
+                  </span><br><br>
+                <span>投票截止时间 <span> 2018-02-02</span>
+                  </span>
+            </div>
+            <img width="200px" height="130px" src="${ctxStatic}/common/image2/toupiao.jpg">
+        </div>
+
+        <div id="selects" class="famous_school_question_bank_ontent_detail">
+            <div class="famous_school_question_bank_ontent_detail_num">
+                <div class="dot"><!--https://www.17sucai.com/preview/1370534/2019-04-04/classpaper/img/dot.png-->
+                    <img width="10px;" src="">
+                </div>
+                <div class="paper_name">
+                    <span></span>
+                </div>
+                <div class="download_paper">
+                    <a href="/a/public/vote">投票</a>
+                </div>
+                <div  class="vip">
+                    <img class="vipimg" src="${ctxStatic}/common/image2/wu.jpg">
+                </div>
+                <div  class="dp">
+                    <sapn>得票数:</sapn><span>10</span>
+                </div>
+            </div>
+
+            <div class="famous_school_question_bank_ontent_detail_num">
+                <div class="dot">
+                    <img width="10px;" src="">
+                </div>
+                <div class="paper_name">
+                    <span></span>
+                </div>
+                <div class="download_paper">
+                    <a href="/a/public/vote">投票</a>
+                </div>
+                <div  class="vip">
+                    <img class="vipimg" src="${ctxStatic}/common/image2/wu.jpg">
+                </div>
+                <div  class="dp">
+                    <sapn>得票数:</sapn><span>10</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+<script>
+    function tp(e) {
+        var id = $(e).val();
+        $.post("/a/public/vote",{id:id},function (data) {
+            if(data.success){
+                // layer.msg(data.msg);
+                alert(data.msg);
+            }else {
+                // layer.msg(data.msg);
+                alert(data.msg);
+            }
+            location.reload();
+        })
+    }
+    $(document).ready(function() {
+        var id = '${bankVote.id!}';
+        $.post("/a/public/voteinfodata",{id:id},function (data) {
+            // console.log(data);
+            if(data){
+                $("#selects").empty();
+                //主题
+                $("#team").empty();
+                var team = '  <div style="width: 100%;overflow: hidden;text-align: center;margin-bottom: 1%">' +
+                    '                  <span style="' +
+                    '                    font-size: 30px;">'+data[0].themeName+'?' +
+                    '                  </span><br><br>' +
+                    '                <span>投票截止时间 <span> '+data[0].endTimes+'</span>' +
+                    '                  </span>' +
+                    '            </div>' +
+                    '            <img width="200px" height="130px" src="${ctxStatic}/common/image2/toupiao.jpg">';
+                $("#team").append(team);
+                //选项
+                var divs = '';
+                for(var i =0;i<data.length;i++){
+                    divs +=  '<div class="famous_school_question_bank_ontent_detail_num">' +
+                        '                <div class="dot">' +
+                        '                    <img width="10px;" src="https://www.17sucai.com/preview/1370534/2019-04-04/classpaper/img/dot.png">' +
+                        '                </div>' +
+                        '                <div class="paper_name">' +
+                        '                    <span>'+data[i].content+'</span>' +
+                        '                </div>' +
+                        '                <div class="download_paper">' +
+                        '                    <button class="tp" type="button" value="'+data[i].selectId+'" onclick="tp(this)">投票</button>' +
+                        '                </div>' +
+                        '                <div  class="vip">\n' +
+                        '                    <img class="vipimg" src="${ctxStatic}/common/image2/wu.jpg">' +
+                        '                </div>' +
+                        '                <div  class="dp">' +
+                        '                    <sapn>得票数:</sapn><span>'+data[i].voteNum+'</span>' +
+                        '                </div>' +
+                        '            </div>'
+                }
+                $("#selects").append(divs);
+            }
+
+        })
+    });
+
+
+</script>
+</html>

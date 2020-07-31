@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.communicationbook.communicationbookmanagement.mapper.BankCommunicationBookMapper">
+    
+	<sql id="bankCommunicationBookColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.name AS "name",
+		a.login_name AS "loginName",
+		a.phone AS "phone",
+		b.name AS "office",
+		a.no AS "no",
+		a.email AS "email",
+		a.mobile AS "mobile",
+		a.psotes AS "psotes",
+		a.statement AS "statement"
+	</sql>
+	
+	<sql id="bankCommunicationBookJoins">
+		
+		LEFT JOIN sys_office b ON b.id = a.office_id
+	</sql>
+	
+    
+	<select id="get" resultType="BankCommunicationBook" >
+		SELECT
+			<include refid="bankCommunicationBookColumns"/>
+		FROM sys_user a
+		<include refid="bankCommunicationBookJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BankCommunicationBook" >
+		SELECT 
+			<include refid="bankCommunicationBookColumns"/>
+		FROM sys_user a
+		<include refid="bankCommunicationBookJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="name != null and name != ''">
+				AND a.name = #{name}
+			</if>
+			<if test="office != null and office != ''">
+				AND a.office_id = #{office}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY
+				a.no
+			</otherwise>
+		</choose>
+	</select>
+	
+<!--	<select id="findAllList" resultType="BankCommunicationBook" >-->
+<!--		SELECT -->
+<!--			<include refid="bankCommunicationBookColumns"/>-->
+<!--		FROM bank_communication_book a-->
+<!--		<include refid="bankCommunicationBookJoins"/>-->
+<!--		<where>-->
+<!--			a.del_flag = #{DEL_FLAG_NORMAL}-->
+<!--			${dataScope}-->
+<!--		</where>		-->
+<!--		<choose>-->
+<!--			<when test="page !=null and page.orderBy != null and page.orderBy != ''">-->
+<!--				ORDER BY ${page.orderBy}-->
+<!--			</when>-->
+<!--			<otherwise>-->
+<!--				ORDER BY a.update_date DESC-->
+<!--			</otherwise>-->
+<!--		</choose>-->
+<!--	</select>-->
+	
+	<insert id="insert">
+		INSERT INTO sys_user(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			name ,
+		    phone ,
+		    no ,
+		    email,
+		    mobile,
+		    psotes ,
+		    statement
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{name},
+			#{phone},
+			#{no},
+		    #{email},
+		    #{mobile},
+		    #{psotes},
+		    #{statement}
+		)
+	</insert>
+	
+<!--	<update id="update">-->
+<!--		UPDATE bank_communication_book SET 	-->
+<!--			update_by = #{updateBy.id},-->
+<!--			update_date = #{updateDate},-->
+<!--			remarks = #{remarks},-->
+<!--			name = #{name},-->
+<!--			phone = #{phone},-->
+<!--			address = #{address},-->
+<!--			deptid = #{deptid},-->
+<!--			uid = #{uid},-->
+<!--			dept_name = #{deptname}-->
+<!--		WHERE id = #{id}-->
+<!--	</update>-->
+	
+	
+<!--	&lt;!&ndash;物理删除&ndash;&gt;-->
+<!--	<update id="delete">-->
+<!--		DELETE FROM bank_communication_book-->
+<!--		WHERE id = #{id}-->
+<!--	</update>-->
+	
+<!--	&lt;!&ndash;逻辑删除&ndash;&gt;-->
+<!--	<update id="deleteByLogic">-->
+<!--		UPDATE bank_communication_book SET -->
+<!--			del_flag = #{DEL_FLAG_DELETE}-->
+<!--		WHERE id = #{id}-->
+<!--	</update>-->
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="BankCommunicationBook" statementType="STATEMENT">
+		select * FROM sys_user  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>
